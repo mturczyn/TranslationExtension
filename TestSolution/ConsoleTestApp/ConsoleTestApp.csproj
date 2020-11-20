@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlternativeLanguages\AlternativeLanguages.csproj" />
+    <ProjectReference Include="..\Languages\Languages.csproj" />
+  </ItemGroup>
+  <PropertyGroup Label="Translation">
+    <Path>..\..\Languages\Resources\Resource.resx</Path>
+  </PropertyGroup>
+</Project>

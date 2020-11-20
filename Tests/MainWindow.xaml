@@ -1,0 +1,177 @@
+﻿<Window x:Class="Tests.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Tests"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="2"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Background="Green"/>
+
+        <Label Name="lblTranslationName" Grid.Row="0" Grid.Column="0" Content="Nazwa tłumaczenia:" FontFamily="Calibri" FontSize="18" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Background="LightGreen"/>
+        <TextBox Name="tbTranslationName" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" AcceptsReturn="True" FontSize="16" FontFamily="Calibri" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextChanged="tbTranslationName_TextChanged">
+            <!--LoremIpsum-->
+        </TextBox>
+
+        <Label Name="lblTextToTranslate" Grid.Row="0" Grid.Column="1" Content="Do tłumaczenia:" FontFamily="Calibri" FontSize="18" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Background="LightGreen" />
+        <TextBox Name="tbTextToTranslate" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" AcceptsReturn="True" FontSize="16" FontFamily="Calibri" VerticalScrollBarVisibility="Auto" TextChanged="tbTextToTranslate_TextChanged">
+            <!--Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+            lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+            lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+            lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum-->
+        </TextBox>
+        <Label Name="lblTranslation" Grid.Row="0" Grid.Column="2" Content="Tłumaczenie:" FontFamily="Calibri" FontSize="18" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Background="LightGreen" />
+        <TextBox Name="tbTranslation" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" AcceptsReturn="True" FontSize="16" FontFamily="Calibri" VerticalScrollBarVisibility="Auto" TextChanged="tbTranslation_TextChanged"/>
+
+        <Grid Grid.Row="3" Grid.Column="0" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Szukana fraza:" FontSize="16" FontFamily="Calibri" VerticalAlignment="Center"/>
+            <TextBox Name="tbPhraseToSearch" Grid.Row="1" FontFamily="Calibri" Margin="10, 10, 10, 0"/>
+            <Button Name="btnSearchPhrase" Grid.Row="2" Content="Szukaj" FontSize="16" FontFamily="Calibri" Click="BtnSearchPhrase_Click" Margin="10,10,10,0"/>
+            <Button Name="btnUseTranslation" Grid.Row="3" Content="Użyj tłumaczenia" FontSize="16" FontFamily="Calibri" Click="BtnUseTranslation_Click" Margin="10,10,10,0"/>
+        </Grid>
+
+        <DataGrid AutoGenerateColumns="False" Name="dgPossibleTranslations" Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" MouseDoubleClick="DgPossibleTranslations_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="1*" Header="Nazwa">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Name}" IsEnabled="False" TextWrapping="Wrap" FontSize="16" FontFamily="Calibri"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" Header="Polski">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding PolishText}" IsEnabled="False" TextWrapping="Wrap" FontSize="16" FontFamily="Calibri"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" Header="Angielski">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding EnglishText}" IsEnabled="False" TextWrapping="Wrap" FontSize="16" FontFamily="Calibri"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!--<ListView Name="lvPossibleTranslations" Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" MouseDoubleClick="LvPossibleTranslations_MouseDoubleClick">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nazwa" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
+                    <GridViewColumn Header="Polski" DisplayMemberBinding="{Binding PolishText}" Width="Auto" />
+                    <GridViewColumn Header="Angielski" DisplayMemberBinding="{Binding EnglishText}" Width="Auto"/>
+                </GridView>
+            </ListView.View>
+        </ListView>-->
+
+        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="btnOk" IsDefault="True" Content="Zapisz" Click="BtnOk_Click" Grid.Row="1" Grid.Column="0" FontFamily="Calibri" FontSize="20" Margin="10,5,5,10" />
+            <Button Name="btnCancel" IsCancel="True" Content="Anuluj" Click="BtnCancel_Click" Grid.Row="1" Grid.Column="1" FontFamily="Calibri" FontSize="20" Margin="5,5,10,10"/>
+            <Button Name="SaveLogs" Content="Zapisz logi" Click="SaveLogs_Click" Grid.Row="0" Grid.Column="1" FontFamily="Calibri" FontSize="20" Margin="5,10,10,5"  Background="Pink"/>
+            <Button Name="ChangeResourcesPath" Content="Zmień plik zasobów" Click="ChangeResourcesPath_Click"  Grid.Row="0" Grid.Column="0" FontFamily="Calibri" FontSize="20" Margin="10,10,5,5" />
+        </Grid>
+    </Grid>
+</Window>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
