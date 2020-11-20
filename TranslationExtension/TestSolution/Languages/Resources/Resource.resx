@@ -118,36 +118,42 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TestString" xml:space="preserve">
-    <value>Test string</value>
+    <value>Testowy ciąg</value>
   </data>
   <data name="TransWorldWelcome" xml:space="preserve">
-    <value>Welcome in the world of translations!</value>
+    <value>witam w śiwecie rozszerzeń</value>
   </data>
   <data name="testString2" xml:space="preserve">
-    <value>test string</value>
+    <value>testowty ciąg</value>
   </data>
   <data name="testStr" xml:space="preserve">
-    <value>test string</value>
+    <value>testoey ciąg</value>
   </data>
   <data name="finallyAddedString" xml:space="preserve">
-    <value>sfzsf</value>
+    <value>asdfaefawefa</value>
   </data>
   <data name="afawfe" xml:space="preserve">
-    <value>esaf</value>
+    <value>Hello World!</value>
   </data>
   <data name="blaString" xml:space="preserve">
-    <value>blah string</value>
+    <value>bla ciąg</value>
   </data>
   <data name="rndStringSome" xml:space="preserve">
-    <value>some random string</value>
+    <value>jakiś losowwy cuą znaków</value>
   </data>
   <data name="blaString2" xml:space="preserve">
-    <value>shsrbr</value>
+    <value>basdfaasdfa</value>
   </data>
   <data name="blaString344" xml:space="preserve">
-    <value>gggggggggg</value>
+    <value>ggggggg</value>
   </data>
   <data name="blaString1345" xml:space="preserve">
-    <value></value>
+    <value>Sdfgafrefa</value>
+  </data>
+  <data name="testString777" xml:space="preserve">
+    <value>asfdasdfA</value>
+  </data>
+  <data name="RandomTrannslation" xml:space="preserve">
+    <value>This string i wish to translate</value>
   </data>
 </root>

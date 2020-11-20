@@ -172,5 +172,13 @@ namespace Languages {
 				return ResourceManager.GetString("testString777", resourceCulture);
 			}
 		}
+		/// <summary>
+		/// 	Looks up a localized string similar to This string i wish to translate
+		/// </summary>
+		public static string RandomTrannslation {
+			get {
+				return ResourceManager.GetString("RandomTrannslation", resourceCulture);
+			}
+		}
 	}
 }
