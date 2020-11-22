@@ -1,0 +1,13 @@
+1. Gdzie powinyn znaleźć się tłumaczenia?
+
+W osobnym projekcie, odpowiednio ustawionym (tak jak w readmy jest pokazana odpowiedź z SO)
+
+2. Jak, odpalając rozszerzenie w projekcie, określić, który projekt jest z tłuamczeniami? Czyli gdzie mają lądować tłuamczenia nowe?
+
+Użytkownik, żeby pomyślnie używać projektu z tłlumaczenaimi, powinien posiadać w obecnym projekcie referencje do projektu z tłuamczeniami.
+Także, pozwalamy mu działać, czyli kliknąć w menu kotenkstowe, wybrać opcję dodania tłuamczenia, ale nie zezwolimy na nic, poza anulowaniem,
+póki nie wybierze user odpowiedniego projektu (ewentualnie komunikat, że powinien stworzyć taki i dodać jako referencję).
+
+Wybór projektu przez usera powinien wywołać:
+- sprawdzenie czy projekt się nadaje, jak nie to error i wracamy do punktu wyjścia
+- wczytanie wszystkich języków
