@@ -1,6 +1,7 @@
 ﻿using AddTranslation.LogService;
 using AddTranslation.Windows;
 using EnvDTE;
+using Microsoft;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
@@ -10,12 +11,12 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using Task = System.Threading.Tasks.Task;
-using System.Collections.Generic;
-using Microsoft;
 
 namespace AddTranslation
 {
@@ -24,6 +25,7 @@ namespace AddTranslation
     /// </summary>
     internal sealed class AddTranslationCommand
     {
+        private AsyncPackage _serviceProvider;
         /// <summary>
         /// Command ID.
         /// </summary>
@@ -35,21 +37,16 @@ namespace AddTranslation
         public static readonly Guid CommandSet = new Guid("52faa2b6-add8-48ca-89c4-e2487d1d625b");
 
         /// <summary>
-        /// VS Package that provides this command, not null.
-        /// </summary>
-        private readonly AsyncPackage package;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="AddTranslationCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private AddTranslationCommand(AsyncPackage package, OleMenuCommandService commandService)
+        private AddTranslationCommand(OleMenuCommandService commandService, AsyncPackage package)
         {
-            this.package = package ?? throw new ArgumentNullException(nameof(package));
-            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
-
+            if (package == null) throw new ArgumentNullException(nameof(package));
+            if (commandService == null) throw new ArgumentNullException(nameof(commandService));
+            _serviceProvider = package;
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
             commandService.AddCommand(menuItem);
@@ -65,17 +62,6 @@ namespace AddTranslation
         }
 
         /// <summary>
-        /// Gets the service provider from the owner package.
-        /// </summary>
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
-        {
-            get
-            {
-                return this.package;
-            }
-        }
-
-        /// <summary>
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
@@ -84,10 +70,34 @@ namespace AddTranslation
             // Switch to the main thread - the call to AddCommand in AddTranslationCommand's constructor requires
             // the UI thread.
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+            var commandService = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
+            Assumes.Present(commandService);
+            // Get Visual Studio extensibility object.
+            var dte = (DTE)await package.GetServiceAsync(typeof(DTE));
+            Assumes.Present(dte);
 
-            OleMenuCommandService commandService = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
+            Instance = new AddTranslationCommand(commandService, package);
+        }
 
-            Instance = new AddTranslationCommand(package, commandService);
+        private async Task<List<VSLangProj.Reference>> GetProjectReferencesForCUrrentlyOpenedFileAsync()
+        {
+            var dte = (DTE)await _serviceProvider.GetServiceAsync(typeof(DTE));
+            Assumes.Present(dte);
+            var vsProject = dte.ActiveDocument.ProjectItem.ContainingProject.Object as VSLangProj.VSProject;
+            if (vsProject == null)
+            {
+                // Cant get the current project.
+                return null;
+            }
+
+            var projectReferences = new List<VSLangProj.Reference>();
+            foreach (VSLangProj.Reference @ref in vsProject.References)
+            {
+                if (@ref.SourceProject != null)
+                    projectReferences.Add(@ref);
+            }
+
+            return projectReferences;
         }
 
         /// <summary>
@@ -99,43 +109,23 @@ namespace AddTranslation
         /// <param name="e">Event args.</param>
         private async void Execute(object sender, EventArgs e)
         {
-            // Get Visual Studio extensibility object.
-            var dte = (DTE)await package.GetServiceAsync(typeof(DTE));
-            Assumes.Present(dte);
-
-            var vsProject = dte.ActiveDocument.ProjectItem.ContainingProject.Object as VSLangProj.VSProject;
-            if(vsProject == null)
-            {
-                // Cant get the current project.
-                return;
-            }
-
-            var projectReferences = new List<VSLangProj.Reference>();
-            foreach (VSLangProj.Reference @ref in vsProject.References)
-            {
-                if (@ref.SourceProject != null)
-                    projectReferences.Add(@ref);
-            }
-
-            if(projectReferences.Count < 1)
-            {
-                // no project references, but it's OK
-            }
-
             Logger.AppendInfoLine("Rozpoczęcie tłumaczenia");
 
-            var textManager = ServiceProvider.GetServiceAsync(typeof(SVsTextManager));
-            var componentModel = this.ServiceProvider.GetServiceAsync(typeof(SComponentModel));
+            var textManager = (SVsTextManager)await _serviceProvider.GetServiceAsync(typeof(SVsTextManager));
+            Assumes.Present(textManager);
+            var componentModel = (SComponentModel)await _serviceProvider.GetServiceAsync(typeof(SComponentModel));
+            Assumes.Present(componentModel);
+
             IVsTextView view;
             IWpfTextView wpfTextView;
             ITextEdit edit = null;
 
             try
             {
-                int result = ((await textManager) as IVsTextManager2).GetActiveView2(1, null, (uint)_VIEWFRAMETYPE.vftCodeWindow, out view);
+                int result = (textManager as IVsTextManager2).GetActiveView2(1, null, (uint)_VIEWFRAMETYPE.vftCodeWindow, out view);
                 Logger.AppendInfoLine("Pomyślnie utworzono obiekt IVsTextView");
                 // Przekonwertuj IVsTextView na IWpfTextView, aby móc modyfikować tekst pliku (kod)
-                wpfTextView = (((await componentModel) as IComponentModel).GetService<IVsEditorAdaptersFactoryService>()).GetWpfTextView(view);
+                wpfTextView = (componentModel as IComponentModel).GetService<IVsEditorAdaptersFactoryService>().GetWpfTextView(view);
                 Logger.AppendInfoLine("Pomyślnie utworzono obiekt IWpfTextView");
                 // Ważny moment: tutaj tworzymy obiekt do edycji tekstu kodu
                 edit = wpfTextView.TextBuffer.CreateEdit();
@@ -143,28 +133,8 @@ namespace AddTranslation
 
                 IVsHierarchy hierarchy = null;
                 string csProjPath = null;
-                // uint itemid = VSConstants.ALL;//.VSITEMID_NIL;
-                if (IsSingleProjectItemSelection(out hierarchy, out uint itemid))
-                {
-                    Logger.AppendInfoLine("IsSingleProjectItemSelection zwróciło true...");
-                    IVsProject project;
-                    if ((project = hierarchy as IVsProject) != null)
-                    {
-                        Logger.AppendInfoLine("Pobieranie ścieżki do projektu.");
-                        // Pobieramy ścieżkę do pliku csproj
-                        project.GetMkDocument(VSConstants.VSITEMID_ROOT, out csProjPath);
-
-                        Logger.AppendInfoLine("Pobrano ścieżkę do projektu: " + csProjPath ?? "NULL");
-
-                        if ((!csProjPath?.EndsWith(".csproj")) ?? true)
-                        {
-                            MessageBox.Show("Nie udało się zlokalizować pliku projektu csproj", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
-                            Logger.SaveLogs();
-                            Logger.ClearLogger();
-                            return;
-                        }
-                    }
-                }
+               
+                var projectReferences = await GetProjectReferencesForCUrrentlyOpenedFileAsync();
 
                 var selection = wpfTextView.Selection;
 
@@ -216,54 +186,8 @@ namespace AddTranslation
             finally
             {
                 edit?.Dispose();
-                textManager?.Dispose();
                 Logger.ClearLogger();
             }
         }
-        #region Metody pomocnicze
-        public static bool IsSingleProjectItemSelection(out IVsHierarchy hierarchy, out uint itemid)
-        {
-            hierarchy = null;
-            itemid = VSConstants.ALL;//.VSITEMID_NIL;
-            int hr = VSConstants.S_OK;
-            var monitorSelection = Package.GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
-            var solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
-            if (monitorSelection == null || solution == null) return false;
-
-            IVsMultiItemSelect multiItemSelect = null;
-            IntPtr hierarchyPtr = IntPtr.Zero;
-            IntPtr selectionContainerPtr = IntPtr.Zero;
-
-            try
-            {
-                hr = monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, out multiItemSelect, out selectionContainerPtr);
-                // if there is no selection
-                if (ErrorHandler.Failed(hr) || hierarchyPtr == IntPtr.Zero || itemid == VSConstants.ALL) //VSITEMID_NIL          
-                    return false;
-                // multiple items are selected
-                if (multiItemSelect != null) return false;
-                // there is a hierarchy root node selected, thus it is not a single item inside a project
-                if (itemid == VSConstants.VSITEMID_ROOT) return false;
-
-                hierarchy = Marshal.GetObjectForIUnknown(hierarchyPtr) as IVsHierarchy;
-                if (hierarchy == null) return false;
-
-                Guid guidProjectID = Guid.Empty;
-                if (ErrorHandler.Failed(solution.GetGuidOfProject(hierarchy, out guidProjectID)))
-                    return false; // hierarchy is not a project inside the Solution if it does not have a ProjectID Guid
-
-                // if we got this far then there is a single project item selected
-                return true;
-            }
-            finally
-            {
-                if (selectionContainerPtr != IntPtr.Zero)
-                    Marshal.Release(selectionContainerPtr);
-
-                if (hierarchyPtr != IntPtr.Zero)
-                    Marshal.Release(hierarchyPtr);
-            }
-        }
-        #endregion
     }
 }
