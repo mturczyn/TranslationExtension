@@ -12,7 +12,6 @@ rozszerzenia do projektu testów, tak aby mieć aktualne okno.
 
 Rozszerzenie zrobione na podstawie postu z StackOverflow, o tym jak najlepiej zaimplementować wiele języków w aplikacji https://stackoverflow.com/questions/373388/best-way-to-implement-multi-language-globalization-in-large-net-project
 
-
 <h1>Use a separate project with Resources</h1>
 
 I can tell this from out experience, having a current solution with <strike>12</strike> **24** projects that includes API, MVC, Project Libraries (Core functionalities), WPF, UWP and Xamarin. It is worth reading this long post as I think it is the best way to do so. With the help of VS tools easily exportable and importable to sent to translation agencies or review by other people.
