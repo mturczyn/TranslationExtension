@@ -115,15 +115,11 @@
       <Project>{55ec2353-8ef9-439f-9242-6934c932a754}</Project>
       <Name>AddTranslation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ClosestStringFinding\ClosestStringFinding.vbproj">
-      <Project>{3c6b058f-d490-4777-a35b-5dfffe4790a3}</Project>
-      <Name>ClosestStringFinding</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>REM skopiowanie kodu okna AddTranslationWindow z AddTranslation to Tests
-powershell.exe -ExecutionPolicy Unrestricted $(ProjectDir)PrzepisanieKoduOknaZRozszerzeniaDoTestowego.ps1</PreBuildEvent>
+REM powershell.exe -ExecutionPolicy Unrestricted $(ProjectDir)PrzepisanieKoduOknaZRozszerzeniaDoTestowego.ps1</PreBuildEvent>
   </PropertyGroup>
 </Project>

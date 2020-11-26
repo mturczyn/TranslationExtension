@@ -5,7 +5,8 @@ Public Module ClosestStringMatch
         Dim wordValue = valueWords(s1, s2)
         Dim phraseValue = valuePhrase(s1, s2) - 0.8 * Math.Abs(s1.Length - s2.Length)
 
-        Return Math.Min(wordValue, phraseValue) * 0.8 + Math.Max(wordValue, phraseValue) * 0.2
+        Dim dist = Math.Min(wordValue, phraseValue) * 0.8 + Math.Max(wordValue, phraseValue) * 0.2
+        Return dist
     End Function
 
     'Calculate the Levenshtein Distance between two strings (the number of insertions,

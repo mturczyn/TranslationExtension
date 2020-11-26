@@ -11,3 +11,8 @@ póki nie wybierze user odpowiedniego projektu (ewentualnie komunikat, że powin
 Wybór projektu przez usera powinien wywołać:
 - sprawdzenie czy projekt się nadaje, jak nie to error i wracamy do punktu wyjścia
 - wczytanie wszystkich języków
+
+
+            // TODO: Maybe it would be good to move those to settings
+            var wordsS1 = s1.Split(new char[] { ' ', '_', '-' });
+            var wordsS2 = s2.Split(new char[] { ' ', '_', '-' });

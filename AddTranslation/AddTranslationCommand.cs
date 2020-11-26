@@ -2,7 +2,6 @@
 using AddTranslation.Windows;
 using EnvDTE;
 using Microsoft;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
@@ -13,7 +12,6 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using Task = System.Threading.Tasks.Task;
@@ -111,7 +109,7 @@ namespace AddTranslation
         {
             Logger.AppendInfoLine("Rozpoczęcie tłumaczenia");
 
-            var textManager = (SVsTextManager)await _serviceProvider.GetServiceAsync(typeof(SVsTextManager));
+            var textManager = (VsTextManager)await _serviceProvider.GetServiceAsync(typeof(SVsTextManager));
             Assumes.Present(textManager);
             var componentModel = (SComponentModel)await _serviceProvider.GetServiceAsync(typeof(SComponentModel));
             Assumes.Present(componentModel);
@@ -133,7 +131,7 @@ namespace AddTranslation
 
                 IVsHierarchy hierarchy = null;
                 string csProjPath = null;
-               
+
                 var projectReferences = await GetProjectReferencesForCUrrentlyOpenedFileAsync();
 
                 var selection = wpfTextView.Selection;
