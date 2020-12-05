@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using AddTranslation.Windows;
+﻿using System.Windows;
+using AddTranslationUINetFramework;
+
 namespace Tests
 {
-  /// <summary>
-  /// Interaction logic for App.xaml
-  /// </summary>
-  public partial class App : Application
-  {
-    private void Application_Startup(object sender, StartupEventArgs e)
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : Application
     {
-      TestClass.RunTests();
-      (new MainWindow("przykładowy tekst",
-        @"C:\Users\Mi\Desktop\CSharp\Aplikacje testowe\ConsoleApp\ConsoleApp\ConsoleApp.csproj", out bool _)).ShowDialog();
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            //TestClass.RunTests();
+            //(new MainWindow("przykładowy tekst",
+            //  @"C:\Users\Mi\Desktop\CSharp\Aplikacje testowe\ConsoleApp\ConsoleApp\ConsoleApp.csproj", out bool _)).ShowDialog();
+
+
+            var vm = new AddTranslationUINetFramework.AddTranslationViewModel();
+            vm.ProjectReferences.Add(new ProjectItem() { ProjectName = "Project name" });
+            var wnd = new MainWindow();
+            wnd.DataContext = vm;
+            wnd.ShowDialog();
+        }
     }
-  }
 }
