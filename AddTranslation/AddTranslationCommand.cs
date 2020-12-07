@@ -142,27 +142,22 @@ namespace AddTranslation
 
                 var textToReplace = wpfTextView.TextBuffer.CurrentSnapshot.GetText(span).Trim(' ').Trim('"');
 
-                var wnd = new UserControl1();
-                var vm = new AddTranslationUINetFramework.AddTranslationViewModel();
-                vm.ProjectReferences.Add(new ProjectReferenceItem());
-                wnd.DataContext = vm;
-                wnd.ShowDialog();
 
-                //var translationWindow = new AddTranslationWindow(textToReplace, csProjPath, projectReferences, out bool shouldNotOpenTheWindow);
-                //if (shouldNotOpenTheWindow)
-                //    // Jak musimy przeładować projekt, to nie pokazujemy okna w ogóle.
-                //    return;
+                var translationWindow = new AddTranslationWindow(textToReplace, csProjPath, projectReferences, out bool shouldNotOpenTheWindow);
+                if (shouldNotOpenTheWindow)
+                    // Jak musimy przeładować projekt, to nie pokazujemy okna w ogóle.
+                    return;
 
-                //translationWindow.ShowDialog();
+                translationWindow.ShowDialog();
 
-                //if (translationWindow.DialogResult != null && !translationWindow.DialogResult.Value)
-                //{
-                //    Logger.AppendInfoLine("Anulowano dodawanie tłumaczenia!");
-                //    return;
-                //}
+                if (translationWindow.DialogResult != null && !translationWindow.DialogResult.Value)
+                {
+                    Logger.AppendInfoLine("Anulowano dodawanie tłumaczenia!");
+                    return;
+                }
 
-                //edit.Replace(span, translationWindow.TranslationName);
-                //edit.Apply();
+                edit.Replace(span, translationWindow.TranslationName);
+                edit.Apply();
             }
             catch (InvalidOperationException ioe)
             {

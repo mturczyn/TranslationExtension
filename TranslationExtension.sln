@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslation", "AddTransl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslationUITests", "Tests\AddTranslationUITests.csproj", "{7593558A-54C9-4E24-B9A3-D55964336BD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslationUI", "AddTranslationUINetFramework\AddTranslationUI.csproj", "{700C7082-4927-4CC2-A653-47E2F6392961}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslationUI", "AddTranslationUI\AddTranslationUI.csproj", "{700C7082-4927-4CC2-A653-47E2F6392961}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

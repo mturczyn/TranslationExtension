@@ -13,6 +13,6 @@ Wybór projektu przez usera powinien wywołać:
 - wczytanie wszystkich języków
 
 
-            // TODO: Maybe it would be good to move those to settings
-            var wordsS1 = s1.Split(new char[] { ' ', '_', '-' });
-            var wordsS2 = s2.Split(new char[] { ' ', '_', '-' });
+
+
+- Rozwaażyć konfigurację log4net przede wszystkim gdzie zapisywane beda logi)

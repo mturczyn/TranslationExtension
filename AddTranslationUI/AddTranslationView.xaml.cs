@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
-namespace AddTranslationUINetFramework
+namespace AddTranslationUI
 {
     /// <summary>
     /// Interaction logic for AddTranslationView.xaml

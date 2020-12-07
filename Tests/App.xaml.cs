@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using AddTranslationUINetFramework;
 
 namespace Tests
 {
@@ -15,7 +14,7 @@ namespace Tests
             //  @"C:\Users\Mi\Desktop\CSharp\Aplikacje testowe\ConsoleApp\ConsoleApp\ConsoleApp.csproj", out bool _)).ShowDialog();
 
 
-            var vm = new AddTranslationUINetFramework.AddTranslationViewModel();
+            var vm = new AddTranslationUI.AddTranslationViewModel();
             vm.ProjectReferences.Add(new ProjectItem() { ProjectName = "Project name" });
             var wnd = new MainWindow();
             wnd.DataContext = vm;

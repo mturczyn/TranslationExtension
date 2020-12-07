@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AddTranslationUINetFramework
+namespace AddTranslationUI
 {
     public class AddTranslationViewModel : INotifyPropertyChanged
     {
@@ -14,5 +9,10 @@ namespace AddTranslationUINetFramework
 
         public ObservableCollection<IProjectIem> ProjectReferences { get; } = new ObservableCollection<IProjectIem>();
 
+        public AddTranslationViewModel()
+        {
+            var logger = log4net.LogManager.GetLogger("Logger");
+            logger.Info("Logging something");
+        }
     }
 }

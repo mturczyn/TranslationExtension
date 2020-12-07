@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AddTranslationUINetFramework
+namespace AddTranslationUI
 {
     public interface IProjectIem
     {
