@@ -31,7 +31,6 @@
                 Background="Green" />
 
             <Label
-                Name="lblTranslationName"
                 Grid.Row="0"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
@@ -39,11 +38,10 @@
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 Background="LightGreen"
-                Content="Nazwa tłumaczenia:"
+                Content="Translation key"
                 FontFamily="Calibri"
                 FontSize="18" />
             <TextBox
-                Name="tbTranslationName"
                 Grid.Row="1"
                 Grid.Column="0"
                 HorizontalContentAlignment="Center"
@@ -51,12 +49,10 @@
                 AcceptsReturn="True"
                 FontFamily="Calibri"
                 FontSize="16"
-                TextWrapping="Wrap">
-                <!--  LoremIpsum  -->
-            </TextBox>
+                Text="{Binding TranslationKey, UpdateSourceTrigger=PropertyChanged}"
+                TextWrapping="Wrap" />
 
             <Label
-                Name="lblTextToTranslate"
                 Grid.Row="0"
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
@@ -64,27 +60,19 @@
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 Background="LightGreen"
-                Content="Do tłumaczenia:"
+                Content="Original text"
                 FontFamily="Calibri"
                 FontSize="18" />
             <TextBox
-                Name="tbTextToTranslate"
                 Grid.Row="1"
                 Grid.Column="1"
                 AcceptsReturn="True"
                 FontFamily="Calibri"
-                FontSize="16"
+                FontSize="18"
+                Text="{Binding OriginalText, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Auto">
-                <!--
-                    Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                -->
-            </TextBox>
+                VerticalScrollBarVisibility="Auto" />
             <Label
-                Name="lblTranslation"
                 Grid.Row="0"
                 Grid.Column="2"
                 HorizontalAlignment="Stretch"
@@ -92,16 +80,16 @@
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 Background="LightGreen"
-                Content="Tłumaczenie:"
+                Content="Translation"
                 FontFamily="Calibri"
                 FontSize="18" />
             <TextBox
-                Name="tbTranslation"
                 Grid.Row="1"
                 Grid.Column="2"
                 AcceptsReturn="True"
                 FontFamily="Calibri"
                 FontSize="16"
+                Text="{Binding TranslationText, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
 
@@ -189,63 +177,27 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <!--<ListView Name="lvPossibleTranslations" Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" MouseDoubleClick="LvPossibleTranslations_MouseDoubleClick">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Nazwa" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
-                    <GridViewColumn Header="Polski" DisplayMemberBinding="{Binding PolishText}" Width="Auto" />
-                    <GridViewColumn Header="Angielski" DisplayMemberBinding="{Binding EnglishText}" Width="Auto"/>
-                </GridView>
-            </ListView.View>
-        </ListView>-->
-
             <Grid
                 Grid.Row="5"
                 Grid.Column="0"
                 Grid.ColumnSpan="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Button
-                    Name="btnOk"
-                    Grid.Row="1"
-                    Grid.Column="0"
                     Margin="10,5,5,10"
-                    Content="Zapisz"
+                    Content="OK"
                     FontFamily="Calibri"
                     FontSize="20"
                     IsDefault="True" />
                 <Button
-                    Name="btnCancel"
-                    Grid.Row="1"
                     Grid.Column="1"
                     Margin="5,5,10,10"
-                    Content="Anuluj"
+                    Content="Cancel"
                     FontFamily="Calibri"
                     FontSize="20"
                     IsCancel="True" />
-                <Button
-                    Name="SaveLogs"
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="5,10,10,5"
-                    Background="Pink"
-                    Content="Zapisz logi"
-                    FontFamily="Calibri"
-                    FontSize="20" />
-                <Button
-                    Name="ChangeResourcesPath"
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Margin="10,10,5,5"
-                    Content="Zmień plik zasobów"
-                    FontFamily="Calibri"
-                    FontSize="20" />
             </Grid>
 
             <ListBox
@@ -254,12 +206,13 @@
                 ItemsSource="{Binding ProjectReferences}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding FullName}" />
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="{Binding ProjectName}" />
+                            <TextBlock Text="{Binding FullPathToProjectFile}" Foreground="LightGray" />
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-
         </Grid>
-
     </Grid>
 </UserControl>

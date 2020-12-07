@@ -7,6 +7,6 @@ namespace AddTranslationUI
     public interface IProjectIem
     {
         string ProjectName { get; }
-        void GetProjectDirectory();
+        string FullPathToProjectFile { get; }
     }
 }

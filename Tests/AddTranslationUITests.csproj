@@ -75,7 +75,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ProjectItem.cs" />
-    <Compile Include="TestClass.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -90,6 +89,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectsFactoryFromSolutionFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -118,7 +118,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AddTranslationUINetFramework\AddTranslationUI.csproj">
+    <ProjectReference Include="..\AddTranslationUI\AddTranslationUI.csproj">
       <Project>{700c7082-4927-4cc2-a653-47e2f6392961}</Project>
       <Name>AddTranslationUI</Name>
     </ProjectReference>

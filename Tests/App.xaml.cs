@@ -13,9 +13,8 @@ namespace Tests
             //(new MainWindow("przykładowy tekst",
             //  @"C:\Users\Mi\Desktop\CSharp\Aplikacje testowe\ConsoleApp\ConsoleApp\ConsoleApp.csproj", out bool _)).ShowDialog();
 
-
-            var vm = new AddTranslationUI.AddTranslationViewModel();
-            vm.ProjectReferences.Add(new ProjectItem() { ProjectName = "Project name" });
+            var projFactory = new ProjectsFactoryFromSolutionFile();
+            var vm = new AddTranslationUI.AddTranslationViewModel(projFactory);
             var wnd = new MainWindow();
             wnd.DataContext = vm;
             wnd.ShowDialog();
