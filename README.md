@@ -10,7 +10,13 @@ Ewentualnie można sobie wygooglować jak to się robi (jeśli powyższe nie bę
 W solucji mamy projekt Test, gdzie testujemy sobie samo okno do tłumaczeń (żeby nie odpalać eksperymentalnej instancji VS). Jest tam skrypt pre-buildowy, który przepisuje kod okna z projektu
 rozszerzenia do projektu testów, tak aby mieć aktualne okno.
 
-Rozszerzenie zrobione na podstawie postu z StackOverflow, o tym jak najlepiej zaimplementować wiele języków w aplikacji https://stackoverflow.com/questions/373388/best-way-to-implement-multi-language-globalization-in-large-net-project
+## Key points to resources project
+In one directory there must be *.resx file, which differ only by extension with language, i.e. `sample.resx` and `sample.en.resx`. Main name must be consistent.
+Also there has to be designer file with the same name, but with post fix `Designer.cs`, so in example: `sample.Designer.cs`. Directory must be common to all those files (they should be in one directory), but it does not matter if it's directly in project or in Resources directory (just namespace would change, which still can be read from designer file).
+
+## Solution to problem of multilanguage application
+
+Extension was developed based on StackOverflow post on "what is the best way to develop multilanguage application": [link to the SO post](https://stackoverflow.com/questions/373388/best-way-to-implement-multi-language-globalization-in-large-net-project).
 
 <h1>Use a separate project with Resources</h1>
 

@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsApp", "ConsApp\ConsApp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnotherConsole", "AnotherConsole\AnotherConsole.csproj", "{57EE8B3D-B585-4301-B66A-003627B2A726}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnotherAnotherConsole", "AnotherAnotherConsole\AnotherAnotherConsole.csproj", "{5E29A6EF-2FDD-4C0C-91F4-33F94806FC4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnotherAnotherConsole", "AnotherAnotherConsole\AnotherAnotherConsole.csproj", "{5E29A6EF-2FDD-4C0C-91F4-33F94806FC4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLib", "ClassLib\ClassLib.csproj", "{592A60EC-9F1E-4E6C-B3F2-38A07EE32143}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLib", "ClassLib\ClassLib.csproj", "{592A60EC-9F1E-4E6C-B3F2-38A07EE32143}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterLang", "AlterLang\AlterLang.csproj", "{F608E7A0-674A-4AC9-BF9C-CA278C7DEBDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{592A60EC-9F1E-4E6C-B3F2-38A07EE32143}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{592A60EC-9F1E-4E6C-B3F2-38A07EE32143}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{592A60EC-9F1E-4E6C-B3F2-38A07EE32143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F608E7A0-674A-4AC9-BF9C-CA278C7DEBDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F608E7A0-674A-4AC9-BF9C-CA278C7DEBDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F608E7A0-674A-4AC9-BF9C-CA278C7DEBDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F608E7A0-674A-4AC9-BF9C-CA278C7DEBDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

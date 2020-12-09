@@ -42,6 +42,13 @@ namespace AddTranslationUI
 
         public ObservableCollection<IProjectIem> ProjectReferences { get; } = new ObservableCollection<IProjectIem>();
 
+        private IProjectIem _selectedProject;
+        public IProjectIem SelectedProject
+        {
+            get => _selectedProject;
+            set => SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject));
+        }
+
         private string _translationKey;
         public string TranslationKey
         {

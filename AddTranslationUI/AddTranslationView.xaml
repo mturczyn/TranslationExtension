@@ -203,6 +203,7 @@
             <ListBox
                 Grid.RowSpan="10"
                 Grid.Column="3"
+                SelectedItem="{Binding SelectedProject}"
                 ItemsSource="{Binding ProjectReferences}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

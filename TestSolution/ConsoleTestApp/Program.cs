@@ -2,13 +2,13 @@
 
 namespace ConsoleTestApp
 {
-  class Program
-  {
-    static void Main(string[] args)
+    class Program
     {
-      Console.WriteLine(AlternativeLanguages.Resource.tesString123);
-      Console.WriteLine(Languages.Resource.testString34);
-      var str = Languages.Resource.finallyAddedString;
+        static void Main(string[] args)
+        {
+            Console.WriteLine(AlterLang.dx.blaString);
+            AlterLang.dx.Culture = new System.Globalization.CultureInfo("en-US");
+            Console.WriteLine(AlterLang.dx.blaString);
+        }
     }
-  }
 }

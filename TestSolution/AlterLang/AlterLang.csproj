@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="dx.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dx.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="dx.en.resx">
+      <CustomToolNamespace>AlterLang</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="dx.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>dx.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>AlterLang</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

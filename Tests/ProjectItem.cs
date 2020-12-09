@@ -7,5 +7,10 @@ namespace Tests
     {
         public string ProjectName { get; set; }
         public string FullPathToProjectFile { get; set; }
+
+        public bool CheckIfIsCorrectResourcesProject()
+        {
+            return true;
+        }
     }
 }
