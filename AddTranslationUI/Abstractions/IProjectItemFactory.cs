@@ -1,4 +1,4 @@
-﻿namespace AddTranslationUI
+﻿namespace AddTranslationUI.Abstractions
 {
     public interface IProjectItemFactory
     {

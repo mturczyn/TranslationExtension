@@ -63,8 +63,8 @@
       <DependentUpon>AddTranslationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="AddTranslationViewModel.cs" />
-    <Compile Include="IProjectItem.cs" />
-    <Compile Include="IProjectItemFactory.cs" />
+    <Compile Include="Abstractions\IProjectItem.cs" />
+    <Compile Include="Abstractions\IProjectItemFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
