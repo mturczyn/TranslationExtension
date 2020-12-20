@@ -23,7 +23,7 @@ namespace Tests
             _logger = LogManager.GetLogger(nameof(ProjectsFactoryFromSolutionFile));
         }
 
-        public IProjectIem[] GetProjectItems()
+        public IProjectItem[] GetProjectItems()
         {
             var ofd = new OpenFileDialog();
             ofd.Title = "Choose solution file to provide context";
@@ -55,7 +55,7 @@ namespace Tests
                 _logger.Warn(msg);
             }
 
-            var projectItems = new IProjectIem[regexMatches.Count];
+            var projectItems = new IProjectItem[regexMatches.Count];
             var slnDir = Path.GetDirectoryName(solutionPath);
             for (int i = 0; i < regexMatches.Count; i++)
             {
@@ -70,11 +70,7 @@ namespace Tests
                 var projName = match.Groups[1].Value;
                 var projRelativePath = match.Groups[2].Value;
 
-                projectItems[i] = new ProjectItem()
-                {
-                    ProjectName = projName,
-                    FullPathToProjectFile = Path.GetFullPath(Path.Combine(slnDir, projRelativePath)),
-                };
+                projectItems[i] = new ProjectItem(Path.GetFullPath(Path.Combine(slnDir, projRelativePath)), projName);
             }
 
             return projectItems;

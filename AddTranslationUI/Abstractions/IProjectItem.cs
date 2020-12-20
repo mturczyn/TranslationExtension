@@ -1,6 +1,6 @@
 ﻿namespace AddTranslationUI.Abstractions
 {
-    public interface IProjectIem
+    public interface IProjectItem
     {
         string ProjectName { get; }
         string FullPathToProjectFile { get; }
@@ -8,6 +8,7 @@
         /// Checks if project directory contains correctly placed resources files as well as designer file.
         /// </summary>
         /// <returns></returns>
-        bool CheckIfIsCorrectResourcesProject();
+        bool IsValidResourcesProject { get; }
     }
+
 }

@@ -20,5 +20,5 @@ Wybór projektu przez usera powinien wywołać:
 TESTOWANIE
 1. Nominalny język usera to francuski, rozwija aplikację w angielksim oraz polskim.
 2. Nominalny język usera to angielski, rozwija apkę w polskim języku.
-3. Nominalny język usera to polski rozwija apkę w angielskim języku.
 4. Nominalny język usera to polski rozwija apkę w angielskim, francuskim, czeskim i łotweskim języku (główny język PL oraz 4 dodatkowe).
+3. Nominalny język usera to polski rozwija apkę w angielskim języku.

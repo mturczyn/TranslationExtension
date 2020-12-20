@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using AddTranslationUI.Abstractions;
+using log4net;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace AddTranslationUI
@@ -24,26 +26,26 @@ namespace AddTranslationUI
         }
         #endregion
 
-        private IProjectItemFactory _projectItemFactory;
+        private readonly IProjectItemFactory _projectItemFactory;
+        private readonly ILog _logger;
+
         public AddTranslationViewModel(IProjectItemFactory projectItemFactory)
         {
-#warning Rethink logging throughout solution. Logger should be "dependency injected".
-            var logger = log4net.LogManager.GetLogger("Logger");
-            logger.Info("Logging test");
+            _logger = LogManager.GetLogger(nameof(AddTranslationViewModel));
 
-            if (projectItemFactory == null) 
+            if (projectItemFactory == null)
             {
-                logger.Error($"{nameof(projectItemFactory)} is null.");
+                _logger.Error($"{nameof(projectItemFactory)} is null.");
                 throw new System.ArgumentNullException(nameof(projectItemFactory));
             }
             _projectItemFactory = projectItemFactory;
             LoadProjects();
         }
 
-        public ObservableCollection<IProjectIem> ProjectReferences { get; } = new ObservableCollection<IProjectIem>();
+        public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
-        private IProjectIem _selectedProject;
-        public IProjectIem SelectedProject
+        private IProjectItem _selectedProject;
+        public IProjectItem SelectedProject
         {
             get => _selectedProject;
             set => SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject));
@@ -55,14 +57,14 @@ namespace AddTranslationUI
             get => _translationKey;
             set => SetPropertyAndRaise(value, ref _translationKey, nameof(TranslationKey));
         }
-        
+
         private string _originalText;
         public string OriginalText
         {
             get => _originalText;
             set => SetPropertyAndRaise(value, ref _originalText, nameof(OriginalText));
         }
-        
+
         private string _translationText;
         public string TranslationText
         {

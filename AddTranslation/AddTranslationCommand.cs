@@ -1,5 +1,4 @@
-﻿using AddTranslation.LogService;
-using AddTranslation.Windows;
+﻿using AddTranslation.Windows;
 using EnvDTE;
 using Microsoft;
 using Microsoft.VisualStudio.ComponentModelHost;

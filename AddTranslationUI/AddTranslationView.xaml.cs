@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using AddTranslationUI.Abstractions;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 namespace AddTranslationUI
@@ -13,6 +14,6 @@ namespace AddTranslationUI
             InitializeComponent();
         }
 
-        public ObservableCollection<IProjectIem> ProjectReferences { get; } = new ObservableCollection<IProjectIem>();
+        public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IProjectItemFactory
     {
-        IProjectIem[] GetProjectItems();
+        IProjectItem[] GetProjectItems();
     }
 }
