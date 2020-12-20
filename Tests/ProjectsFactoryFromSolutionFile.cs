@@ -1,6 +1,7 @@
 ﻿using AddTranslationUI.Abstractions;
 using log4net;
 using Microsoft.Win32;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -55,7 +56,7 @@ namespace Tests
                 _logger.Warn(msg);
             }
 
-            var projectItems = new IProjectItem[regexMatches.Count];
+            var projectItems = new List<IProjectItem>();
             var slnDir = Path.GetDirectoryName(solutionPath);
             for (int i = 0; i < regexMatches.Count; i++)
             {
@@ -70,10 +71,12 @@ namespace Tests
                 var projName = match.Groups[1].Value;
                 var projRelativePath = match.Groups[2].Value;
 
-                projectItems[i] = new ProjectItem(Path.GetFullPath(Path.Combine(slnDir, projRelativePath)), projName);
+                var pi = new ProjectItem(Path.GetFullPath(Path.Combine(slnDir, projRelativePath)), projName);
+                if (pi.IsValidResourcesProject)
+                    projectItems.Add(pi);
             }
 
-            return projectItems;
+            return projectItems.ToArray();
         }
     }
 }

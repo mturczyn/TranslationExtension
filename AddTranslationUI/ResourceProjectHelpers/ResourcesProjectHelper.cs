@@ -10,24 +10,26 @@ namespace AddTranslationUI.ResourceProjectHelpers
         private ResourceFile[] _resourcesFiles;
         private readonly ILog _logger;
 
-        public bool DirectorySet { get; }
+        public bool IsValidResourcesDirectory { get; }
 
         public ResourcesProjectHelper(string projectDirectory)
         {
-            DirectorySet = CheckIfIsCorrectResourcesProject(projectDirectory);
             _logger = LogManager.GetLogger(nameof(ResourcesProjectHelper));
+            IsValidResourcesDirectory = CheckIfIsCorrectResourcesProject(Path.GetDirectoryName(projectDirectory));
         }
 
         private bool CheckIfIsCorrectResourcesProject(string directory)
         {
             if (! Directory.Exists(directory)) return false;
-            if (!CheckIfDirectoryContainsRequiredFiles(directory))
+            if (!CheckIfDirectoryContainsRequiredFiles(directory, out _resourcesFiles))
             {
-                var isCorrect = false;
-                foreach (var subdirectory in Directory.GetDirectories(directory))
-                {
-                    isCorrect = isCorrect || CheckIfIsCorrectResourcesProject(subdirectory);
-                }
+                var enumerator = Directory.GetDirectories(directory).GetEnumerator();
+                bool isCorrect = false;
+                // It will stop if directory is found (so first directory satisfying
+                // conditions will be loaded (_resourcesFiles will be populated).
+                while (!isCorrect && enumerator.MoveNext())
+                    isCorrect = CheckIfIsCorrectResourcesProject((string)enumerator.Current);
+
                 return isCorrect;
             }
             return true;
@@ -43,10 +45,11 @@ namespace AddTranslationUI.ResourceProjectHelpers
         /// NOTE: method requires single designer file, to avoid ambiguity.
         /// </summary>
         /// <returns></returns>
-        private bool CheckIfDirectoryContainsRequiredFiles(string directory)
+        private bool CheckIfDirectoryContainsRequiredFiles(string directory, out ResourceFile[] resourceFiles)
         {
             var designerExtension = ".Designer.cs";
             var resExtension = ".resx";
+            resourceFiles = null;
 
             var files = Directory.GetFiles(directory);
             var designerFiles = files.Where(f => f.EndsWith(designerExtension)).ToArray();
@@ -58,7 +61,7 @@ namespace AddTranslationUI.ResourceProjectHelpers
                 return false;
             var designerFile = designerFiles.Single();
             // Here we remove designer extension and get only file name.
-            var baseFileName = Path.GetFileName(designerFile.Substring(designerFile.Length - designerExtension.Length));
+            var baseFileName = Path.GetFileName(designerFile.Substring(0, designerFile.Length - designerExtension.Length));
             // We get all resource files with translations.
             var resFiles = files.Where(f =>
             {
@@ -72,7 +75,7 @@ namespace AddTranslationUI.ResourceProjectHelpers
 
             if (resFiles.Count() <= 0) return false;
             // Set found resources files.
-            _resourcesFiles = resFiles.ToArray();
+            resourceFiles = resFiles.ToArray();
             return true;
         }
     }

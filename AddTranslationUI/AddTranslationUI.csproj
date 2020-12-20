@@ -59,6 +59,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\BaseObservable.cs" />
     <Compile Include="AddTranslationView.xaml.cs">
       <DependentUpon>AddTranslationView.xaml</DependentUpon>
     </Compile>
@@ -80,6 +81,7 @@
     </Compile>
     <Compile Include="ResourceProjectHelpers\ResourceFile.cs" />
     <Compile Include="ResourceProjectHelpers\ResourcesProjectHelper.cs" />
+    <Compile Include="DTO\Translation.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

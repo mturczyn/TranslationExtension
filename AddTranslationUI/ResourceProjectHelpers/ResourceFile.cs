@@ -23,7 +23,7 @@ namespace AddTranslationUI.ResourceProjectHelpers
             }
             else
             {
-                _cultureInfo = CultureInfo.CurrentCulture;
+                _cultureInfo = CultureInfo.InvariantCulture;
             }
             // If everything is set correctly, we set the path.
             _fullPath = fullPath;

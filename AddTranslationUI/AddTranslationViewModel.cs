@@ -1,31 +1,11 @@
 ﻿using AddTranslationUI.Abstractions;
 using log4net;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace AddTranslationUI
 {
-    public class AddTranslationViewModel : INotifyPropertyChanged
+    public class AddTranslationViewModel : BaseObservable
     {
-        #region INotifyPropertyChanged implementation and helpers
-        public event PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// Returns whether property changed event was raised.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="field"></param>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        private bool SetPropertyAndRaise<T>(T value, ref T field, string propertyName)
-        {
-            if (field.Equals(value)) return false;
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            return true;
-        }
-        #endregion
-
         private readonly IProjectItemFactory _projectItemFactory;
         private readonly ILog _logger;
 
