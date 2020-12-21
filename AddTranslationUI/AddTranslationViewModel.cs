@@ -28,7 +28,11 @@ namespace AddTranslationUI
         public IProjectItem SelectedProject
         {
             get => _selectedProject;
-            set => SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject));
+            set
+            {
+                if(!SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject))) return;
+
+            }
         }
 
         private string _translationKey;

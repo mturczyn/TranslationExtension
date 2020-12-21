@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -28,5 +29,7 @@ namespace AddTranslationUI.ResourceProjectHelpers
             // If everything is set correctly, we set the path.
             _fullPath = fullPath;
         }
+
+        public Dictionary<string, Translation> GetTranslations
     }
 }

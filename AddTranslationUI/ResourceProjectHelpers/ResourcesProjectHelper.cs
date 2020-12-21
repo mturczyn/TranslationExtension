@@ -10,14 +10,14 @@ namespace AddTranslationUI.ResourceProjectHelpers
         private ResourceFile[] _resourcesFiles;
         private readonly ILog _logger;
 
-        public bool IsValidResourcesDirectory { get; }
-
         public ResourcesProjectHelper(string projectDirectory)
         {
             _logger = LogManager.GetLogger(nameof(ResourcesProjectHelper));
             IsValidResourcesDirectory = CheckIfIsCorrectResourcesProject(Path.GetDirectoryName(projectDirectory));
         }
 
+        public bool IsValidResourcesDirectory { get; }
+        
         private bool CheckIfIsCorrectResourcesProject(string directory)
         {
             if (! Directory.Exists(directory)) return false;

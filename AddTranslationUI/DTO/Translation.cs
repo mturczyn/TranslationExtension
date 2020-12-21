@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
-namespace AddTranslationUI
+namespace AddTranslationUI.DTO
 {
     class Translation : BaseObservable
     {
         private readonly Dictionary<CultureInfo, string> _translations = new Dictionary<CultureInfo, string>();
 
         public ObservableCollection<CultureInfo> AvailableTranslations { get; } = new ObservableCollection<CultureInfo>();
+
+        private string _translationKey;
+        public string TranslationKey
+        { 
+            get => _translationKey;
+            set => SetPropertyAndRaise(value, ref _translationKey, nameof(TranslationKey));
+        }
 
         private CultureInfo _selectedCultureInfo;
         public CultureInfo SelectedCultureInfo 
