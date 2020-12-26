@@ -1,4 +1,5 @@
 ﻿using log4net;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -17,6 +18,13 @@ namespace AddTranslationUI.ResourceProjectHelpers
         }
 
         public bool IsValidResourcesDirectory { get; }
+
+        public string[] GetTranslations(CultureInfo cultureInfo)
+        {
+            var file = _resourcesFiles.Single(f => f.CultureInfo.LCID == cultureInfo.LCID);
+            var translations = file.GetTranslations();
+            return new string[] { "Hello world" };
+        }
         
         private bool CheckIfIsCorrectResourcesProject(string directory)
         {

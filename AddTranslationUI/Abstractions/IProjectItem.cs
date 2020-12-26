@@ -1,4 +1,6 @@
-﻿namespace AddTranslationUI.Abstractions
+﻿using System.Globalization;
+
+namespace AddTranslationUI.Abstractions
 {
     public interface IProjectItem
     {
@@ -9,6 +11,7 @@
         /// </summary>
         /// <returns></returns>
         bool IsValidResourcesProject { get; }
+        string[] GetTranslations(CultureInfo cultureInfo);
     }
 
 }

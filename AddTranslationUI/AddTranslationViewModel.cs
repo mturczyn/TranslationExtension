@@ -31,7 +31,7 @@ namespace AddTranslationUI
             set
             {
                 if(!SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject))) return;
-
+                SelectedProject.GetTranslations(System.Globalization.CultureInfo.InvariantCulture);
             }
         }
 

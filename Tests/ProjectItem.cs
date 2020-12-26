@@ -1,5 +1,6 @@
 ﻿using AddTranslationUI.Abstractions;
 using AddTranslationUI.ResourceProjectHelpers;
+using System.Globalization;
 
 namespace Tests
 {
@@ -15,5 +16,10 @@ namespace Tests
         public string ProjectName { get; set; }
         public string FullPathToProjectFile { get; set; }
         public bool IsValidResourcesProject => _projectHelper.IsValidResourcesDirectory;
+
+        public string[] GetTranslations(CultureInfo culture)
+        {
+            return _projectHelper.GetTranslations(culture);
+        }
     }
 }
