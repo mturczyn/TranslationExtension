@@ -1,4 +1,5 @@
 ﻿using AddTranslationUI.DTO;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,10 +10,26 @@ namespace AddTranslationUI.ResourceProjectHelpers
 {
     class ResourceFile
     {
+        /// <summary>
+        /// Name of a node in resources XML file. It contanis descendant element nameed 'value'.
+        /// 'name' attribute stored key of a translation.
+        /// </summary>
+        private const string DATA_NODE = "data";
+        /// <summary>
+        /// Name of a node that contains translation text.
+        /// </summary>
+        private const string VALUE_NODE = "value";
+        /// <summary>
+        /// Name of a attribute which value is key of a translation.
+        /// </summary>
+        private const string NAME_ATTRIBUTE = "name";
+
         private readonly string _fullPath;
+        private readonly ILog _logger;
 
         public ResourceFile(string fullPath, bool isMainResource)
         {
+            _logger = LogManager.GetLogger(nameof(ResourceFile));
             if (!File.Exists(fullPath)) throw new ArgumentException("Directory does not exist.");
 
             if (!isMainResource)
@@ -33,7 +50,13 @@ namespace AddTranslationUI.ResourceProjectHelpers
         
         public CultureInfo CultureInfo { get; }
 
-        public Dictionary<string, Translation> GetTranslations()
+        /// <summary>
+        /// Get translation with specific key. It reads XML file until translation
+        /// with specified name is found.
+        /// </summary>
+        /// <param name="translationName">Name of translation.</param>
+        /// <returns></returns>
+        public string GetTranslation(string translationName)
         {
             using (var fileStream = new FileStream(_fullPath, FileMode.Open))
             {
@@ -42,13 +65,115 @@ namespace AddTranslationUI.ResourceProjectHelpers
                     while (!xmlReader.EOF)
                     {
 #warning Zmienić na async
-                        xmlReader.Read();
-                        var name = xmlReader.GetAttribute("name");
+                        if(!xmlReader.ReadToFollowing(DATA_NODE))
+                            break;
+                        
+                        var name = xmlReader.GetAttribute(NAME_ATTRIBUTE);
+                        if(name == null)
+                        {
+                            _logger.Warn($"In {DATA_NODE} node, but attribute {NAME_ATTRIBUTE} is not found. Path of the file {_fullPath}");
+                            continue;
+                        }
+                        
+                        if (name != translationName) 
+                            continue;
+                        
+                        _logger.Debug($"Found translation with name {translationName}");
+
+                        if (!xmlReader.ReadToDescendant(VALUE_NODE))
+                        {
+                            _logger.Warn($"Could not read descendant with name {VALUE_NODE}, {nameof(name)} is {name}");
+                            continue;
+                        }
+
+                        _logger.Debug($"Trying to read content of a {VALUE_NODE}");
+
+                        if (!xmlReader.Read())
+                        {
+                            _logger.Warn($"Could not process XML reader after reading {VALUE_NODE} node.");
+                            continue;
+                        }
+
+                        _logger.Debug($"Translation read inside {VALUE_NODE} node. Node type is {xmlReader.NodeType} and value is {xmlReader.Value ?? "NULL"}");
+
+                        if (xmlReader.NodeType != XmlNodeType.Text)
+                        {
+                            _logger.Warn($"Unexpected node type, expected {XmlNodeType.Text}");
+                            continue;
+                        }
+
+                        return xmlReader.Value;
                     }
                 }
-
             }
-            return null;
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Gets all translation and returns them as dictionary with names as keys.
+        /// CAUTION: operation reads whole file, so it might result in huge data loaded into memory.
+        /// </summary>
+        /// <returns></returns>
+        public HashSet<Translation> GetTranslations()
+        {
+            var translations = new HashSet<Translation>();
+            using (var fileStream = new FileStream(_fullPath, FileMode.Open))
+            {
+                using (var xmlReader = XmlReader.Create(fileStream))
+                {
+                    while (!xmlReader.EOF)
+                    {
+#warning Zmienić na async
+                        if(!xmlReader.ReadToFollowing(DATA_NODE))
+                            break;
+                        
+                        var name = xmlReader.GetAttribute(NAME_ATTRIBUTE);
+                        if(name == null)
+                        {
+                            _logger.Warn($"In {DATA_NODE} node, but attribute {NAME_ATTRIBUTE} is not found. Path of the file {_fullPath}");
+                            continue;
+                        }
+                        if (!xmlReader.ReadToDescendant(VALUE_NODE))
+                        {
+                            _logger.Warn($"Could not read descendant with name {VALUE_NODE}, {nameof(name)} is {name}");
+                            continue;
+                        }
+
+                        _logger.Debug($"Trying to read content of a {VALUE_NODE}");
+
+                        if (!xmlReader.Read())
+                        {
+                            _logger.Warn($"Could not process XML reader after reading {VALUE_NODE} node.");
+                            continue;
+                        }
+
+                        _logger.Debug($"Translation read inside {VALUE_NODE} node. Node type is {xmlReader.NodeType} and value is {xmlReader.Value ?? "NULL"}");
+
+                        if (xmlReader.NodeType != XmlNodeType.Text)
+                        {
+                            _logger.Warn($"Unexpected node type, expected {XmlNodeType.Text}");
+                            continue;
+                        }
+
+                        var translationText = xmlReader.Value;
+                        _logger.Debug($"Adding translation: {nameof(name)} = {name}, {nameof(translationText)} = {translationText}");
+
+                        var translation = new Translation()
+                        {
+                            TranslationKey = name,
+                        };
+
+                        translation.AddTranslation(CultureInfo, translationText);
+
+                        if (!translations.Add(translation))
+                        {
+                            _logger.Warn($"We already read translation with key {translation.TranslationKey} - ignoring translation.");
+                            continue;
+                        }
+                    }
+                }
+            }
+            return translations;
         }
     }
 }

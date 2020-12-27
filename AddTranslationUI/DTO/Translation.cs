@@ -13,14 +13,14 @@ namespace AddTranslationUI.DTO
 
         private string _translationKey;
         public string TranslationKey
-        { 
+        {
             get => _translationKey;
             set => SetPropertyAndRaise(value, ref _translationKey, nameof(TranslationKey));
         }
 
         private CultureInfo _selectedCultureInfo;
-        public CultureInfo SelectedCultureInfo 
-        { 
+        public CultureInfo SelectedCultureInfo
+        {
             get => _selectedCultureInfo;
             set
             {
@@ -31,11 +31,11 @@ namespace AddTranslationUI.DTO
 
         private string _selectedTranslationText;
         public string SelectedTranslationText
-        { 
+        {
             get => _selectedTranslationText;
             set => SetPropertyAndRaise(value, ref _selectedTranslationText, nameof(SelectedTranslationText));
         }
-         
+
         public bool AddTranslation(CultureInfo ci, string translationText)
         {
             if (_translations.ContainsKey(ci))
@@ -51,6 +51,23 @@ namespace AddTranslationUI.DTO
         {
             _translations.Remove(ci);
             AvailableTranslations.Remove(ci);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Translation t)) return false;
+            return this == t;
+        }
+
+        public static bool operator ==(Translation t1, Translation t2) => t1.TranslationKey == t2.TranslationKey;
+
+        public static bool operator !=(Translation t1, Translation t2) => !(t1 == t2);
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 31 + _translationKey.GetHashCode();
+            return hash;
         }
     }
 }
