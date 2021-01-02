@@ -34,7 +34,7 @@ namespace AddTranslationUI.ResourceProjectHelpers
                 var enumerator = Directory.GetDirectories(directory).GetEnumerator();
                 bool isCorrect = false;
                 // It will stop if directory is found (so first directory satisfying
-                // conditions will be loaded (_resourcesFiles will be populated).
+                // conditions will be loaded (_resourcesFiles will be populated)).
                 while (!isCorrect && enumerator.MoveNext())
                     isCorrect = CheckIfIsCorrectResourcesProject((string)enumerator.Current);
 

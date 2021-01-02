@@ -3,21 +3,21 @@ using System.ComponentModel;
 
 namespace AddTranslationUI.Abstractions
 {
-    public class BaseObservable : INotifyPropertyChanged
+    public abstract class BaseObservable : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// Returns whether property changed event was raised.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="field"></param>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        protected bool SetPropertyAndRaise<T>(T value, ref T field, string propertyName)
+        /// <param name="value">Value to be set.</param>
+        /// <param name="backingField">Underlying field, which backs the property.</param>
+        /// <param name="propertyName">Name of property.</param>
+        /// <returns>If <see cref="PropertyChanged"/> event was raised for property.</returns>
+        protected bool SetPropertyAndRaise<T>(T value, ref T backingField, string propertyName)
         {
-            if (EqualityComparer<T>.Default.Equals(value, field)) return false;
-            field = value;
+            if (EqualityComparer<T>.Default.Equals(value, backingField)) return false;
+            backingField = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             return true;
         }
