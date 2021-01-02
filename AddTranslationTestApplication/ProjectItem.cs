@@ -1,5 +1,5 @@
-﻿using AddTranslationUI.Abstractions;
-using AddTranslationUI.ResourceProjectHelpers;
+﻿using AddTranslationCore.Abstractions;
+using AddTranslationCore.ResourceProjectHelpers;
 using System.Globalization;
 
 namespace AddTranslationTestApplication
@@ -8,9 +8,9 @@ namespace AddTranslationTestApplication
     {
         private readonly ResourcesProjectHelper _projectHelper;
 
-        public ProjectItem(ResourcesProjectHelper projectHelper, string projectDirectory, string projectName) 
+        public ProjectItem(ResourcesProjectHelper projectHelper, string projectDirectory, string projectName)
             => (_projectHelper, FullPathToProjectFile, ProjectName) = (projectHelper, projectDirectory, projectName);
-        public ProjectItem(string projectDirectory, string projectName) 
+        public ProjectItem(string projectDirectory, string projectName)
             => (_projectHelper, FullPathToProjectFile, ProjectName) = (new ResourcesProjectHelper(projectDirectory), projectDirectory, projectName);
 
         public string ProjectName { get; set; }

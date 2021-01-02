@@ -203,13 +203,13 @@
             <ListBox
                 Grid.RowSpan="10"
                 Grid.Column="3"
-                SelectedItem="{Binding SelectedProject}"
-                ItemsSource="{Binding ProjectReferences}">
+                ItemsSource="{Binding ProjectReferences}"
+                SelectedItem="{Binding SelectedProject}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="0,0,0,5">
                             <TextBlock Text="{Binding ProjectName}" />
-                            <TextBlock Text="{Binding FullPathToProjectFile}" Foreground="LightGray" />
+                            <TextBlock Foreground="LightGray" Text="{Binding FullPathToProjectFile}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

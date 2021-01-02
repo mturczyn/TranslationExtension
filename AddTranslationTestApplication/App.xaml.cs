@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using AddTranslationCore;
+using System.Windows;
 
 namespace AddTranslationTestApplication
 {
@@ -14,7 +15,7 @@ namespace AddTranslationTestApplication
             //  @"C:\Users\Mi\Desktop\CSharp\Aplikacje testowe\ConsoleApp\ConsoleApp\ConsoleApp.csproj", out bool _)).ShowDialog();
 
             var projFactory = new ProjectsFactoryFromSolutionFile();
-            var vm = new AddTranslationUI.AddTranslationViewModel(projFactory);
+            var vm = new AddTranslationViewModel(projFactory);
             var wnd = new MainWindow();
             wnd.DataContext = vm;
             wnd.ShowDialog();

@@ -23,8 +23,8 @@
     <ProjectGuid>{55EC2353-8EF9-439F-9242-6934C932A754}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AddTranslation</RootNamespace>
-    <AssemblyName>AddTranslation</AssemblyName>
+    <RootNamespace>AddTranslationVsix</RootNamespace>
+    <AssemblyName>AddTranslationVsix</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
@@ -146,7 +146,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AddTranslationUI\AddTranslationCore.csproj">
+    <ProjectReference Include="..\AddTranslationCore\AddTranslationCore.csproj">
       <Project>{700c7082-4927-4cc2-a653-47e2f6392961}</Project>
       <Name>AddTranslationCore</Name>
     </ProjectReference>

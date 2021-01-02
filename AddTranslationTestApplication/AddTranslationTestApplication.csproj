@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7593558A-54C9-4E24-B9A3-D55964336BD2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
+    <RootNamespace>AddTranslationTestApplication</RootNamespace>
+    <AssemblyName>AddTranslationTestApplication</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -115,7 +115,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AddTranslationUI\AddTranslationCore.csproj">
+    <ProjectReference Include="..\AddTranslationCore\AddTranslationCore.csproj">
       <Project>{700c7082-4927-4cc2-a653-47e2f6392961}</Project>
       <Name>AddTranslationCore</Name>
     </ProjectReference>

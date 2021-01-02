@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace AddTranslationUI.Abstractions
+namespace AddTranslationCore.Abstractions
 {
     public interface IProjectItem
     {

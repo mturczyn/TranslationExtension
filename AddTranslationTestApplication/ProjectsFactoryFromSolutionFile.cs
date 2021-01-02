@@ -1,4 +1,4 @@
-﻿using AddTranslationUI.Abstractions;
+﻿using AddTranslationCore.Abstractions;
 using log4net;
 using Microsoft.Win32;
 using System.Collections.Generic;
