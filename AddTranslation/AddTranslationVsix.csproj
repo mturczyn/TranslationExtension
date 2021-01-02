@@ -146,9 +146,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AddTranslationUINetFramework\AddTranslationUI.csproj">
+    <ProjectReference Include="..\AddTranslationUI\AddTranslationCore.csproj">
       <Project>{700c7082-4927-4cc2-a653-47e2f6392961}</Project>
-      <Name>AddTranslationUI</Name>
+      <Name>AddTranslationCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace AddTranslationUI.Abstractions
+namespace AddTranslationCore.Abstractions
 {
     public abstract class BaseObservable : INotifyPropertyChanged
     {

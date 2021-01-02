@@ -1,9 +1,9 @@
-﻿using AddTranslationUI.Abstractions;
+﻿using AddTranslationCore.Abstractions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
-namespace AddTranslationUI.DTO
+namespace AddTranslationCore.DTO
 {
     class Translation : BaseObservable
     {

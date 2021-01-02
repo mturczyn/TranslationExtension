@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace AddTranslationUI.ResourceProjectHelpers
+namespace AddTranslationCore.ResourceProjectHelpers
 {
 
     public class ResourcesProjectHelper

@@ -1,4 +1,4 @@
-﻿using AddTranslationUI.DTO;
+﻿using AddTranslationCore.DTO;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 
-namespace AddTranslationUI.ResourceProjectHelpers
+namespace AddTranslationCore.ResourceProjectHelpers
 {
     class ResourceFile
     {

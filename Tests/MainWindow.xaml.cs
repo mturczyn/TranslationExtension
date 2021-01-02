@@ -1,17 +1,11 @@
-﻿//using AddTranslation.LogService;
-//using AddTranslation.TranslationResourcesManagement;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows;
 
-namespace Tests
+namespace AddTranslationTestApplication
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow 
     {
         //private string _translation;
         //private string _toTransalte;

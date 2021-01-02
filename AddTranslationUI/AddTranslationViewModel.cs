@@ -1,8 +1,8 @@
-﻿using AddTranslationUI.Abstractions;
+﻿using AddTranslationCore.Abstractions;
 using log4net;
 using System.Collections.ObjectModel;
 
-namespace AddTranslationUI
+namespace AddTranslationCore
 {
     public class AddTranslationViewModel : BaseObservable
     {
@@ -30,7 +30,7 @@ namespace AddTranslationUI
             get => _selectedProject;
             set
             {
-                if(!SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject))) return;
+                if (!SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject))) return;
                 SelectedProject.GetTranslations(System.Globalization.CultureInfo.InvariantCulture);
             }
         }

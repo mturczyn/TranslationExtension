@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslation", "AddTranslation\AddTranslation.csproj", "{55EC2353-8EF9-439F-9242-6934C932A754}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslationVsix", "AddTranslation\AddTranslationVsix.csproj", "{55EC2353-8EF9-439F-9242-6934C932A754}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslationUITests", "Tests\AddTranslationUITests.csproj", "{7593558A-54C9-4E24-B9A3-D55964336BD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslationTestApplication", "Tests\AddTranslationTestApplication.csproj", "{7593558A-54C9-4E24-B9A3-D55964336BD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslationUI", "AddTranslationUI\AddTranslationUI.csproj", "{700C7082-4927-4CC2-A653-47E2F6392961}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddTranslationCore", "AddTranslationUI\AddTranslationCore.csproj", "{700C7082-4927-4CC2-A653-47E2F6392961}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

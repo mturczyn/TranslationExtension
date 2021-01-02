@@ -2,7 +2,7 @@
 using AddTranslationUI.ResourceProjectHelpers;
 using System.Globalization;
 
-namespace Tests
+namespace AddTranslationTestApplication
 {
     class ProjectItem : IProjectItem
     {

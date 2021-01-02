@@ -6,7 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
 
-namespace Tests
+namespace AddTranslationTestApplication
 {
     class ProjectsFactoryFromSolutionFile : IProjectItemFactory
     {

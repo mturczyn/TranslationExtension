@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Tests
+namespace AddTranslationTestApplication
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AddTranslationUI.Properties {
+namespace AddTranslationCore.Properties {
     using System;
     
     
