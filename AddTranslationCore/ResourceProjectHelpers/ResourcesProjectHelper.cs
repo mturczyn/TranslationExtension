@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace AddTranslationCore.ResourceProjectHelpers
 {
-
     public class ResourcesProjectHelper
     {
+        private static readonly string _designerExtension = ".Designer.cs";
+        private static readonly string _resExtension = ".resx";
+
         private ResourceFile[] _resourcesFiles;
         private readonly ILog _logger;
 
@@ -53,14 +55,12 @@ namespace AddTranslationCore.ResourceProjectHelpers
         /// NOTE: method requires single designer file, to avoid ambiguity.
         /// </summary>
         /// <returns></returns>
-        private bool CheckIfDirectoryContainsRequiredFiles(string directory, out ResourceFile[] resourceFiles)
+        private static bool CheckIfDirectoryContainsRequiredFiles(string directory, out ResourceFile[] resourceFiles)
         {
-            var designerExtension = ".Designer.cs";
-            var resExtension = ".resx";
             resourceFiles = null;
 
             var files = Directory.GetFiles(directory);
-            var designerFiles = files.Where(f => f.EndsWith(designerExtension)).ToArray();
+            var designerFiles = files.Where(f => f.EndsWith(_designerExtension)).ToArray();
             // We do not have any designer file.
             if (designerFiles.Length == 0)
                 return false;
@@ -69,16 +69,16 @@ namespace AddTranslationCore.ResourceProjectHelpers
                 return false;
             var designerFile = designerFiles.Single();
             // Here we remove designer extension and get only file name.
-            var baseFileName = Path.GetFileName(designerFile.Substring(0, designerFile.Length - designerExtension.Length));
+            var baseFileName = Path.GetFileName(designerFile.Substring(0, designerFile.Length - _designerExtension.Length));
             // We get all resource files with translations.
             var resFiles = files.Where(f =>
             {
                 var fn = Path.GetFileName(f);
-                return fn.EndsWith(resExtension) && fn.StartsWith(baseFileName);
+                return fn.EndsWith(_resExtension) && fn.StartsWith(baseFileName);
             }).Select(f =>
             {
                 var fn = Path.GetFileName(f);
-                return new ResourceFile(f, fn == baseFileName + resExtension);
+                return new ResourceFile(f, fn == baseFileName + _resExtension);
             });
 
             if (resFiles.Count() <= 0) return false;

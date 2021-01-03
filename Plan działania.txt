@@ -14,7 +14,7 @@ Wybór projektu przez usera powinien wywołać:
 
 
 
-
+KONFIGURACJA 
 - Rozwaażyć konfigurację log4net przede wszystkim gdzie zapisywane beda logi)
 
 TESTOWANIE

@@ -49,6 +49,10 @@ namespace AddTranslationCore.ResourceProjectHelpers
         }
         
         public CultureInfo CultureInfo { get; }
+        /// <summary>
+        /// Determines if file is the main language used in application.
+        /// </summary>
+        public bool IsMainResource { get; set; }
 
         /// <summary>
         /// Get translation with specific key. It reads XML file until translation
@@ -116,6 +120,13 @@ namespace AddTranslationCore.ResourceProjectHelpers
         /// <returns></returns>
         public HashSet<Translation> GetTranslations()
         {
+            // For now we prohibit reading all translations from secondary file.
+            // As user can choose arbitrary project as main project, here we
+            // prevent reading many big files into memory.
+            if (! IsMainResource)
+            {
+                throw new InvalidOperationException("Getting all translations is allowed only for main resource.");
+            }
             var translations = new HashSet<Translation>();
             using (var fileStream = new FileStream(_fullPath, FileMode.Open))
             {

@@ -89,7 +89,6 @@
     <VSCTCompile Include="AddTranslationCommandPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
-    <Content Include="Documentation\Dokumentacja rozszerzenia.txt" />
     <Content Include="Resources\AddTranslationCommand.png" />
     <Content Include="Resources\AddTranslationCommandPackage.ico" />
     <Content Include="stylesheet.css" />
