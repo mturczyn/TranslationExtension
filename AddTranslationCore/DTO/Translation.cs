@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace AddTranslationCore.DTO
 {
-    class Translation : BaseObservable
+    public class Translation : BaseObservable
     {
         private readonly Dictionary<CultureInfo, string> _translations = new Dictionary<CultureInfo, string>();
 

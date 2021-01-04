@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using AddTranslationCore.DTO;
+using log4net;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -21,13 +22,18 @@ namespace AddTranslationCore.ResourceProjectHelpers
 
         public bool IsValidResourcesDirectory { get; }
 
-        public string[] GetTranslations(CultureInfo cultureInfo)
+        public Translation[] GetTranslations()
+        {
+            var file = _resourcesFiles.Single(f => f.IsMainResource);
+            return file.GetTranslations().ToArray();
+        }
+
+        public string GetTranslation(CultureInfo cultureInfo, string translationKey)
         {
             var file = _resourcesFiles.Single(f => f.CultureInfo.LCID == cultureInfo.LCID);
-            var translations = file.GetTranslations();
-            return new string[] { "Hello world" };
+            return file.GetTranslation(translationKey);
         }
-        
+
         private bool CheckIfIsCorrectResourcesProject(string directory)
         {
             if (! Directory.Exists(directory)) return false;
