@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿using AddTranslationCore.DTO;
 
 namespace AddTranslationCore.Abstractions
 {
@@ -11,7 +11,11 @@ namespace AddTranslationCore.Abstractions
         /// </summary>
         /// <returns></returns>
         bool IsValidResourcesProject { get; }
-        string[] GetTranslations(CultureInfo cultureInfo);
+        /// <summary>
+        /// Gets translations for main language.
+        /// </summary>
+        /// <returns></returns>
+        Translation[] GetTranslations();
     }
 
 }

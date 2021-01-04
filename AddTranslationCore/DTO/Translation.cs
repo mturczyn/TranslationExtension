@@ -1,15 +1,12 @@
 ﻿using AddTranslationCore.Abstractions;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace AddTranslationCore.DTO
 {
     public class Translation : BaseObservable
     {
-        private readonly Dictionary<CultureInfo, string> _translations = new Dictionary<CultureInfo, string>();
-
-        public ObservableCollection<CultureInfo> AvailableTranslations { get; } = new ObservableCollection<CultureInfo>();
+        public Translation(string translationKey, string translationText, CultureInfo cultureInfo)
+            => (TranslationKey, TranslationText, CultureInfo) = (translationKey, translationText, cultureInfo);
 
         private string _translationKey;
         public string TranslationKey
@@ -18,39 +15,18 @@ namespace AddTranslationCore.DTO
             set => SetPropertyAndRaise(value, ref _translationKey, nameof(TranslationKey));
         }
 
-        private CultureInfo _selectedCultureInfo;
-        public CultureInfo SelectedCultureInfo
+        private string _translationText;
+        public string TranslationText
         {
-            get => _selectedCultureInfo;
-            set
-            {
-                if (!SetPropertyAndRaise(value, ref _selectedCultureInfo, nameof(SelectedCultureInfo))) return;
-                SelectedTranslationText = _translations[value];
-            }
+            get => _translationText;
+            set => SetPropertyAndRaise(value, ref _translationText, nameof(TranslationText));
         }
 
-        private string _selectedTranslationText;
-        public string SelectedTranslationText
+        private CultureInfo _cultureInfo;
+        public CultureInfo CultureInfo
         {
-            get => _selectedTranslationText;
-            set => SetPropertyAndRaise(value, ref _selectedTranslationText, nameof(SelectedTranslationText));
-        }
-
-        public bool AddTranslation(CultureInfo ci, string translationText)
-        {
-            if (_translations.ContainsKey(ci))
-            {
-                return false;
-            }
-            _translations.Add(ci, translationText);
-            AvailableTranslations.Add(ci);
-            return true;
-        }
-
-        public void RemoveTranslation(CultureInfo ci)
-        {
-            _translations.Remove(ci);
-            AvailableTranslations.Remove(ci);
+            get => _cultureInfo;
+            set => SetPropertyAndRaise(value, ref _cultureInfo, nameof(CultureInfo));
         }
 
         public override bool Equals(object obj)

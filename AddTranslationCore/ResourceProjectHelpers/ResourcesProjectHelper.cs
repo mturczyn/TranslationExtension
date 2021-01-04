@@ -1,5 +1,6 @@
 ﻿using AddTranslationCore.DTO;
 using log4net;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace AddTranslationCore.ResourceProjectHelpers
             return file.GetTranslations().ToArray();
         }
 
-        public string GetTranslation(CultureInfo cultureInfo, string translationKey)
+        public Translation GetTranslation(CultureInfo cultureInfo, string translationKey)
         {
             var file = _resourcesFiles.Single(f => f.CultureInfo.LCID == cultureInfo.LCID);
             return file.GetTranslation(translationKey);
@@ -36,7 +37,7 @@ namespace AddTranslationCore.ResourceProjectHelpers
 
         private bool CheckIfIsCorrectResourcesProject(string directory)
         {
-            if (! Directory.Exists(directory)) return false;
+            if (!Directory.Exists(directory)) return false;
             if (!CheckIfDirectoryContainsRequiredFiles(directory, out _resourcesFiles))
             {
                 var enumerator = Directory.GetDirectories(directory).GetEnumerator();
@@ -77,15 +78,13 @@ namespace AddTranslationCore.ResourceProjectHelpers
             // Here we remove designer extension and get only file name.
             var baseFileName = Path.GetFileName(designerFile.Substring(0, designerFile.Length - _designerExtension.Length));
             // We get all resource files with translations.
-            var resFiles = files.Where(f =>
+            List<ResourceFile> resFiles = new List<ResourceFile>();
+            foreach (var path in files)
             {
-                var fn = Path.GetFileName(f);
-                return fn.EndsWith(_resExtension) && fn.StartsWith(baseFileName);
-            }).Select(f =>
-            {
-                var fn = Path.GetFileName(f);
-                return new ResourceFile(f, fn == baseFileName + _resExtension);
-            });
+                var fileName = Path.GetFileName(path);
+                if (fileName.StartsWith(baseFileName) && fileName.EndsWith(_resExtension))
+                    resFiles.Add(new ResourceFile(path, 0 == string.Compare(fileName, baseFileName + _resExtension, true)));
+            }
 
             if (resFiles.Count() <= 0) return false;
             // Set found resources files.

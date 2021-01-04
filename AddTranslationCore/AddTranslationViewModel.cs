@@ -1,4 +1,5 @@
 ﻿using AddTranslationCore.Abstractions;
+using AddTranslationCore.DTO;
 using log4net;
 using System.Collections.ObjectModel;
 
@@ -24,6 +25,8 @@ namespace AddTranslationCore
 
         public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
+        public ObservableCollection<Translation> Translations { get; } = new ObservableCollection<Translation>();
+
         private IProjectItem _selectedProject;
         public IProjectItem SelectedProject
         {
@@ -31,7 +34,7 @@ namespace AddTranslationCore
             set
             {
                 if (!SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject))) return;
-                SelectedProject.GetTranslations(System.Globalization.CultureInfo.InvariantCulture);
+                SetTranslations();
             }
         }
 
@@ -61,6 +64,12 @@ namespace AddTranslationCore
             ProjectReferences.Clear();
             var projectItems = _projectItemFactory.GetProjectItems();
             foreach (var p in projectItems) ProjectReferences.Add(p);
+        }
+
+        private void SetTranslations()
+        {
+            Translations.Clear();
+            foreach (var t in SelectedProject.GetTranslations()) Translations.Add(t);
         }
     }
 }

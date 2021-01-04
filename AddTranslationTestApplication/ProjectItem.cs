@@ -1,6 +1,7 @@
 ﻿using AddTranslationCore.Abstractions;
+using AddTranslationCore.DTO;
 using AddTranslationCore.ResourceProjectHelpers;
-using System.Globalization;
+using System;
 
 namespace AddTranslationTestApplication
 {
@@ -17,9 +18,10 @@ namespace AddTranslationTestApplication
         public string FullPathToProjectFile { get; set; }
         public bool IsValidResourcesProject => _projectHelper.IsValidResourcesDirectory;
 
-        public string[] GetTranslations(CultureInfo culture)
+        public Translation[] GetTranslations()
         {
-            return _projectHelper.GetTranslations(culture);
+            if (!_projectHelper.IsValidResourcesDirectory) return Array.Empty<Translation>();
+            return _projectHelper.GetTranslations();
         }
     }
 }

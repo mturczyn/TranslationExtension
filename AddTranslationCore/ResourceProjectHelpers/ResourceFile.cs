@@ -31,13 +31,14 @@ namespace AddTranslationCore.ResourceProjectHelpers
         {
             _logger = LogManager.GetLogger(nameof(ResourceFile));
             if (!File.Exists(fullPath)) throw new ArgumentException("Directory does not exist.");
-
-            if (!isMainResource)
+            
+            IsMainResource = isMainResource;
+            if (!IsMainResource)
             {
                 var fileName = Path.GetFileName(fullPath);
                 var parts = fileName.Split('.');
                 if (parts.Length < 3) throw new InvalidOperationException($"Resource file name should contain information about culture, while file name is {fileName}");
-                // Resource file should by of form [base file name].[culture info abbreviation].resx, so here we get culture info.
+                // Resource file should be of form [base file name].[culture info abbreviation].resx, so here we get culture info.
                 CultureInfo = new CultureInfo(parts[parts.Length - 2]);
             }
             else
@@ -60,8 +61,9 @@ namespace AddTranslationCore.ResourceProjectHelpers
         /// </summary>
         /// <param name="translationName">Name of translation.</param>
         /// <returns></returns>
-        public string GetTranslation(string translationName)
+        public Translation GetTranslation(string translationName)
         {
+            var translation = new Translation(translationName, string.Empty, CultureInfo);
             using (var fileStream = new FileStream(_fullPath, FileMode.Open))
             {
                 using (var xmlReader = XmlReader.Create(fileStream))
@@ -105,12 +107,12 @@ namespace AddTranslationCore.ResourceProjectHelpers
                             _logger.Warn($"Unexpected node type, expected {XmlNodeType.Text}");
                             continue;
                         }
-
-                        return xmlReader.Value;
+                        translation.TranslationText = xmlReader.Value;
+                        return translation;
                     }
                 }
             }
-            return string.Empty;
+            return translation;
         }
 
         /// <summary>
@@ -169,12 +171,7 @@ namespace AddTranslationCore.ResourceProjectHelpers
                         var translationText = xmlReader.Value;
                         _logger.Debug($"Adding translation: {nameof(name)} = {name}, {nameof(translationText)} = {translationText}");
 
-                        var translation = new Translation()
-                        {
-                            TranslationKey = name,
-                        };
-
-                        translation.AddTranslation(CultureInfo, translationText);
+                        var translation = new Translation(name, translationText, CultureInfo);
 
                         if (!translations.Add(translation))
                         {
