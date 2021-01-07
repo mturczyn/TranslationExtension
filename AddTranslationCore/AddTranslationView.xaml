@@ -5,9 +5,76 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dto="clr-namespace:AddTranslationCore.DTO"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Background="Black"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="White" />
+            </Style>
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="Foreground" Value="White" />
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="Background" Value="#222222" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border
+                                Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="Green"
+                                BorderThickness="1">
+                                <Label
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding Content}" />
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup Name="MouseStates">
+                                        <VisualState Name="MouseOver">
+                                            <Storyboard>
+                                                <ColorAnimation
+                                                    Storyboard.TargetName="ButtonBorder"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#333333"
+                                                    Duration="0:0:0.5" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState Name="Normal">
+                                            <Storyboard>
+                                                <ColorAnimation
+                                                    Storyboard.TargetName="ButtonBorder"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#222222"
+                                                    Duration="0:0:0.5" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState Name="Pressed">
+                                            <Storyboard>
+                                                <ThicknessAnimation
+                                                    Storyboard.TargetName="ButtonBorder"
+                                                    Storyboard.TargetProperty="BorderThickness"
+                                                    To="3"
+                                                    Duration="0:0:0.1" />
+                                                <ColorAnimation
+                                                    Storyboard.TargetName="ButtonBorder"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#333333"
+                                                    Duration="0" />
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -38,13 +105,13 @@
                 VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
-                Background="LightGreen"
                 Content="Translation key"
                 FontFamily="Calibri"
                 FontSize="18" />
             <TextBox
                 Grid.Row="1"
                 Grid.Column="0"
+                Margin="20"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 AcceptsReturn="True"
@@ -60,13 +127,13 @@
                 VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
-                Background="LightGreen"
                 Content="Original text"
                 FontFamily="Calibri"
                 FontSize="18" />
             <TextBox
                 Grid.Row="1"
                 Grid.Column="1"
+                Margin="20"
                 AcceptsReturn="True"
                 FontFamily="Calibri"
                 FontSize="18"
@@ -80,13 +147,17 @@
                 VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
-                Background="LightGreen"
-                Content="Translation"
                 FontFamily="Calibri"
-                FontSize="18" />
+                FontSize="18">
+                <UniformGrid Rows="1">
+                    <TextBlock Margin="0,10" Text="Translation in" />
+                    <ComboBox Margin="10" />
+                </UniformGrid>
+            </Label>
             <TextBox
                 Grid.Row="1"
                 Grid.Column="2"
+                Margin="20"
                 AcceptsReturn="True"
                 FontFamily="Calibri"
                 FontSize="16"
@@ -94,48 +165,12 @@
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
 
-            <Grid
-                Grid.Row="3"
-                Grid.RowSpan="2"
-                Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    VerticalAlignment="Center"
-                    FontFamily="Calibri"
-                    FontSize="16"
-                    Text="Szukana fraza:" />
-                <TextBox
-                    Name="tbPhraseToSearch"
-                    Grid.Row="1"
-                    Margin="10,10,10,0"
-                    FontFamily="Calibri" />
-                <Button
-                    Name="btnSearchPhrase"
-                    Grid.Row="2"
-                    Margin="10,10,10,0"
-                    Content="Szukaj"
-                    FontFamily="Calibri"
-                    FontSize="16" />
-                <Button
-                    Name="btnUseTranslation"
-                    Grid.Row="3"
-                    Margin="10,10,10,0"
-                    Content="Użyj tłumaczenia"
-                    FontFamily="Calibri"
-                    FontSize="16" />
-            </Grid>
-
             <DataGrid
                 Grid.Row="3"
                 Grid.RowSpan="2"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="20"
                 AutoGenerateColumns="False"
                 ItemsSource="{Binding Translations}">
                 <DataGrid.Columns>
