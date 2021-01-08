@@ -82,6 +82,7 @@
     <Compile Include="ResourceProjectHelpers\ResourceFile.cs" />
     <Compile Include="ResourceProjectHelpers\ResourcesProjectHelper.cs" />
     <Compile Include="DTO\Translation.cs" />
+    <Compile Include="ViewModel\RelayCommand.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

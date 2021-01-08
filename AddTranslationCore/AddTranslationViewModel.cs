@@ -1,5 +1,6 @@
 ﻿using AddTranslationCore.Abstractions;
 using AddTranslationCore.DTO;
+using AddTranslationCore.ViewModel;
 using log4net;
 using System.Collections.ObjectModel;
 
@@ -22,7 +23,10 @@ namespace AddTranslationCore
             _projectItemFactory = projectItemFactory;
             LoadProjects();
         }
-
+        public RelayCommand TestCommand { get; } = new RelayCommand((param) =>
+        {
+            int i = 0;
+        });
         public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
         public ObservableCollection<Translation> Translations { get; } = new ObservableCollection<Translation>();
