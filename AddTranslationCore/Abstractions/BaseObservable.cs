@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace AddTranslationCore.Abstractions
 {
@@ -14,7 +15,7 @@ namespace AddTranslationCore.Abstractions
         /// <param name="backingField">Underlying field, which backs the property.</param>
         /// <param name="propertyName">Name of property.</param>
         /// <returns>If <see cref="PropertyChanged"/> event was raised for property.</returns>
-        protected bool SetPropertyAndRaise<T>(T value, ref T backingField, string propertyName)
+        protected bool Set<T>(T value, ref T backingField, [CallerMemberName]string propertyName = "")
         {
             if (EqualityComparer<T>.Default.Equals(value, backingField)) return false;
             backingField = value;

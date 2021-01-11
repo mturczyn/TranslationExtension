@@ -8,6 +8,10 @@ using System.Xml;
 
 namespace AddTranslationCore.ResourceProjectHelpers
 {
+    /// <summary>
+    /// Represents single dictionary file.
+    /// Handles getting translations from file.
+    /// </summary>
     class ResourceFile
     {
         /// <summary>

@@ -1,0 +1,64 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{StaticResource GrayAABrush}" />
+        <Setter Property="Background" Value="{StaticResource Gray22Brush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Gray22Brush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Name="ButtonBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1">
+                        <Label
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="{TemplateBinding Content}" />
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="MouseStates">
+                                <VisualState Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimation
+                                            Storyboard.TargetName="ButtonBorder"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="{StaticResource Gray33Color}"
+                                            Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState Name="Normal">
+                                    <Storyboard>
+                                        <ColorAnimation
+                                            Storyboard.TargetName="ButtonBorder"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="{StaticResource Gray22Color}"
+                                            Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState Name="Pressed">
+                                    <Storyboard>
+                                        <ThicknessAnimation
+                                            Storyboard.TargetName="ButtonBorder"
+                                            Storyboard.TargetProperty="BorderThickness"
+                                            To="6,6,1,1"
+                                            Duration="0:0:0.1" />
+                                        <ColorAnimation
+                                            Storyboard.TargetName="ButtonBorder"
+                                            Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                            To="{StaticResource Gray33Color}"
+                                            Duration="0" />
+                                        <ColorAnimation
+                                            Storyboard.TargetName="ButtonBorder"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="{StaticResource Gray33Color}"
+                                            Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

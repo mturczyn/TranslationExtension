@@ -12,21 +12,21 @@ namespace AddTranslationCore.DTO
         public string TranslationKey
         {
             get => _translationKey;
-            set => SetPropertyAndRaise(value, ref _translationKey, nameof(TranslationKey));
+            set => Set(value, ref _translationKey, nameof(TranslationKey));
         }
 
         private string _translationText;
         public string TranslationText
         {
             get => _translationText;
-            set => SetPropertyAndRaise(value, ref _translationText, nameof(TranslationText));
+            set => Set(value, ref _translationText, nameof(TranslationText));
         }
 
         private CultureInfo _cultureInfo;
         public CultureInfo CultureInfo
         {
             get => _cultureInfo;
-            set => SetPropertyAndRaise(value, ref _cultureInfo, nameof(CultureInfo));
+            set => Set(value, ref _cultureInfo, nameof(CultureInfo));
         }
 
         public override bool Equals(object obj)

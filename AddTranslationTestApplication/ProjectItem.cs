@@ -2,6 +2,7 @@
 using AddTranslationCore.DTO;
 using AddTranslationCore.ResourceProjectHelpers;
 using System;
+using System.Globalization;
 
 namespace AddTranslationTestApplication
 {
@@ -17,6 +18,8 @@ namespace AddTranslationTestApplication
         public string ProjectName { get; set; }
         public string FullPathToProjectFile { get; set; }
         public bool IsValidResourcesProject => _projectHelper.IsValidResourcesDirectory;
+
+        public CultureInfo[] AvailableLanguages => _projectHelper.AvailableLanguages;
 
         public Translation[] GetTranslations()
         {

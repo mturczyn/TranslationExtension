@@ -23,6 +23,8 @@ namespace AddTranslationCore.ResourceProjectHelpers
 
         public bool IsValidResourcesDirectory { get; }
 
+        public CultureInfo[] AvailableLanguages => _resourcesFiles.Where(rf => !rf.IsMainResource).Select(rf => rf.CultureInfo).ToArray();
+
         public Translation[] GetTranslations()
         {
             var file = _resourcesFiles.Single(f => f.IsMainResource);

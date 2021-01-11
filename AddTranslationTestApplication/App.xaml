@@ -4,6 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Startup="Application_Startup">
     <Application.Resources>
-        <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ScrollBar.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ColorsAndBrushes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/SmallStylesForControls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ScrollBar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ComboBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

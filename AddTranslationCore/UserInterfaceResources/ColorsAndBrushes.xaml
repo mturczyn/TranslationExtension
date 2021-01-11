@@ -1,0 +1,114 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  #111111  -->
+    <Color
+        x:Key="Gray11Color"
+        A="255"
+        B="17"
+        G="17"
+        R="17" />
+    <SolidColorBrush x:Key="Gray11Brush" Color="{StaticResource Gray11Color}" />
+    <!--  #222222  -->
+    <Color
+        x:Key="Gray22Color"
+        A="255"
+        B="34"
+        G="34"
+        R="34" />
+    <SolidColorBrush x:Key="Gray22Brush" Color="{StaticResource Gray22Color}" />
+    <!--  #333333  -->
+    <Color
+        x:Key="Gray33Color"
+        A="255"
+        B="51"
+        G="51"
+        R="51" />
+    <SolidColorBrush x:Key="Gray33Brush" Color="{StaticResource Gray33Color}" />
+    <!--  #444444  -->
+    <Color
+        x:Key="Gray44Color"
+        A="255"
+        B="68"
+        G="68"
+        R="68" />
+    <SolidColorBrush x:Key="Gray44Brush" Color="{StaticResource Gray44Color}" />
+    <!--  #555555  -->
+    <Color
+        x:Key="Gray55Color"
+        A="255"
+        B="85"
+        G="85"
+        R="85" />
+    <SolidColorBrush x:Key="Gray55Brush" Color="{StaticResource Gray55Color}" />
+    <!--  #666666  -->
+    <Color
+        x:Key="Gray66Color"
+        A="255"
+        B="102"
+        G="102"
+        R="102" />
+    <SolidColorBrush x:Key="Gray66Brush" Color="{StaticResource Gray66Color}" />
+    <!--  #777777  -->
+    <Color
+        x:Key="Gray77Color"
+        A="255"
+        B="119"
+        G="119"
+        R="119" />
+    <SolidColorBrush x:Key="Gray77Brush" Color="{StaticResource Gray77Color}" />
+    <!--  #888888  -->
+    <Color
+        x:Key="Gray88Color"
+        A="255"
+        B="136"
+        G="136"
+        R="136" />
+    <SolidColorBrush x:Key="Gray88Brush" Color="{StaticResource Gray88Color}" />
+    <!--  #999999  -->
+    <Color
+        x:Key="Gray99Color"
+        A="255"
+        B="153"
+        G="153"
+        R="153" />
+    <SolidColorBrush x:Key="Gray99Brush" Color="{StaticResource Gray99Color}" />
+    <!--  #AAAAAA  -->
+    <Color
+        x:Key="GrayAAColor"
+        A="255"
+        B="170"
+        G="170"
+        R="170" />
+    <SolidColorBrush x:Key="GrayAABrush" Color="{StaticResource GrayAAColor}" />
+    <!--  #BBBBBB  -->
+    <Color
+        x:Key="GrayBBColor"
+        A="255"
+        B="187"
+        G="187"
+        R="187" />
+    <SolidColorBrush x:Key="GrayBBBrush" Color="{StaticResource GrayBBColor}" />
+    <!--  #CCCCCC  -->
+    <Color
+        x:Key="GrayCCColor"
+        A="255"
+        B="204"
+        G="204"
+        R="204" />
+    <SolidColorBrush x:Key="GrayCCBrush" Color="{StaticResource GrayCCColor}" />
+    <!--  #DDDDDD  -->
+    <Color
+        x:Key="GrayDDColor"
+        A="255"
+        B="221"
+        G="221"
+        R="221" />
+    <SolidColorBrush x:Key="GrayDDBrush" Color="{StaticResource GrayDDColor}" />
+    <!--  #EEEEEE  -->
+    <Color
+        x:Key="GrayEEColor"
+        A="255"
+        B="238"
+        G="238"
+        R="238" />
+    <SolidColorBrush x:Key="GrayEEBrush" Color="{StaticResource GrayEEColor}" />
+</ResourceDictionary>

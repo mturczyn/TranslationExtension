@@ -3,6 +3,8 @@ using AddTranslationCore.DTO;
 using AddTranslationCore.ViewModel;
 using log4net;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Windows.Input;
 
 namespace AddTranslationCore
 {
@@ -23,7 +25,7 @@ namespace AddTranslationCore
             _projectItemFactory = projectItemFactory;
             LoadProjects();
         }
-        public RelayCommand TestCommand { get; } = new RelayCommand((param) =>
+        public ICommand TestCommand { get; } = new RelayCommand((param) =>
         {
             int i = 0;
         });
@@ -31,14 +33,17 @@ namespace AddTranslationCore
 
         public ObservableCollection<Translation> Translations { get; } = new ObservableCollection<Translation>();
 
+        public ObservableCollection<CultureInfo> AvailableLanguages { get; } = new ObservableCollection<CultureInfo>();
+
         private IProjectItem _selectedProject;
         public IProjectItem SelectedProject
         {
             get => _selectedProject;
             set
             {
-                if (!SetPropertyAndRaise(value, ref _selectedProject, nameof(SelectedProject))) return;
+                if (!Set(value, ref _selectedProject)) return;
                 SetTranslations();
+                SetAvailableLanguages();
             }
         }
 
@@ -46,21 +51,21 @@ namespace AddTranslationCore
         public string TranslationKey
         {
             get => _translationKey;
-            set => SetPropertyAndRaise(value, ref _translationKey, nameof(TranslationKey));
+            set => Set(value, ref _translationKey);
         }
 
         private string _originalText;
         public string OriginalText
         {
             get => _originalText;
-            set => SetPropertyAndRaise(value, ref _originalText, nameof(OriginalText));
+            set => Set(value, ref _originalText);
         }
 
         private string _translationText;
         public string TranslationText
         {
             get => _translationText;
-            set => SetPropertyAndRaise(value, ref _translationText, nameof(TranslationText));
+            set => Set(value, ref _translationText);
         }
 
         private void LoadProjects()
@@ -74,6 +79,12 @@ namespace AddTranslationCore
         {
             Translations.Clear();
             foreach (var t in SelectedProject.GetTranslations()) Translations.Add(t);
+        }
+
+        private void SetAvailableLanguages()
+        {
+            AvailableLanguages.Clear();
+            foreach (var t in SelectedProject.AvailableLanguages) AvailableLanguages.Add(t);
         }
     }
 }

@@ -11,118 +11,7 @@
     Background="Black"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <!--  #AAAAAA  -->
-        <Color
-            x:Key="LightForegroundGrayColor"
-            B="170"
-            G="170"
-            R="170" />
-        <SolidColorBrush x:Key="LightForegroundGrayBrush" Color="{StaticResource LightForegroundGrayColor}" />
-        <!--  #222222  -->
-        <Color
-            x:Key="DarkBackgroundGrayColor"
-            B="34"
-            G="34"
-            R="34" />
-        <SolidColorBrush x:Key="DarkBackgroundGrayBrush" Color="{StaticResource DarkBackgroundGrayColor}" />
-        <!--  #333333  -->
-        <Color
-            x:Key="BackgroundGrayColor"
-            B="51"
-            G="51"
-            R="51" />
-        <SolidColorBrush x:Key="BackgroundGrayBrush" Color="{StaticResource BackgroundGrayColor}" />
-        <!--  #888888  -->
-        <Color
-            x:Key="LightBackgroundWCGrayColor"
-            B="136"
-            G="136"
-            R="136" />
-        <SolidColorBrush x:Key="LightBackgroundGrayBrush" Color="{StaticResource LightBackgroundWCGrayColor}" />
-
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Background" Value="#222222" />
-            <Setter Property="Foreground" Value="#AAAAAA" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontFamily" Value="Calibri" />
-            <Setter Property="FontSize" Value="16" />
-            <Style.Triggers>
-                <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="Background" Value="#333333" />
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#333333" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="Foreground" Value="#AAAAAA" />
-        </Style>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="#AAAAAA" />
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="Foreground" Value="#AAAAAA" />
-            <Setter Property="Background" Value="#222222" />
-            <Setter Property="BorderBrush" Value="#222222" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border
-                            Name="ButtonBorder"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1">
-                            <Label
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Content="{TemplateBinding Content}" />
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup Name="MouseStates">
-                                    <VisualState Name="MouseOver">
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="ButtonBorder"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="#333333"
-                                                Duration="0:0:0.5" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState Name="Normal">
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="ButtonBorder"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="#222222"
-                                                Duration="0:0:0.5" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState Name="Pressed">
-                                        <Storyboard>
-                                            <ThicknessAnimation
-                                                Storyboard.TargetName="ButtonBorder"
-                                                Storyboard.TargetProperty="BorderThickness"
-                                                To="6,6,1,1"
-                                                Duration="0:0:0.1" />
-                                            <ColorAnimation
-                                                Storyboard.TargetName="ButtonBorder"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-                                                To="#333333"
-                                                Duration="0" />
-                                            <ColorAnimation
-                                                Storyboard.TargetName="ButtonBorder"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="#333333"
-                                                Duration="0" />
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        
     </UserControl.Resources>
     <Grid>
         <Grid>
@@ -145,7 +34,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 HorizontalAlignment="Stretch"
-                Background="Green" />
+                Background="{StaticResource Gray99Brush}" />
 
             <Label
                 Grid.Row="0"
@@ -200,7 +89,7 @@
                 FontSize="18">
                 <UniformGrid Rows="1">
                     <TextBlock Margin="0,10" Text="Translation in" />
-                    <ComboBox Margin="10" />
+                    <ComboBox Margin="10" ItemsSource="{Binding AvailableLanguages}"/>
                 </UniformGrid>
             </Label>
             <TextBox
@@ -227,7 +116,7 @@
                 RowHeaderWidth="0">
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
-                        <Setter Property="Background" Value="{StaticResource DarkBackgroundGrayBrush}" />
+                        <Setter Property="Background" Value="{StaticResource Gray22Brush}" />
                         <Setter Property="Foreground" Value="#AAAAAA" />
                         <Setter Property="FontSize" Value="18" />
                         <Setter Property="Padding" Value="10,5,5,5" />
