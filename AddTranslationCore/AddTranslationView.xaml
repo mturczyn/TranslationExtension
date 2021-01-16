@@ -5,14 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dto="clr-namespace:AddTranslationCore.DTO"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="Black"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        
-    </UserControl.Resources>
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -35,7 +31,6 @@
                 Grid.ColumnSpan="3"
                 HorizontalAlignment="Stretch"
                 Background="{StaticResource Gray99Brush}" />
-
             <Label
                 Grid.Row="0"
                 Grid.Column="0"
@@ -89,7 +84,10 @@
                 FontSize="18">
                 <UniformGrid Rows="1">
                     <TextBlock Margin="0,10" Text="Translation in" />
-                    <ComboBox Margin="10" ItemsSource="{Binding AvailableLanguages}"/>
+                    <ComboBox
+                        Margin="10"
+                        IsEditable="True"
+                        ItemsSource="{Binding AvailableLanguages}" />
                 </UniformGrid>
             </Label>
             <TextBox
