@@ -1,193 +1,200 @@
-﻿using AddTranslation.LogService;
-using AddTranslation.TranslationResourcesManagement;
+﻿using AddTranslation.TranslationResourcesManagement;
+using AddTranslationCore;
+using AddTranslationVsix.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace AddTranslation.Windows
+namespace AddTranslationVsix.Windows
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
     public partial class AddTranslationWindow : BaseDialogWindow
     {
-        private string _translation;
-        private string _toTransalte;
-        private string _translationName;
-        private TranslationResourcesManager _translationResourcesManager;
-        public string Translation
+        public AddTranslationWindow(AddTranslationViewModel viewModel)
         {
-            get
-            {
-                return tbTranslation.Text;
-            }
-        }
-
-        public string TextToTranslate
-        {
-            get
-            {
-                return tbTextToTranslate.Text;
-            }
-        }
-
-        public string TranslationName
-        {
-            get
-            {
-                return _translationResourcesManager.Namespace + '.' +
-                  _translationResourcesManager.DesignerFileName + '.' +
-                  tbTranslationName.Text;
-            }
-        }
-
-        public AddTranslationWindow(string text, string csProjPath, List<VSLangProj.Reference> projectReferences, out bool shouldNotOpenTheWindow)
-        {
-            Logger.AppendInfoLine($"Wywołanie okna do tłumaczeń z tekstem {text ?? "NULL"} oraz ścieżką" +
-              $" {csProjPath ?? "NULL"}");
-
             InitializeComponent();
-            DataContext = this;
-            ProjectReferences = projectReferences.Select(r => new ProjectReferenceModel(r)).ToList();
-
-            tbTextToTranslate.Text = text;
-            _toTransalte = text;
-            _translation = "";
-            _translationName = "";
-            // Jeśli zmodyfikowany zostanie plik csproj lub nie dostaniemy żadnych tłumaczeń, to nie otwieramy w ogóle okna.
-            _translationResourcesManager = TranslationResourcesManager.GetInstance(csProjPath, out shouldNotOpenTheWindow);
-            shouldNotOpenTheWindow = shouldNotOpenTheWindow || !GetSortedTranslations(text);
+            DataContext = viewModel;
         }
 
-        public List<ProjectReferenceModel> ProjectReferences { get; }
+        //private string _translation;
+        //private string _toTransalte;
+        //private string _translationName;
+        //private TranslationResourcesManager _translationResourcesManager;
+        //public string Translation
+        //{
+        //    get
+        //    {
+        //        return tbTranslation.Text;
+        //    }
+        //}
 
-        public class ProjectReferenceModel
-        {
-            private VSLangProj.Reference _reference;
-            public ProjectReferenceModel(VSLangProj.Reference reference) => _reference = reference;
-            public string FullName => _reference.Name;
-        }
+        //public string TextToTranslate
+        //{
+        //    get
+        //    {
+        //        return tbTextToTranslate.Text;
+        //    }
+        //}
 
-        private void ChangeResourcesPath_Click(object sender, RoutedEventArgs e)
-        {
-            _translationResourcesManager.ChangeResourcePath();
-            dgPossibleTranslations.ItemsSource = null;
-        }
-        private void BtnOk_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(tbTranslationName?.Text))
-            {
-                MessageBox.Show("Wprowadź nazwę tłumaczenia!", "Ostrzeżenie", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+        //public string TranslationName
+        //{
+        //    get
+        //    {
+        //        return _translationResourcesManager.Namespace + '.' +
+        //          _translationResourcesManager.DesignerFileName + '.' +
+        //          tbTranslationName.Text;
+        //    }
+        //}
 
-            bool success = _translationResourcesManager.TrySaveTranslation(tbTranslationName.Text, tbTextToTranslate.Text, tbTranslation.Text, _updatingTranslation, _translationName);
-            if (success)
-                Close(true);
-            else
-                return;
-        }
+        //public AddTranslationWindow(string text, string csProjPath, List<VSLangProj.Reference> projectReferences, out bool shouldNotOpenTheWindow)
+        //{
+        //    Logger.AppendInfoLine($"Wywołanie okna do tłumaczeń z tekstem {text ?? "NULL"} oraz ścieżką" +
+        //      $" {csProjPath ?? "NULL"}");
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            Close(false);
-        }
+        //    InitializeComponent();
+        //    DataContext = this;
+        //    ProjectReferences = projectReferences.Select(r => new ProjectReferenceModel(r)).ToList();
 
-        private void SaveLogs_Click(object sender, RoutedEventArgs e)
-        {
-            Logger.SaveLogs();
-        }
+        //    tbTextToTranslate.Text = text;
+        //    _toTransalte = text;
+        //    _translation = "";
+        //    _translationName = "";
+        //    // Jeśli zmodyfikowany zostanie plik csproj lub nie dostaniemy żadnych tłumaczeń, to nie otwieramy w ogóle okna.
+        //    _translationResourcesManager = TranslationResourcesManager.GetInstance(csProjPath, out shouldNotOpenTheWindow);
+        //    shouldNotOpenTheWindow = shouldNotOpenTheWindow || !GetSortedTranslations(text);
+        //}
 
-        public void Close(bool result)
-        {
-            DialogResult = result;
-            Close();
-        }
+        //public List<ProjectReferenceModel> ProjectReferences { get; }
 
-        private void tbTextToTranslate_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ChangeRespectiveTextToUnsaved(lblTextToTranslate, _toTransalte, tbTextToTranslate?.Text);
-        }
+        //public class ProjectReferenceModel
+        //{
+        //    private VSLangProj.Reference _reference;
+        //    public ProjectReferenceModel(VSLangProj.Reference reference) => _reference = reference;
+        //    public string FullName => _reference.Name;
+        //}
 
-        private void tbTranslationName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ChangeRespectiveTextToUnsaved(lblTranslationName, _translationName, tbTranslationName?.Text);
-        }
+        //private void ChangeResourcesPath_Click(object sender, RoutedEventArgs e)
+        //{
+        //    _translationResourcesManager.ChangeResourcePath();
+        //    dgPossibleTranslations.ItemsSource = null;
+        //}
+        //private void BtnOk_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (string.IsNullOrEmpty(tbTranslationName?.Text))
+        //    {
+        //        MessageBox.Show("Wprowadź nazwę tłumaczenia!", "Ostrzeżenie", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return;
+        //    }
 
-        private void tbTranslation_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ChangeRespectiveTextToUnsaved(lblTranslation, _translation, tbTranslation?.Text);
-        }
+        //    bool success = _translationResourcesManager.TrySaveTranslation(tbTranslationName.Text, tbTextToTranslate.Text, tbTranslation.Text, _updatingTranslation, _translationName);
+        //    if (success)
+        //        Close(true);
+        //    else
+        //        return;
+        //}
 
-        private void BtnUseTranslation_Click(object sender, RoutedEventArgs e)
-        {
-            UseTranslation();
-        }
+        //private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Close(false);
+        //}
 
-        private void DgPossibleTranslations_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            UseTranslation();
-        }
+        //private void SaveLogs_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Logger.SaveLogs();
+        //}
 
-        #region Metody pomocnicze
-        /// <summary>
-        /// Pobiera i sortuje tłumaczenia.
-        /// </summary>
-        /// <param name="stringToSortBy"></param>
-        /// <returns>Jesli nie uda się pobrać żadnych tłumaczeń (lita == null) to zwracamy false.</returns>
-        private bool GetSortedTranslations(string stringToSortBy)
-        {
-            var possibleTranslations = _translationResourcesManager.GetAllSimilairTranslations(stringToSortBy);
-            dgPossibleTranslations.ItemsSource = null;
-            if (possibleTranslations == null)
-                return false;
-            dgPossibleTranslations.ItemsSource = possibleTranslations;
-            return true;
-        }
-        private void ChangeRespectiveTextToUnsaved(Label label, string originalText, string currentText)
-        {
-            if (label == null || originalText == null || currentText == null)
-                return;
+        //public void Close(bool result)
+        //{
+        //    DialogResult = result;
+        //    Close();
+        //}
 
-            if (originalText != currentText)
-            {
-                if (!label.Content.ToString().EndsWith("*"))
-                    label.Content += "*";
-            }
-            else
-                label.Content = label.Content.ToString().TrimEnd('*');
-        }
+        //private void tbTextToTranslate_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    ChangeRespectiveTextToUnsaved(lblTextToTranslate, _toTransalte, tbTextToTranslate?.Text);
+        //}
 
-        private void BtnSearchPhrase_Click(object sender, RoutedEventArgs e)
-        {
-            GetSortedTranslations(tbPhraseToSearch.Text);
-        }
-        private bool _updatingTranslation = false;
-        private void UseTranslation()
-        {
-            if (dgPossibleTranslations.SelectedIndex == -1)
-                return;
-            var translation = dgPossibleTranslations.SelectedItem as Translation;
-            if (translation == null)
-                return;
+        //private void tbTranslationName_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    ChangeRespectiveTextToUnsaved(lblTranslationName, _translationName, tbTranslationName?.Text);
+        //}
 
-            _updatingTranslation = true;
+        //private void tbTranslation_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    ChangeRespectiveTextToUnsaved(lblTranslation, _translation, tbTranslation?.Text);
+        //}
 
-            Logger.AppendInfoLine($"Wybrano tłumaczenie do modyfikacji: {translation.Name}");
+        //private void BtnUseTranslation_Click(object sender, RoutedEventArgs e)
+        //{
+        //    UseTranslation();
+        //}
 
-            tbTranslationName.Text = translation.Name;
-            _translationName = translation.Name;
-            tbTextToTranslate.Text = translation.PolishText;
-            _toTransalte = translation.PolishText;
-            tbTranslation.Text = translation.EnglishText;
-            _translation = translation.EnglishText;
-            // Zmieniamy na zieolny kolor kontrolki, bo teraz mamy sytuację, ze nic się nie zmieniło
-            ChangeRespectiveTextToUnsaved(lblTextToTranslate, "", "");
-            ChangeRespectiveTextToUnsaved(lblTranslation, "", "");
-            ChangeRespectiveTextToUnsaved(lblTranslationName, "", "");
-        }
-        #endregion
+        //private void DgPossibleTranslations_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        //{
+        //    UseTranslation();
+        //}
+
+        //#region Metody pomocnicze
+        ///// <summary>
+        ///// Pobiera i sortuje tłumaczenia.
+        ///// </summary>
+        ///// <param name="stringToSortBy"></param>
+        ///// <returns>Jesli nie uda się pobrać żadnych tłumaczeń (lita == null) to zwracamy false.</returns>
+        //private bool GetSortedTranslations(string stringToSortBy)
+        //{
+        //    var possibleTranslations = _translationResourcesManager.GetAllSimilairTranslations(stringToSortBy);
+        //    dgPossibleTranslations.ItemsSource = null;
+        //    if (possibleTranslations == null)
+        //        return false;
+        //    dgPossibleTranslations.ItemsSource = possibleTranslations;
+        //    return true;
+        //}
+        //private void ChangeRespectiveTextToUnsaved(Label label, string originalText, string currentText)
+        //{
+        //    if (label == null || originalText == null || currentText == null)
+        //        return;
+
+        //    if (originalText != currentText)
+        //    {
+        //        if (!label.Content.ToString().EndsWith("*"))
+        //            label.Content += "*";
+        //    }
+        //    else
+        //        label.Content = label.Content.ToString().TrimEnd('*');
+        //}
+
+        //private void BtnSearchPhrase_Click(object sender, RoutedEventArgs e)
+        //{
+        //    GetSortedTranslations(tbPhraseToSearch.Text);
+        //}
+        //private bool _updatingTranslation = false;
+        //private void UseTranslation()
+        //{
+        //    if (dgPossibleTranslations.SelectedIndex == -1)
+        //        return;
+        //    var translation = dgPossibleTranslations.SelectedItem as Translation;
+        //    if (translation == null)
+        //        return;
+
+        //    _updatingTranslation = true;
+
+        //    Logger.AppendInfoLine($"Wybrano tłumaczenie do modyfikacji: {translation.Name}");
+
+        //    tbTranslationName.Text = translation.Name;
+        //    _translationName = translation.Name;
+        //    tbTextToTranslate.Text = translation.PolishText;
+        //    _toTransalte = translation.PolishText;
+        //    tbTranslation.Text = translation.EnglishText;
+        //    _translation = translation.EnglishText;
+        //    // Zmieniamy na zieolny kolor kontrolki, bo teraz mamy sytuację, ze nic się nie zmieniło
+        //    ChangeRespectiveTextToUnsaved(lblTextToTranslate, "", "");
+        //    ChangeRespectiveTextToUnsaved(lblTranslation, "", "");
+        //    ChangeRespectiveTextToUnsaved(lblTranslationName, "", "");
+        //}
+        //#endregion
     }
 }

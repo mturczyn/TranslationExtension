@@ -1,5 +1,7 @@
-﻿using AddTranslation.Windows;
+﻿using AddTranslationCore;
+using AddTranslationVsix.Windows;
 using EnvDTE;
+using log4net;
 using Microsoft;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
@@ -22,6 +24,8 @@ namespace AddTranslation
     /// </summary>
     internal sealed class AddTranslationCommand
     {
+        private readonly ILog _logger;
+
         private AsyncPackage _serviceProvider;
         /// <summary>
         /// Command ID.
@@ -41,6 +45,8 @@ namespace AddTranslation
         /// <param name="commandService">Command service to add command to, not null.</param>
         private AddTranslationCommand(OleMenuCommandService commandService, AsyncPackage package)
         {
+            _logger = LogManager.GetLogger(nameof(AddTranslationCommand));
+
             if (package == null) throw new ArgumentNullException(nameof(package));
             if (commandService == null) throw new ArgumentNullException(nameof(commandService));
             _serviceProvider = package;
@@ -74,6 +80,34 @@ namespace AddTranslation
             Assumes.Present(dte);
 
             Instance = new AddTranslationCommand(commandService, package);
+#warning It needs to be defined as pack urif or relative URIs, optionally, move it to XAML.
+            try
+            {
+                Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\ColorsAndBrushes.xaml", UriKind.RelativeOrAbsolute)
+                });
+                Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\SmallStylesForControls.xaml", UriKind.RelativeOrAbsolute)
+                });
+                Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\Button.xaml", UriKind.RelativeOrAbsolute)
+                });
+                Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\ScrollBar.xaml", UriKind.RelativeOrAbsolute)
+                });
+                Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\ComboBox.xaml", UriKind.RelativeOrAbsolute)
+                });
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
 
         private async Task<List<VSLangProj.Reference>> GetProjectReferencesForCUrrentlyOpenedFileAsync()
@@ -106,7 +140,7 @@ namespace AddTranslation
         /// <param name="e">Event args.</param>
         private async void Execute(object sender, EventArgs e)
         {
-            Logger.AppendInfoLine("Rozpoczęcie tłumaczenia");
+            _logger.Info("Rozpoczęcie tłumaczenia");
 
             var textManager = (VsTextManager)await _serviceProvider.GetServiceAsync(typeof(SVsTextManager));
             Assumes.Present(textManager);
@@ -120,13 +154,13 @@ namespace AddTranslation
             try
             {
                 int result = (textManager as IVsTextManager2).GetActiveView2(1, null, (uint)_VIEWFRAMETYPE.vftCodeWindow, out view);
-                Logger.AppendInfoLine("Pomyślnie utworzono obiekt IVsTextView");
+                _logger.Info("Pomyślnie utworzono obiekt IVsTextView");
                 // Przekonwertuj IVsTextView na IWpfTextView, aby móc modyfikować tekst pliku (kod)
                 wpfTextView = (componentModel as IComponentModel).GetService<IVsEditorAdaptersFactoryService>().GetWpfTextView(view);
-                Logger.AppendInfoLine("Pomyślnie utworzono obiekt IWpfTextView");
+                _logger.Info("Pomyślnie utworzono obiekt IWpfTextView");
                 // Ważny moment: tutaj tworzymy obiekt do edycji tekstu kodu
                 edit = wpfTextView.TextBuffer.CreateEdit();
-                Logger.AppendInfoLine("Pomyślnie wykonano CreateEdit() oraz utworzono obiekt do edycji tekstu");
+                _logger.Info("Pomyślnie wykonano CreateEdit() oraz utworzono obiekt do edycji tekstu");
 
                 IVsHierarchy hierarchy = null;
                 string csProjPath = null;
@@ -141,21 +175,23 @@ namespace AddTranslation
 
                 var textToReplace = wpfTextView.TextBuffer.CurrentSnapshot.GetText(span).Trim(' ').Trim('"');
 
-
-                var translationWindow = new AddTranslationWindow(textToReplace, csProjPath, projectReferences, out bool shouldNotOpenTheWindow);
-                if (shouldNotOpenTheWindow)
+                var vm = new AddTranslationViewModel(null);
+                var translationWindow = new AddTranslationWindow(vm);
+#warning TO UNCOMMENT
+                //var translationWindow = new AddTranslationWindow(textToReplace, csProjPath, projectReferences, out bool shouldNotOpenTheWindow);
+                //if (shouldNotOpenTheWindow)
                     // Jak musimy przeładować projekt, to nie pokazujemy okna w ogóle.
-                    return;
+                 //   return;
 
                 translationWindow.ShowDialog();
 
                 if (translationWindow.DialogResult != null && !translationWindow.DialogResult.Value)
                 {
-                    Logger.AppendInfoLine("Anulowano dodawanie tłumaczenia!");
+                    _logger.Info("Anulowano dodawanie tłumaczenia!");
                     return;
                 }
-
-                edit.Replace(span, translationWindow.TranslationName);
+#warning TO UNCOMMENT
+                // edit.Replace(span, translationWindow.TranslationName);
                 edit.Apply();
             }
             catch (InvalidOperationException ioe)
@@ -164,27 +200,24 @@ namespace AddTranslation
                 MessageBox.Show("Aby nie utracić wprowadzonych zmian NIE NALEŻY nic klikać," +
                   " ponieważ spowoduje to zawieszenie Visuala i zmiany zostaną utracone." +
                   " Należy zapisać plik, zamknąć go i ponownie otworzyć.");
-                Logger.AppendErrorLine(ioe.ToString());
+                _logger.Info(ioe.ToString());
                 if (ioe.InnerException != null)
-                    Logger.AppendErrorLine(ioe.InnerException.ToString());
-                Logger.SaveLogs();
+                    _logger.Info(ioe.InnerException.ToString());
                 return;
             }
             catch (Exception ex)
             {
                 string err = $"Wystąpił błąd!\n{ex.ToString()}";
                 MessageBox.Show(err);
-                Logger.AppendErrorLine(err);
-                Logger.AppendErrorLine(ex.ToString());
+                _logger.Info(err);
+                _logger.Info(ex.ToString());
                 if (ex.InnerException != null)
-                    Logger.AppendErrorLine(ex.InnerException.ToString());
-                Logger.SaveLogs();
+                    _logger.Info(ex.InnerException.ToString());
                 return;
             }
             finally
             {
                 edit?.Dispose();
-                Logger.ClearLogger();
             }
         }
     }

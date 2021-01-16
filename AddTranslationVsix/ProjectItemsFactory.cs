@@ -1,4 +1,4 @@
-﻿using AddTranslationUI;
+﻿using AddTranslationCore.Abstractions;
 using Microsoft.VisualStudio.Shell;
 using System;
 
@@ -14,7 +14,7 @@ namespace AddTranslation
 
         public ProjectItemsFactory(AsyncPackage serviceProvider) => _serviceProvider = serviceProvider;
 
-        public IProjectIem[] GetProjectItems()
+        public IProjectItem[] GetProjectItems()
         {
             throw new NotImplementedException();
         }

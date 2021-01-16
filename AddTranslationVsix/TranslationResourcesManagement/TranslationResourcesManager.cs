@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
+using log4net;
 
 namespace AddTranslation.TranslationResourcesManagement
 {
@@ -26,6 +27,7 @@ namespace AddTranslation.TranslationResourcesManagement
         private string _designerPath;
 
         private static string _csProjPath;
+        private readonly ILog _logger;
 
         public static TranslationResourcesManager GetInstance(string csProjPath, out bool csProjFileModified)
         {
@@ -48,8 +50,10 @@ namespace AddTranslation.TranslationResourcesManagement
 
         private TranslationResourcesManager(string csProjPath, out bool csProjFileModified)
         {
+            _logger = LogManager.GetLogger(nameof(TranslationResourcesManager));
+            
             csProjFileModified = false;
-            Logger.AppendInfoLine($"Tworzenie menadżera zasobów tłumaczeń ze ścieżką {csProjPath ?? "NULL"}");
+            _logger.Info($"Tworzenie menadżera zasobów tłumaczeń ze ścieżką {csProjPath ?? "NULL"}");
             _csProjPath = csProjPath;
             if (!ValidateCsProjFile(out csProjFileModified))
             {
@@ -75,7 +79,7 @@ namespace AddTranslation.TranslationResourcesManagement
             catch (Exception ex)
             {
                 MessageBox.Show("Nie powiodła się zmiana ścieżki.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
-                Logger.AppendErrorLine(ex.ToString());
+                _logger.Error(ex.ToString());
             }
         }
 
@@ -89,19 +93,19 @@ namespace AddTranslation.TranslationResourcesManagement
                 ofd.Multiselect = false;
                 if (ofd.ShowDialog() ?? false)
                 {
-                    Logger.AppendInfoLine($"Wybrano plik z polskimi zasobami: {ofd.FileName}");
+                    _logger.Info($"Wybrano plik z polskimi zasobami: {ofd.FileName}");
                     _defaultResPath = ofd.FileName;
                 }
                 else
                 {
-                    Logger.AppendErrorLine("Nie wybrano żadnego pliku z polskimi zasobami!");
+                    _logger.Error("Nie wybrano żadnego pliku z polskimi zasobami!");
                     MessageBox.Show("Nie wybrano pliku zasobów! Dodawanie tłumaczeń nie będzie działać poprawnie.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }
             }
             catch
             {
-                Logger.AppendErrorLine("Nie powiódł się wybór pliku zasobów.");
+                _logger.Error("Nie powiódł się wybór pliku zasobów.");
                 MessageBox.Show("Nie powiódł się wybór pliku zasobów. Dodawanie tłumaczeń nie będzie działać poprawnie.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
@@ -123,7 +127,7 @@ namespace AddTranslation.TranslationResourcesManagement
             (var polishResource, var englishResource) = LoadAndValidateResources();
             if (polishResource == null || englishResource == null)
                 return false;
-            Logger.AppendInfoLine("Próba zapisu tłumaczeń z parametrami: " +
+            _logger.Info("Próba zapisu tłumaczeń z parametrami: " +
               $"name={name}, polishText={polishText}, englishText={englishText}, oldName={oldName ?? "NUL"}");
 
             var nameToSearchBy = oldName ?? name;
@@ -173,7 +177,7 @@ namespace AddTranslation.TranslationResourcesManagement
             catch (Exception ex)
             {
                 var error = $"Nie powiódł się zapis tłumaczeń!\n{ex.ToString()}";
-                Logger.AppendErrorLine(error);
+                _logger.Error(error);
                 MessageBox.Show(error);
                 return false;
             }
@@ -185,21 +189,21 @@ namespace AddTranslation.TranslationResourcesManagement
               .Where(n => n.Name == "data" && n.Attribute("name").Value == name)
               .FirstOrDefault();
             if (node != null)
-                Logger.AppendInfoLine($"Pobrano węzeł {name} z tłumaczeniem {node.Descendants("value").FirstOrDefault()?.Value ?? "NULL"}");
+                _logger.Info($"Pobrano węzeł {name} z tłumaczeniem {node.Descendants("value").FirstOrDefault()?.Value ?? "NULL"}");
             else
-                Logger.AppendInfoLine($"Nie udalo się pobrać węzła o nazwie {name}, dodawanie nowego węzła");
+                _logger.Info($"Nie udalo się pobrać węzła o nazwie {name}, dodawanie nowego węzła");
             return node;
         }
 
         private XElement CreateNodeWithTranslation(string name, string content)
         {
-            Logger.AppendInfoLine($"Tworzenie nowego węzła: name={name}, content={content}");
+            _logger.Info($"Tworzenie nowego węzła: name={name}, content={content}");
 
             XElement node = new XElement("data", new XElement("value", content));
             node.SetAttributeValue("name", name);
             node.SetAttributeValue(XNamespace.Xml + "space", "preserve");
 
-            Logger.AppendInfoLine("Powiodło sie utworzenie nowego węzła");
+            _logger.Info("Powiodło sie utworzenie nowego węzła");
             return node;
         }
 
@@ -211,34 +215,34 @@ namespace AddTranslation.TranslationResourcesManagement
         /// <param name="nodeToAdd"></param>
         private void AddTranslationNode(XDocument resource, XElement nodeToAdd)
         {
-            Logger.AppendInfoLine($"Próba dodania nowego węzła: {nodeToAdd.Attribute("name")?.Value ?? "NULL"}");
+            _logger.Info($"Próba dodania nowego węzła: {nodeToAdd.Attribute("name")?.Value ?? "NULL"}");
             var lastNode = resource.Descendants("data").LastOrDefault();
             // Jeśli nie mieliśmy żadnych węzłow data, to szukamy resheader, który powinien być i po nim dodamy nasz węzeł
             if (lastNode == null)
                 lastNode = resource.Descendants("resheader").LastOrDefault();
             if (lastNode == null)
             {
-                Logger.AppendWarningLine("Nie znaleziono żadnych węzłów, po których można dodać węzeł z tłumaczeniem!");
+                _logger.Warn("Nie znaleziono żadnych węzłów, po których można dodać węzeł z tłumaczeniem!");
                 return;
             }
             lastNode.AddAfterSelf(nodeToAdd);
-            Logger.AppendInfoLine("Dodanie węzła powiodło się");
+            _logger.Info("Dodanie węzła powiodło się");
         }
 
         private void UpdateTranslationNode(XElement nodeToUpdate, string name, string content)
         {
-            Logger.AppendInfoLine($"Próba aktualizacji węzła: {nodeToUpdate.Attribute("name")?.Value ?? "NULL"} z parametrami: " +
+            _logger.Info($"Próba aktualizacji węzła: {nodeToUpdate.Attribute("name")?.Value ?? "NULL"} z parametrami: " +
               $"name={name}, content={content}");
             var node = nodeToUpdate.Descendants("value").FirstOrDefault();
             if (node != null)
                 node.Value = content;
             nodeToUpdate.Attribute("name").Value = name;
-            Logger.AppendInfoLine("Aktualizacja węzła powiodła się");
+            _logger.Info("Aktualizacja węzła powiodła się");
         }
 
         private List<Translation> GetTranslations(XDocument polishRes, XDocument englishRes)
         {
-            Logger.AppendInfoLine("Próba pobrania wszystkich tłumaczeń");
+            _logger.Info("Próba pobrania wszystkich tłumaczeń");
 
             var polishTranslations = polishRes.Descendants()
               .Where(n => n.Name == "data")
@@ -271,10 +275,10 @@ namespace AddTranslation.TranslationResourcesManagement
             //if (missingEngTranslations.Count > 0)
             //{
             //  MessageBox.Show($"Tłumaczenia o kluczach:\n{string.Join(", ", missingEngTranslations)}\nnie istineją w angielskim słowniku", "Uwaga", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //  Logger.AppendWarningLine($"Tłumaczenia o kluczach:\n{string.Join(", ", missingEngTranslations)}\nnie istineją w angielskim słowniku");
+            //  _logger.Warn($"Tłumaczenia o kluczach:\n{string.Join(", ", missingEngTranslations)}\nnie istineją w angielskim słowniku");
             //}
 
-            Logger.AppendInfoLine("Pomyślnie pobrano wszystkie tłuamczenia");
+            _logger.Info("Pomyślnie pobrano wszystkie tłuamczenia");
             return translations;
         }
 
@@ -286,7 +290,7 @@ namespace AddTranslation.TranslationResourcesManagement
         /// <returns></returns>
         private (XDocument polish, XDocument english) LoadAndValidateResources()
         {
-            Logger.AppendInfoLine("Próba załadowania plików z zasobami");
+            _logger.Info("Próba załadowania plików z zasobami");
             if (_defaultResPath == null) return (null, null);
             try
             {
@@ -305,7 +309,7 @@ namespace AddTranslation.TranslationResourcesManagement
                       string.Join(", ", polishKeys.Except(englishKeys)) + "\n" +
                       string.Join(", ", englishKeys.Except(polishKeys))
                       + "\nKontnuować pomimo to?";
-                    Logger.AppendErrorLine(error);
+                    _logger.Error(error);
 
                     _userAcceptedDifferences = MessageBox.Show(error, "Błąd", MessageBoxButton.YesNo, MessageBoxImage.Error)
                       == MessageBoxResult.Yes;
@@ -319,7 +323,7 @@ namespace AddTranslation.TranslationResourcesManagement
             {
                 var error = "Nie udało się załadować zasobów. Upewnij się, że zasoby są w tym samym katalogu" +
                   $" i uruchom ponownie plik!\nBłąd: {ex.ToString()}";
-                Logger.AppendErrorLine(error);
+                _logger.Error(error);
                 MessageBox.Show(error, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                 return (null, null);
             }
@@ -333,7 +337,7 @@ namespace AddTranslation.TranslationResourcesManagement
         /// <returns></returns>
         public List<Translation> GetAllSimilairTranslations(string textToFind)
         {
-            Logger.AppendInfoLine($"Próba znalezienia tłumaczeń podobnych do: {textToFind}");
+            _logger.Info($"Próba znalezienia tłumaczeń podobnych do: {textToFind}");
 
             (var polishResource, var englishResource) = LoadAndValidateResources();
             if (polishResource == null || englishResource == null)
@@ -369,13 +373,13 @@ namespace AddTranslation.TranslationResourcesManagement
 
         private bool UpdateTranslationInDesigner(string name, string text, string oldName = null)
         {
-            Logger.AppendInfoLine("Rozpoczęcie metody UpdateTranslationInDesigner z parametrami: " +
+            _logger.Info("Rozpoczęcie metody UpdateTranslationInDesigner z parametrami: " +
               $"name={name}, text={text}, oldName={oldName ?? "NULL"}");
 
             var nameToSearchBy = oldName ?? name;
             var tempDesignerPath = _designerPath.Insert(_designerPath.LastIndexOf('\\') + 1, "Temp");
 
-            Logger.AppendInfoLine($"Ściezka tymczasowego zasobu: {tempDesignerPath}");
+            _logger.Info($"Ściezka tymczasowego zasobu: {tempDesignerPath}");
 
             StreamReader sr = null;
             StreamWriter sw = null;
@@ -391,7 +395,7 @@ namespace AddTranslation.TranslationResourcesManagement
                 sw.WriteLine(currentLine);
                 var lineAhead = sr.ReadLine();
                 var twoLinesAhead = sr.ReadLine();
-                Logger.AppendInfoLine("Rozpoczęto przpeisywanie pliku designera.");
+                _logger.Info("Rozpoczęto przpeisywanie pliku designera.");
 
                 var namespaceFound = false;
                 while (!sr.EndOfStream)
@@ -404,8 +408,8 @@ namespace AddTranslation.TranslationResourcesManagement
                     // Jeśli trafimy na deklarację właściwości, którą chcemy zaktualizować...
                     if (twoLinesAhead.Contains(string.Format(_declarationPattern, nameToSearchBy)))
                     {
-                        Logger.AppendInfoLine($"Znaleziono deklarację szukanej właściwości: {nameToSearchBy}");
-                        Logger.AppendInfoLine(twoLinesAhead);
+                        _logger.Info($"Znaleziono deklarację szukanej właściwości: {nameToSearchBy}");
+                        _logger.Info(twoLinesAhead);
                         // ... to currentLine (obecna linia) jest komentarzem, więc sklejamy własny komentarz,
                         // tak aby wcięcia się zgadzały (taby), oraz dwie następne
                         currentLine = currentLine.Substring(0, currentLine.IndexOf(_commentPattern) + _commentPattern.Length) + text;
@@ -415,28 +419,28 @@ namespace AddTranslation.TranslationResourcesManagement
                         sw.WriteLine(sr.ReadLine());
                         sw.WriteLine(sr.ReadLine().Replace(nameToSearchBy, name));
 
-                        Logger.AppendInfoLine("Pomyślnie zaktualziowano właściwość w designerze.");
+                        _logger.Info("Pomyślnie zaktualziowano właściwość w designerze.");
                         // Znaleźliśmy, co mieliśmy, więc kończymy tę pętlę i resztę pliku przepisujemy normalnie
                         break;
                     }
                     else
                         sw.WriteLine(currentLine);
                 }
-                Logger.AppendInfoLine("Przpeisywanie reszty pliku...");
+                _logger.Info("Przpeisywanie reszty pliku...");
                 while (!sr.EndOfStream)
                     sw.WriteLine(sr.ReadLine());
-                Logger.AppendInfoLine("Przepisano plik designera");
+                _logger.Info("Przepisano plik designera");
                 // Zamykamy strumienie i zastępujemy plik designera
                 sr.Close();
                 sw.Close();
                 File.Replace(tempDesignerPath, _designerPath, null);
-                Logger.AppendInfoLine("Zastąpiono plik designera tymczasowym, zaktualizowanym plikiem.");
+                _logger.Info("Zastąpiono plik designera tymczasowym, zaktualizowanym plikiem.");
                 return true;
             }
             catch (Exception ex)
             {
                 var error = $"Nie powiódł się zapis do designera! Błąd: {ex.ToString()}";
-                Logger.AppendErrorLine(error);
+                _logger.Error(error);
                 MessageBox.Show(error);
 
                 return false;
@@ -457,12 +461,12 @@ namespace AddTranslation.TranslationResourcesManagement
         /// <returns>Czy powiodło się dodawanie tłumaczenia (czyli też czy plik został zmodyfikowany)/</returns>
         private bool AddTranslationInDesigner(string name, string text)
         {
-            Logger.AppendInfoLine("Rozpoczęcie metody AddTranslationInDesigner z parametrami: " +
+            _logger.Info("Rozpoczęcie metody AddTranslationInDesigner z parametrami: " +
               $"name={name}, text={text}");
 
             var tempDesignerPath = _designerPath.Insert(_designerPath.LastIndexOf('\\') + 1, "Temp");
 
-            Logger.AppendInfoLine($"Ściezka tymczasowego zasobu: {tempDesignerPath}");
+            _logger.Info($"Ściezka tymczasowego zasobu: {tempDesignerPath}");
             StreamReader sr = null;
             StreamWriter sw = null;
 
@@ -487,7 +491,7 @@ namespace AddTranslation.TranslationResourcesManagement
                     twoLinesAhead = sr.ReadLine();
                     sw.WriteLine(currentLine);
                 }
-                Logger.AppendInfoLine("Zakończono odczytywanie pliku designera. Dodawanie właściwości z tłumaczeniem.");
+                _logger.Info("Zakończono odczytywanie pliku designera. Dodawanie właściwości z tłumaczeniem.");
                 // Dodajemy własciwość z naszym tłumaczeniem na końcu klasy
                 sw.WriteLine("\t\t/// <summary>");
                 sw.WriteLine("\t\t/// \t" + _commentPattern + text);
@@ -499,18 +503,18 @@ namespace AddTranslation.TranslationResourcesManagement
                 sw.WriteLine("\t\t}");
                 sw.WriteLine("\t}");
                 sw.WriteLine("}");
-                Logger.AppendInfoLine("Zakończono zapis pliku designera.");
+                _logger.Info("Zakończono zapis pliku designera.");
                 // Zamykamy strumienie i zastępujemy plik designera
                 sr.Close();
                 sw.Close();
                 File.Replace(tempDesignerPath, _designerPath, null);
-                Logger.AppendInfoLine("Zastąpiono plik designera tymczasowym, zaktualizowanym plikiem.");
+                _logger.Info("Zastąpiono plik designera tymczasowym, zaktualizowanym plikiem.");
                 return true;
             }
             catch (Exception ex)
             {
                 var error = $"Nie powiódł się zapis do designera! Błąd: {ex.ToString()}";
-                Logger.AppendErrorLine(error);
+                _logger.Error(error);
                 MessageBox.Show(error);
 
                 return false;
@@ -547,7 +551,7 @@ namespace AddTranslation.TranslationResourcesManagement
 
                 csProjFileModified = true;
             }
-            Logger.AppendInfoLine($"Mamy węzeł {propertyGroupNodeName}.");
+            _logger.Info($"Mamy węzeł {propertyGroupNodeName}.");
 
             pathNode = translationPropGroup.Descendants(validatedNs + pathNodeName).FirstOrDefault();
             if (pathNode == null)
@@ -562,7 +566,7 @@ namespace AddTranslation.TranslationResourcesManagement
 
                 csProjFileModified = true;
             }
-            Logger.AppendInfoLine($"Mamy węzeł {pathNodeName}.");
+            _logger.Info($"Mamy węzeł {pathNodeName}.");
 
             return csProjXml;
         }
@@ -610,7 +614,7 @@ namespace AddTranslation.TranslationResourcesManagement
             catch (Exception ex)
             {
                 MessageBox.Show("Nie udało się zapisywanie ścieżki tłumaczen w pliku konfiguracyjnym.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
-                Logger.AppendErrorLine(ex.ToString());
+                _logger.Error(ex.ToString());
                 return false;
             }
         }
@@ -623,7 +627,7 @@ namespace AddTranslation.TranslationResourcesManagement
             string fullPath = _defaultResPath.Substring(0, _defaultResPath.LastIndexOf('\\') + 1) + englishResFileName;
             if (!File.Exists(fullPath))
             {
-                Logger.AppendWarningLine($"Spodziewany plik z angielskimi zasobami nie istnieje: {fullPath}");
+                _logger.Warn($"Spodziewany plik z angielskimi zasobami nie istnieje: {fullPath}");
 
                 var ofd = new OpenFileDialog();
                 ofd.Title = "Wybierz angielski zasób";
@@ -634,12 +638,12 @@ namespace AddTranslation.TranslationResourcesManagement
                 ofd.Title = "Wybierz angielski zasób";
                 if (ofd.ShowDialog() ?? false)
                 {
-                    Logger.AppendInfoLine($"Wybrano plik z angielskimi zasobami: {ofd.FileName}");
+                    _logger.Info($"Wybrano plik z angielskimi zasobami: {ofd.FileName}");
                     _englishResPath = ofd.FileName;
                 }
                 else
                 {
-                    Logger.AppendErrorLine("Nie wybrano żadnego pliku z angielskimi zasobami!");
+                    _logger.Error("Nie wybrano żadnego pliku z angielskimi zasobami!");
                     MessageBox.Show("Nie wybrano pliku angielskiego zasobów! Dodawanie tłumaczeń nie będzie działać poprawnie.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }
@@ -664,18 +668,18 @@ namespace AddTranslation.TranslationResourcesManagement
                 ofd.Filter = "Resource file (*.resx)|*.resx";
                 ofd.Multiselect = false;
 
-                Logger.AppendWarningLine($"Spodziewany plik designera nie istnieje: {fullPath}");
+                _logger.Warn($"Spodziewany plik designera nie istnieje: {fullPath}");
 
                 MessageBox.Show($"Nie udało się pliku designera! Oczekiwano pliku w tym samym katalogu o nazwie {designerFileName}", "Ostrzeżenie", MessageBoxButton.OK, MessageBoxImage.Warning);
                 ofd.Title = "Wybierz plik designera";
                 if (ofd.ShowDialog() ?? false)
                 {
-                    Logger.AppendInfoLine($"Wybrano plik designera: {ofd.FileName}");
+                    _logger.Info($"Wybrano plik designera: {ofd.FileName}");
                     _englishResPath = ofd.FileName;
                 }
                 else
                 {
-                    Logger.AppendErrorLine("Nie wybrano żadnego pliku designera!");
+                    _logger.Error("Nie wybrano żadnego pliku designera!");
                     MessageBox.Show("Nie wybrano pliku designera! Dodawanie tłumaczeń nie będzie działać poprawnie.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }
