@@ -108,10 +108,11 @@
                 Grid.ColumnSpan="3"
                 Margin="20"
                 AutoGenerateColumns="False"
-                Background="#222222"
+                Background="{StaticResource Gray22Brush}"
                 BorderThickness="0"
                 ItemsSource="{Binding Translations}"
-                RowHeaderWidth="0">
+                RowHeaderWidth="0"
+                SelectionMode="Single">
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="Background" Value="{StaticResource Gray22Brush}" />

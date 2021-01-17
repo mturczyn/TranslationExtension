@@ -74,11 +74,11 @@
                         x:Name="rectangle"
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
-                        Fill="{StaticResource Gray22Brush}"
+                        Fill="{StaticResource Gray44Brush}"
                         SnapsToDevicePixels="True" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="rectangle" Property="Fill" Value="{StaticResource Gray33Brush}" />
+                            <Setter TargetName="rectangle" Property="Fill" Value="{StaticResource Gray66Brush}" />
                         </Trigger>
                         <Trigger Property="IsDragging" Value="true">
                             <Setter TargetName="rectangle" Property="Fill" Value="{StaticResource Gray88Brush}" />
@@ -115,7 +115,7 @@
     <Style x:Key="ScrollBar_Dark" TargetType="{x:Type ScrollBar}">
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
-        <Setter Property="Background" Value="{StaticResource Gray55Brush}" />
+        <Setter Property="Background" Value="{StaticResource Gray22Brush}" />
         <Setter Property="BorderBrush" Value="{StaticResource Gray33Brush}" />
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
         <Setter Property="BorderThickness" Value="1,0" />

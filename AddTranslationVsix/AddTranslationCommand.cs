@@ -85,23 +85,23 @@ namespace AddTranslation
             {
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\ColorsAndBrushes.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ColorsAndBrushes.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\SmallStylesForControls.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/SmallStylesForControls.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\Button.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/Button.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\ScrollBar.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ScrollBar.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"C:\Users\turek\source\my_git_repos\TranslationExtension\AddTranslationCore\UserInterfaceResources\ComboBox.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ComboBox.xaml", UriKind.RelativeOrAbsolute)
                 });
             }
             catch(Exception ex)
