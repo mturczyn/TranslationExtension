@@ -2,14 +2,18 @@
 using AddTranslationCore.DTO;
 using AddTranslationCore.ViewModel;
 using log4net;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace AddTranslationCore
 {
     public class AddTranslationViewModel : BaseObservable
     {
+        private readonly List<Translation> _translations = new List<Translation>();
+
         private readonly IProjectItemFactory _projectItemFactory;
         private readonly ILog _logger;
 
@@ -22,16 +26,22 @@ namespace AddTranslationCore
                 _logger.Error($"{nameof(projectItemFactory)} is null.");
                 throw new System.ArgumentNullException(nameof(projectItemFactory));
             }
+
             _projectItemFactory = projectItemFactory;
+            
+            Translations.Source = _translations;
+
             LoadProjects();
         }
+
         public ICommand TestCommand { get; } = new RelayCommand((param) =>
         {
             int i = 0;
         });
+
         public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
-        public ObservableCollection<Translation> Translations { get; } = new ObservableCollection<Translation>();
+        public CollectionViewSource Translations { get; } = new CollectionViewSource();
 
         public ObservableCollection<CultureInfo> AvailableLanguages { get; } = new ObservableCollection<CultureInfo>();
 
@@ -58,7 +68,12 @@ namespace AddTranslationCore
         public string OriginalText
         {
             get => _originalText;
-            set => Set(value, ref _originalText);
+            set
+            {
+                if (!Set(value, ref _originalText)) return;
+                if(!string.IsNullOrEmpty(OriginalText))
+                    SortTranslations();
+            }
         }
 
         private string _translationText;
@@ -77,14 +92,22 @@ namespace AddTranslationCore
 
         private void SetTranslations()
         {
-            Translations.Clear();
-            foreach (var t in SelectedProject.GetTranslations()) Translations.Add(t);
+            _translations.Clear();
+            foreach (var t in SelectedProject.GetTranslations()) _translations.Add(t);
+            Translations.View.Refresh();
         }
 
         private void SetAvailableLanguages()
         {
             AvailableLanguages.Clear();
             foreach (var t in SelectedProject.AvailableLanguages) AvailableLanguages.Add(t);
+        }
+
+        private void SortTranslations()
+        {
+            var comparer = new TranslationComparer(OriginalText);
+            _translations.Sort(comparer);
+            Translations.View.Refresh();
         }
     }
 }

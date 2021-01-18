@@ -110,7 +110,7 @@
                 AutoGenerateColumns="False"
                 Background="{StaticResource Gray22Brush}"
                 BorderThickness="0"
-                ItemsSource="{Binding Translations}"
+                ItemsSource="{Binding Translations.View}"
                 RowHeaderWidth="0"
                 SelectionMode="Single">
                 <DataGrid.ColumnHeaderStyle>

@@ -66,6 +66,8 @@
     <Compile Include="AddTranslationViewModel.cs" />
     <Compile Include="Abstractions\IProjectItem.cs" />
     <Compile Include="Abstractions\IProjectItemFactory.cs" />
+    <Compile Include="FindClosestString\FindClosestString.cs" />
+    <Compile Include="FindClosestString\TranslationComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
