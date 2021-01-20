@@ -1,4 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  #000000  -->
+    <Color
+        x:Key="BlackColor"
+        A="255"
+        B="0"
+        G="0"
+        R="0" />
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource BlackColor}" />
     <!--  #111111  -->
     <Color
         x:Key="Gray11Color"
@@ -111,4 +119,12 @@
         G="238"
         R="238" />
     <SolidColorBrush x:Key="GrayEEBrush" Color="{StaticResource GrayEEColor}" />
+    <!--  #FFFFFF  -->
+    <Color
+        x:Key="WhiteColor"
+        A="255"
+        B="255"
+        G="255"
+        R="255" />
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource WhiteColor}" />
 </ResourceDictionary>

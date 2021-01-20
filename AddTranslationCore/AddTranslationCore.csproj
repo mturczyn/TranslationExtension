@@ -84,6 +84,10 @@
     <Compile Include="ResourceProjectHelpers\ResourceFile.cs" />
     <Compile Include="ResourceProjectHelpers\ResourcesProjectHelper.cs" />
     <Compile Include="DTO\Translation.cs" />
+    <Page Include="UserInterfaceResources\DataGridStylesAndTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Compile Include="ViewModel\RelayCommand.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
