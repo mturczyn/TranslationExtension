@@ -182,28 +182,28 @@
                                 <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineDownButton}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowBottom" Property="Fill" Value="White" />
+                            <Setter TargetName="ArrowBottom" Property="Fill" Value="{StaticResource WhiteBrush}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineUpButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineUpButton}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowTop" Property="Fill" Value="White" />
+                            <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource WhiteBrush}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineDownButton}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowBottom" Property="Fill" Value="Black" />
+                            <Setter TargetName="ArrowBottom" Property="Fill" Value="{StaticResource BlackBrush}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineUpButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineUpButton}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowTop" Property="Fill" Value="Black" />
+                            <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource BlackBrush}" />
                         </MultiDataTrigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource GrayBBBrush}" />
@@ -280,28 +280,28 @@
                                         <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}" Value="true" />
                                         <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}" Value="true" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowRight" Property="Fill" Value="White" />
+                                    <Setter TargetName="ArrowRight" Property="Fill" Value="{StaticResource WhiteBrush}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
                                         <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}" Value="true" />
                                         <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}" Value="true" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="White" />
+                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource WhiteBrush}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
                                         <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}" Value="true" />
                                         <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}" Value="false" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowRight" Property="Fill" Value="Black" />
+                                    <Setter TargetName="ArrowRight" Property="Fill" Value="{StaticResource BlackBrush}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
                                         <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}" Value="true" />
                                         <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}" Value="false" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="Black" />
+                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource BlackBrush}" />
                                 </MultiDataTrigger>
                                 <Trigger Property="IsEnabled" Value="false">
                                     <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource GrayBBBrush}" />

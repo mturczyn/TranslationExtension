@@ -13,98 +13,66 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
-                <RowDefinition Height="2" />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
+
             <GridSplitter
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
+                Height="1"
                 HorizontalAlignment="Stretch"
                 Background="{StaticResource Gray99Brush}" />
-            <Label
+
+            <TextBlock
                 Grid.Row="0"
                 Grid.Column="0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Content="Translation key"
-                FontFamily="Calibri"
-                FontSize="18" />
+                Text="Translation key" />
+
+            <UniformGrid Grid.Column="1" Rows="1">
+                <TextBlock Margin="0,10" Text="Translation in" />
+                <ComboBox
+                    Margin="10"
+                    IsEditable="True"
+                    ItemsSource="{Binding AvailableLanguages}" />
+            </UniformGrid>
+
             <TextBox
                 Grid.Row="1"
                 Grid.Column="0"
-                Margin="20"
+                Margin="10"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 AcceptsReturn="True"
-                FontFamily="Calibri"
-                FontSize="16"
                 Text="{Binding TranslationKey, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap" />
 
-            <Label
-                Grid.Row="0"
-                Grid.Column="1"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Content="Original text"
-                FontFamily="Calibri"
-                FontSize="18" />
             <TextBox
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="20"
+                MinHeight="40"
+                Margin="0,10,10,10"
                 AcceptsReturn="True"
-                FontFamily="Calibri"
-                FontSize="18"
-                Text="{Binding OriginalText, UpdateSourceTrigger=PropertyChanged}"
-                TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Auto" />
-            <Label
-                Grid.Row="0"
-                Grid.Column="2"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                FontFamily="Calibri"
-                FontSize="18">
-                <UniformGrid Rows="1">
-                    <TextBlock Margin="0,10" Text="Translation in" />
-                    <ComboBox
-                        Margin="10"
-                        IsEditable="True"
-                        ItemsSource="{Binding AvailableLanguages}" />
-                </UniformGrid>
-            </Label>
-            <TextBox
-                Grid.Row="1"
-                Grid.Column="2"
-                Margin="20"
-                AcceptsReturn="True"
-                FontFamily="Calibri"
-                FontSize="16"
                 Text="{Binding TranslationText, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
 
-            <DataGrid
+            <TextBlock
                 Grid.Row="3"
-                Grid.RowSpan="2"
-                Grid.Column="0"
+                FontSize="20"
+                FontWeight="SemiBold"
+                Text="Similar translations" />
+            <DataGrid
+                Grid.Row="4"
                 Grid.ColumnSpan="3"
                 Margin="20"
                 AutoGenerateColumns="False"
@@ -138,29 +106,20 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Grid
+            <Button
                 Grid.Row="5"
-                Grid.Column="0"
-                Grid.ColumnSpan="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Button
-                    Margin="10,5,5,10"
-                    Command="{Binding TestCommand}"
-                    Content="OK"
-                    FontFamily="Calibri"
-                    FontSize="20"
-                    IsDefault="True" />
-                <Button
-                    Grid.Column="1"
-                    Margin="5,5,10,10"
-                    Content="Cancel"
-                    FontFamily="Calibri"
-                    FontSize="20"
-                    IsCancel="True" />
-            </Grid>
+                Margin="10,5,5,10"
+                Command="{Binding TestCommand}"
+                Content="OK"
+                FontSize="20"
+                IsDefault="True" />
+            <Button
+                Grid.Row="5"
+                Grid.Column="1"
+                Margin="5,5,10,10"
+                Content="Cancel"
+                FontSize="20"
+                IsCancel="True" />
 
             <ListBox
                 Grid.RowSpan="10"

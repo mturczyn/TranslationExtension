@@ -34,7 +34,7 @@ namespace AddTranslationCore
             LoadProjects();
         }
 
-        public ICommand TestCommand { get; } = new RelayCommand((param) =>
+        public ICommand TestCommand { get; } = new RelayCommand(() =>
         {
             int i = 0;
         });
@@ -64,23 +64,15 @@ namespace AddTranslationCore
             set => Set(value, ref _translationKey);
         }
 
-        private string _originalText;
-        public string OriginalText
-        {
-            get => _originalText;
-            set
-            {
-                if (!Set(value, ref _originalText)) return;
-                if(!string.IsNullOrEmpty(OriginalText))
-                    SortTranslations();
-            }
-        }
-
         private string _translationText;
         public string TranslationText
         {
             get => _translationText;
-            set => Set(value, ref _translationText);
+            set
+            {
+                if (!Set(value, ref _translationText)) return;
+                SortTranslations();
+            }
         }
 
         private void LoadProjects()
@@ -105,7 +97,7 @@ namespace AddTranslationCore
 
         private void SortTranslations()
         {
-            var comparer = new TranslationComparer(OriginalText);
+            var comparer = new TranslationComparer(TranslationText);
             _translations.Sort(comparer);
             Translations.View.Refresh();
         }
