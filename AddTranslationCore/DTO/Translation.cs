@@ -8,6 +8,14 @@ namespace AddTranslationCore.DTO
         public Translation(string translationKey, string translationText, CultureInfo cultureInfo)
             => (TranslationKey, TranslationText, CultureInfo) = (translationKey, translationText, cultureInfo);
 
+
+        private bool _isUnderEdition;
+        public bool IsUnderEdition
+        {
+            get => _isUnderEdition;
+            set => Set(value, ref _isUnderEdition, nameof(IsUnderEdition));
+        }
+
         private string _translationKey;
         public string TranslationKey
         {

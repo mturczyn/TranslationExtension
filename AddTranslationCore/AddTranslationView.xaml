@@ -72,6 +72,7 @@
                 FontWeight="SemiBold"
                 Text="Similar translations" />
             <DataGrid
+                Name="TranslationsDataGrid"
                 Grid.Row="4"
                 Grid.ColumnSpan="3"
                 Margin="20"
@@ -81,12 +82,50 @@
                 RowHeaderWidth="0"
                 SelectionMode="Single">
                 <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="1*" Header="{x:Null}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type dto:Translation}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Button
+                                        x:Name="EditButton"
+                                        Grid.ColumnSpan="2"
+                                        Command="{Binding ElementName=TranslationsDataGrid, Path=DataContext.EditTranslationCommand}"
+                                        CommandParameter="{Binding}"
+                                        Content="Edit" />
+                                    <Button
+                                        x:Name="SaveButton"
+                                        Command="{Binding ElementName=TranslationsDataGrid, Path=DataContext.SaveTranslationEditCommand}"
+                                        CommandParameter="{Binding}"
+                                        Content="Save"
+                                        Visibility="Collapsed" />
+                                    <Button
+                                        x:Name="CancelButton"
+                                        Grid.Column="1"
+                                        Command="{Binding ElementName=TranslationsDataGrid, Path=DataContext.CancelTranslationEditCommand}"
+                                        CommandParameter="{Binding}"
+                                        Content="Cancel"
+                                        Visibility="Collapsed" />
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsUnderEdition}" Value="True">
+                                        <Setter TargetName="EditButton" Property="Visibility" Value="Collapsed" />
+                                        <Setter TargetName="SaveButton" Property="Visibility" Value="Visible" />
+                                        <Setter TargetName="CancelButton" Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Width="1*" Header="Translation key">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type dto:Translation}">
                                 <TextBox
                                     Padding="5"
-                                    IsEnabled="False"
+                                    IsEnabled="{Binding IsUnderEdition}"
                                     Text="{Binding TranslationKey}"
                                     TextWrapping="Wrap" />
                             </DataTemplate>
@@ -97,7 +136,7 @@
                             <DataTemplate DataType="{x:Type dto:Translation}">
                                 <TextBox
                                     Padding="5"
-                                    IsEnabled="False"
+                                    IsEnabled="{Binding IsUnderEdition}"
                                     Text="{Binding TranslationText}"
                                     TextWrapping="Wrap" />
                             </DataTemplate>

@@ -2,6 +2,7 @@
 using AddTranslationCore.DTO;
 using AddTranslationCore.ViewModel;
 using log4net;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -34,10 +35,11 @@ namespace AddTranslationCore
             LoadProjects();
         }
 
-        public ICommand TestCommand { get; } = new RelayCommand(() =>
-        {
-            int i = 0;
-        });
+        public ICommand EditTranslationCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = true);
+
+        public ICommand SaveTranslationEditCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = false);
+        public ICommand CancelTranslationEditCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = false);
+
 
         public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
