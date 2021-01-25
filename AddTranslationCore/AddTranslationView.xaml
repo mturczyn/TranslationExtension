@@ -16,8 +16,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition />
                 <RowDefinition Height="Auto" />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -25,31 +25,26 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <GridSplitter
-                Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Height="1"
-                HorizontalAlignment="Stretch"
-                Background="{StaticResource Gray99Brush}" />
-
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="0"
+                Margin="10"
                 Text="Translation key" />
 
-            <UniformGrid Grid.Column="1" Rows="1">
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <TextBlock Margin="0,10" Text="Translation in" />
                 <ComboBox
+                    MinWidth="100"
                     Margin="10"
-                    IsEditable="True"
+                    HorizontalAlignment="Left"
                     ItemsSource="{Binding AvailableLanguages}" />
-            </UniformGrid>
+            </StackPanel>
 
             <TextBox
                 Grid.Row="1"
                 Grid.Column="0"
-                Margin="10"
+                MinHeight="60"
+                Margin="10,0"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 AcceptsReturn="True"
@@ -60,21 +55,30 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 MinHeight="40"
-                Margin="0,10,10,10"
+                Margin="0,0,10,0"
                 AcceptsReturn="True"
                 Text="{Binding TranslationText, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
 
-            <TextBlock
+            <GridSplitter
                 Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Height="1"
+                HorizontalAlignment="Stretch"
+                Background="{StaticResource Gray99Brush}" />
+
+            <TextBlock
+                Grid.Row="4"
                 FontSize="20"
                 FontWeight="SemiBold"
                 Text="Similar translations" />
+
             <DataGrid
                 Name="TranslationsDataGrid"
-                Grid.Row="4"
-                Grid.ColumnSpan="3"
+                Grid.Row="5"
+                Grid.ColumnSpan="2"
                 Margin="20"
                 AutoGenerateColumns="False"
                 BorderThickness="0"
@@ -82,10 +86,10 @@
                 RowHeaderWidth="0"
                 SelectionMode="Single">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Width="1*" Header="{x:Null}">
+                    <DataGridTemplateColumn Width="100" Header="{x:Null}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type dto:Translation}">
-                                <Grid>
+                                <Grid Background="{StaticResource BlackBrush}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                         <ColumnDefinition />
@@ -93,22 +97,40 @@
                                     <Button
                                         x:Name="EditButton"
                                         Grid.ColumnSpan="2"
+                                        Height="40"
+                                        Margin="2"
                                         Command="{Binding ElementName=TranslationsDataGrid, Path=DataContext.EditTranslationCommand}"
                                         CommandParameter="{Binding}"
                                         Content="Edit" />
                                     <Button
                                         x:Name="SaveButton"
+                                        Height="40"
+                                        Margin="2,2,0,2"
                                         Command="{Binding ElementName=TranslationsDataGrid, Path=DataContext.SaveTranslationEditCommand}"
                                         CommandParameter="{Binding}"
-                                        Content="Save"
-                                        Visibility="Collapsed" />
+                                        ToolTip="Save edit"
+                                        Visibility="Collapsed">
+                                        <Image
+                                            MaxWidth="24"
+                                            MaxHeight="24"
+                                            Source="Resources/save_button.ico"
+                                            Stretch="UniformToFill" />
+                                    </Button>
                                     <Button
                                         x:Name="CancelButton"
                                         Grid.Column="1"
+                                        Height="40"
+                                        Margin="2"
                                         Command="{Binding ElementName=TranslationsDataGrid, Path=DataContext.CancelTranslationEditCommand}"
                                         CommandParameter="{Binding}"
-                                        Content="Cancel"
-                                        Visibility="Collapsed" />
+                                        ToolTip="Cancel edit"
+                                        Visibility="Collapsed">
+                                        <Image
+                                            MaxWidth="24"
+                                            MaxHeight="24"
+                                            Source="Resources/cancel_button.ico"
+                                            Stretch="UniformToFill" />
+                                    </Button>
                                 </Grid>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding IsUnderEdition}" Value="True">
@@ -145,21 +167,30 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Button
-                Grid.Row="5"
-                Margin="10,5,5,10"
-                Command="{Binding TestCommand}"
-                Content="OK"
-                FontSize="20"
-                IsDefault="True" />
-            <Button
-                Grid.Row="5"
-                Grid.Column="1"
-                Margin="5,5,10,10"
-                Content="Cancel"
-                FontSize="20"
-                IsCancel="True" />
-
+            <StackPanel
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Grid.Row="2"
+                    Width="100"
+                    Margin="0,10,5,10"
+                    Command="{Binding SaveNewTranslationCommand}"
+                    Content="Save"
+                    FontSize="20"
+                    IsDefault="True"
+                    ToolTip="Save new translation" />
+                <Button
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Width="100"
+                    Margin="5,10,10,10"
+                    Content="Close"
+                    FontSize="20"
+                    IsCancel="True"
+                    ToolTip="Close window" />
+            </StackPanel>
             <ListBox
                 Grid.RowSpan="10"
                 Grid.Column="3"

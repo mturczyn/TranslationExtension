@@ -33,13 +33,17 @@ namespace AddTranslationCore
             Translations.Source = _translations;
 
             LoadProjects();
+
+            SaveNewTranslationCommand = new RelayCommand(SaveNewTranslation);
         }
 
         public ICommand EditTranslationCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = true);
 
         public ICommand SaveTranslationEditCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = false);
+
         public ICommand CancelTranslationEditCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = false);
 
+        public ICommand SaveNewTranslationCommand { get; } 
 
         public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
@@ -102,6 +106,11 @@ namespace AddTranslationCore
             var comparer = new TranslationComparer(TranslationText);
             _translations.Sort(comparer);
             Translations.View.Refresh();
+        }
+
+        private void SaveNewTranslation()
+        {
+
         }
     }
 }
