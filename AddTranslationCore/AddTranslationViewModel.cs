@@ -14,9 +14,9 @@ namespace AddTranslationCore
     public class AddTranslationViewModel : BaseObservable
     {
         private readonly List<Translation> _translations = new List<Translation>();
-
         private readonly IProjectItemFactory _projectItemFactory;
         private readonly ILog _logger;
+        private Translation _editedTranslation;
 
         public AddTranslationViewModel(IProjectItemFactory projectItemFactory)
         {
@@ -25,25 +25,25 @@ namespace AddTranslationCore
             if (projectItemFactory == null)
             {
                 _logger.Error($"{nameof(projectItemFactory)} is null.");
-                throw new System.ArgumentNullException(nameof(projectItemFactory));
+                throw new ArgumentNullException(nameof(projectItemFactory));
             }
 
             _projectItemFactory = projectItemFactory;
-            
             Translations.Source = _translations;
-
             LoadProjects();
-
-            SaveNewTranslationCommand = new RelayCommand(SaveNewTranslation);
         }
 
-        public ICommand EditTranslationCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = true);
+        private ICommand _editTranslationCommand;
+        public ICommand EditTranslationCommand => _editTranslationCommand ?? (_editTranslationCommand = new RelayCommand<Translation>(EditTranslation));
 
-        public ICommand SaveTranslationEditCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = false);
+        private ICommand _saveTranslationEditCommand;
+        public ICommand SaveTranslationEditCommand => _saveTranslationEditCommand ?? (_saveTranslationEditCommand = new RelayCommand<Translation>(SaveTranslationEdit));
 
-        public ICommand CancelTranslationEditCommand { get; } = new RelayCommand<Translation>(t => t.IsUnderEdition = false);
+        private ICommand _cancelTranslationEditCommand;
+        public ICommand CancelTranslationEditCommand => _cancelTranslationEditCommand ?? (_cancelTranslationEditCommand = new RelayCommand<Translation>(CancelTranslationEdit));
 
-        public ICommand SaveNewTranslationCommand { get; } 
+        private ICommand _saveNewTranslationCommand;
+        public ICommand SaveNewTranslationCommand => _saveNewTranslationCommand ?? (_saveNewTranslationCommand = new RelayCommand<Translation>(SaveNewTranslation));
 
         public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
@@ -108,9 +108,28 @@ namespace AddTranslationCore
             Translations.View.Refresh();
         }
 
-        private void SaveNewTranslation()
+        private void SaveNewTranslation(Translation translation)
         {
 
+        }
+
+        private void SaveTranslationEdit(Translation translation)
+        {
+
+        }
+
+        private void EditTranslation(Translation translation)
+        {
+            _logger.Info($"User started edition of {_editedTranslation.TranslationKey}");
+            translation.IsUnderEdition = true;
+            _editedTranslation = (Translation)translation.Clone();
+        }
+
+        private void CancelTranslationEdit(Translation translation)
+        {
+            _logger.Info($"User canceled edition of {_editedTranslation.TranslationKey}");
+            translation.IsUnderEdition = false;
+            _editedTranslation = null;
         }
     }
 }

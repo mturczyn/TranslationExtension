@@ -1,9 +1,10 @@
 ﻿using AddTranslationCore.Abstractions;
+using System;
 using System.Globalization;
 
 namespace AddTranslationCore.DTO
 {
-    public class Translation : BaseObservable
+    public class Translation : BaseObservable, ICloneable
     {
         public Translation(string translationKey, string translationText, CultureInfo cultureInfo)
             => (TranslationKey, TranslationText, CultureInfo) = (translationKey, translationText, cultureInfo);
@@ -37,6 +38,9 @@ namespace AddTranslationCore.DTO
             set => Set(value, ref _cultureInfo, nameof(CultureInfo));
         }
 
+        public object Clone() => this.MemberwiseClone();
+        
+        #region Equality overrides, ToString override
         public override bool Equals(object obj)
         {
             if (!(obj is Translation t)) return false;
@@ -53,5 +57,9 @@ namespace AddTranslationCore.DTO
             hash = hash * 31 + _translationKey.GetHashCode();
             return hash;
         }
+
+        public override string ToString()
+            => $"{CultureInfo} {TranslationKey} {TranslationText}";
+        #endregion
     }
 }
