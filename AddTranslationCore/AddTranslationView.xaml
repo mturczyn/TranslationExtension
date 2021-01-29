@@ -28,15 +28,19 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="0"
-                Margin="10"
+                Margin="20"
+                VerticalAlignment="Center"
                 Text="Translation key" />
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Margin="0,10" Text="Translation in" />
+                <TextBlock
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Text="Translation in" />
                 <ComboBox
                     MinWidth="100"
-                    Margin="10"
                     HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
                     ItemsSource="{Binding AvailableLanguages}" />
             </StackPanel>
 
@@ -44,7 +48,7 @@
                 Grid.Row="1"
                 Grid.Column="0"
                 MinHeight="60"
-                Margin="10,0"
+                Margin="20,0"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 AcceptsReturn="True"
@@ -55,11 +59,36 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 MinHeight="40"
-                Margin="0,0,10,0"
+                Margin="0,0,20,0"
                 AcceptsReturn="True"
                 Text="{Binding TranslationText, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
+
+            <StackPanel
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Grid.Row="2"
+                    Width="100"
+                    Margin="0,20,20,20"
+                    Command="{Binding SaveNewTranslationCommand}"
+                    Content="Save"
+                    FontSize="20"
+                    IsDefault="True"
+                    ToolTip="Save new translation" />
+                <Button
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Width="100"
+                    Margin="0,20,20,20"
+                    Content="Close"
+                    FontSize="20"
+                    IsCancel="True"
+                    ToolTip="Close window" />
+            </StackPanel>
 
             <GridSplitter
                 Grid.Row="3"
@@ -71,6 +100,7 @@
 
             <TextBlock
                 Grid.Row="4"
+                Margin="20,20,20,0"
                 FontSize="20"
                 FontWeight="SemiBold"
                 Text="Similar translations" />
@@ -84,6 +114,7 @@
                 BorderThickness="0"
                 ItemsSource="{Binding Translations.View}"
                 RowHeaderWidth="0"
+                SelectedItem="{Binding SelectedTranslation}"
                 SelectionMode="Single">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Width="100" Header="{x:Null}">
@@ -147,13 +178,15 @@
                             <DataTemplate DataType="{x:Type dto:Translation}">
                                 <TextBox
                                     Padding="5"
+                                    VerticalAlignment="Stretch"
                                     IsEnabled="{Binding IsUnderEdition}"
                                     Text="{Binding TranslationKey}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="2*" Header="Text in main language">
+                    <DataGridTemplateColumn Width="2*" Header="Translation text">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type dto:Translation}">
                                 <TextBox
@@ -167,43 +200,41 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <StackPanel
-                Grid.Row="2"
-                Grid.ColumnSpan="2"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal">
-                <Button
-                    Grid.Row="2"
-                    Width="100"
-                    Margin="0,10,5,10"
-                    Command="{Binding SaveNewTranslationCommand}"
-                    Content="Save"
-                    FontSize="20"
-                    IsDefault="True"
-                    ToolTip="Save new translation" />
-                <Button
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Width="100"
-                    Margin="5,10,10,10"
-                    Content="Close"
-                    FontSize="20"
-                    IsCancel="True"
-                    ToolTip="Close window" />
-            </StackPanel>
             <ListBox
                 Grid.RowSpan="10"
                 Grid.Column="3"
+                Background="{StaticResource Gray33Brush}"
+                BorderBrush="{StaticResource Gray99Brush}"
+                BorderThickness="1,0,0,0"
                 ItemsSource="{Binding ProjectReferences}"
                 SelectedItem="{Binding SelectedProject}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="0,0,0,5">
-                            <TextBlock Text="{Binding ProjectName}" />
-                            <TextBlock Foreground="LightGray" Text="{Binding FullPathToProjectFile}" />
-                        </StackPanel>
+                        <TextBlock Margin="5" Text="{Binding ProjectName}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="ToolTip" Value="{Binding FullPathToProjectFile}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <Border x:Name="ContentBorder">
+                                        <ContentPresenter />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="ContentBorder" Property="Background" Value="{StaticResource Gray44Brush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="ContentBorder" Property="Background" Value="{StaticResource Gray66Brush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListBox>
         </Grid>
     </Grid>

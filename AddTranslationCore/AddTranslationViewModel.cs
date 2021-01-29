@@ -63,6 +63,24 @@ namespace AddTranslationCore
             }
         }
 
+        private Translation _selectedTranslation;
+        public Translation SelectedTranslation
+        {
+            get => _selectedTranslation;
+            set
+            {
+                var prevSelected = _selectedTranslation;
+                if(!Set(value, ref _selectedTranslation)) return;
+                // If we switch from translation that was edited, we cancel that edition.
+                if (prevSelected?.IsUnderEdition ?? false)
+                {
+                    prevSelected.TranslationText = _editedTranslation.TranslationText;
+                    prevSelected.TranslationKey = _editedTranslation.TranslationKey;
+                    prevSelected.IsUnderEdition = false;
+                }
+            }
+        }
+
         private string _translationKey;
         public string TranslationKey
         {
@@ -120,7 +138,7 @@ namespace AddTranslationCore
 
         private void EditTranslation(Translation translation)
         {
-            _logger.Info($"User started edition of {_editedTranslation.TranslationKey}");
+            _logger.Info($"User started edition of {translation.TranslationKey}");
             translation.IsUnderEdition = true;
             _editedTranslation = (Translation)translation.Clone();
         }
