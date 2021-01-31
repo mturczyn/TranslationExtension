@@ -1,5 +1,5 @@
 ﻿using AddTranslationCore.Abstractions;
-using AddTranslationCore.ResourceProjectHelpers;
+using AddTranslationCore.ViewModel;
 using log4net;
 using Microsoft.Win32;
 using System.Collections.Generic;

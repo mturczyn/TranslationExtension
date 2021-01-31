@@ -2,7 +2,7 @@
 using System;
 using System.Globalization;
 
-namespace AddTranslationCore.DTO
+namespace AddTranslationCore.ViewModel
 {
     public class Translation : BaseObservable, ICloneable
     {

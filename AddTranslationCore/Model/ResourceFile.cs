@@ -1,4 +1,4 @@
-﻿using AddTranslationCore.DTO;
+﻿using AddTranslationCore.ViewModel;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace AddTranslationCore.ResourceProjectHelpers
+namespace AddTranslationCore.Model
 {
     /// <summary>
     /// Represents single dictionary file.
@@ -36,7 +36,7 @@ namespace AddTranslationCore.ResourceProjectHelpers
         {
             _logger = LogManager.GetLogger(nameof(ResourceFile));
             if (!File.Exists(fullPath)) throw new ArgumentException("Directory does not exist.");
-            
+
             IsMainResource = isMainResource;
             if (!IsMainResource)
             {
@@ -53,7 +53,7 @@ namespace AddTranslationCore.ResourceProjectHelpers
             // If everything is set correctly, we set the path.
             _fullPath = fullPath;
         }
-        
+
         public CultureInfo CultureInfo { get; }
         /// <summary>
         /// Determines if file is the main language used in application.
@@ -76,19 +76,19 @@ namespace AddTranslationCore.ResourceProjectHelpers
                     while (!xmlReader.EOF)
                     {
 #warning Zmienić na async
-                        if(!xmlReader.ReadToFollowing(DATA_NODE))
+                        if (!xmlReader.ReadToFollowing(DATA_NODE))
                             break;
-                        
+
                         var name = xmlReader.GetAttribute(NAME_ATTRIBUTE);
-                        if(name == null)
+                        if (name == null)
                         {
                             _logger.Warn($"In {DATA_NODE} node, but attribute {NAME_ATTRIBUTE} is not found. Path of the file {_fullPath}");
                             continue;
                         }
-                        
-                        if (name != translationName) 
+
+                        if (name != translationName)
                             continue;
-                        
+
                         _logger.Debug($"Found translation with name {translationName}");
 
                         if (!xmlReader.ReadToDescendant(VALUE_NODE))
@@ -130,7 +130,7 @@ namespace AddTranslationCore.ResourceProjectHelpers
             // For now we prohibit reading all translations from secondary file.
             // As user can choose arbitrary project as main project, here we
             // prevent reading many big files into memory.
-            if (! IsMainResource)
+            if (!IsMainResource)
             {
                 throw new InvalidOperationException("Getting all translations is allowed only for main resource.");
             }
@@ -143,11 +143,11 @@ namespace AddTranslationCore.ResourceProjectHelpers
                     while (!xmlReader.EOF)
                     {
 #warning Zmienić na async
-                        if(!xmlReader.ReadToFollowing(DATA_NODE))
+                        if (!xmlReader.ReadToFollowing(DATA_NODE))
                             break;
-                        
+
                         var name = xmlReader.GetAttribute(NAME_ATTRIBUTE);
-                        if(name == null)
+                        if (name == null)
                         {
                             _logger.Warn($"In {DATA_NODE} node, but attribute {NAME_ATTRIBUTE} is not found. Path of the file {_fullPath}");
                             continue;
@@ -178,7 +178,7 @@ namespace AddTranslationCore.ResourceProjectHelpers
                         _logger.Debug($"Adding translation: {nameof(name)} = {name}, {nameof(translationText)} = {translationText}");
 
                         var translation = new Translation(name, translationText, CultureInfo);
-                        if(translations.Any(t => t.TranslationKey == translation.TranslationKey))
+                        if (translations.Any(t => t.TranslationKey == translation.TranslationKey))
                         {
                             _logger.Warn($"We already read translation with key {translation.TranslationKey}.");
                             duplicates.Add(translation.TranslationKey);

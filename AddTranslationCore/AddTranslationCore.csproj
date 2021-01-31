@@ -82,9 +82,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ResourceProjectHelpers\ResourceFile.cs" />
-    <Compile Include="ResourceProjectHelpers\Project.cs" />
-    <Compile Include="DTO\Translation.cs" />
+    <Compile Include="Model\ResourceFile.cs" />
+    <Compile Include="ViewModel\Project.cs" />
+    <Compile Include="ViewModel\Translation.cs" />
     <EmbeddedResource Include="Resources\Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>

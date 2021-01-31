@@ -1,5 +1,4 @@
 ﻿using AddTranslationCore.Abstractions;
-using AddTranslationCore.DTO;
 using AddTranslationCore.ViewModel;
 using log4net;
 using System;
@@ -58,8 +57,10 @@ namespace AddTranslationCore
             get => _selectedProject;
             set
             {
-                _selectedProject.DuplicatedKeysFound -= ProjectDuplicatedKTranslationeysFound;
-                value.DuplicatedKeysFound += ProjectDuplicatedKTranslationeysFound;
+                if (_selectedProject != null)
+                    _selectedProject.DuplicatedKeysFound -= ProjectDuplicatedKTranslationeysFound;
+                if (value != null)
+                    value.DuplicatedKeysFound += ProjectDuplicatedKTranslationeysFound;
                 if (!Set(value, ref _selectedProject)) return;
                 SetTranslations();
                 SetAvailableLanguages();
@@ -73,7 +74,7 @@ namespace AddTranslationCore
             set
             {
                 var prevSelected = _selectedTranslation;
-                if(!Set(value, ref _selectedTranslation)) return;
+                if (!Set(value, ref _selectedTranslation)) return;
                 // If we switch from translation that was edited, we cancel that edition.
                 if (prevSelected?.IsUnderEdition ?? false)
                 {
@@ -155,7 +156,7 @@ namespace AddTranslationCore
 
         private void ProjectDuplicatedKTranslationeysFound(string[] duplicatedKeys)
         {
-            MessageBox.Show($"Found duplicated keys of translations:\n{string.Join(", ", duplicatedKeys)}");
+            MessageBox.Show($"Found duplicated keys of translations. You should resolve those duplicates before making any editions and adding new translations:\n{string.Join(", ", duplicatedKeys)}", "Duplicated keys found", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 }

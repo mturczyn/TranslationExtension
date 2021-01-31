@@ -129,4 +129,10 @@
   <data name="englishRandomString" xml:space="preserve">
     <value>sdfa</value>
   </data>
+  <data name="tesString123" xml:space="preserve">
+    <value>wergserv</value>
+  </data>
+  <data name="englishRandomString" xml:space="preserve">
+    <value>sdfa</value>
+  </data>
 </root>

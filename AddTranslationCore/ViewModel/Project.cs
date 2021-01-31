@@ -1,5 +1,5 @@
 ﻿using AddTranslationCore.Abstractions;
-using AddTranslationCore.DTO;
+using AddTranslationCore.Model;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -7,9 +7,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace AddTranslationCore.ResourceProjectHelpers
+namespace AddTranslationCore.ViewModel
 {
-    public class Project : IProjectItem
+    public class Project : BaseObservable, IProjectItem
     {
         public event Action<string[]> DuplicatedKeysFound;
 

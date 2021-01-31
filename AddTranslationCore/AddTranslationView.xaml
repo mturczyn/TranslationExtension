@@ -3,8 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dto="clr-namespace:AddTranslationCore.DTO"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:AddTranslationCore.ViewModel"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="{StaticResource BlackBrush}"
@@ -53,7 +53,7 @@
                 Grid.Column="1"
                 Margin="0,10,20,10"
                 VerticalAlignment="Center"
-                Text="Translation in" />
+                Text="Translation" />
 
             <TextBox
                 Grid.Row="2"
@@ -109,12 +109,22 @@
                 HorizontalAlignment="Stretch"
                 Background="{StaticResource Gray99Brush}" />
 
-            <TextBlock
+            <StackPanel
                 Grid.Row="5"
-                Margin="20,20,20,0"
-                FontSize="20"
-                FontWeight="SemiBold"
-                Text="Similar translations" />
+                Grid.ColumnSpan="3"
+                Margin="20,20,20,0">
+                <TextBlock
+                    FontSize="20"
+                    FontWeight="SemiBold"
+                    Text="Similar translations" />
+
+                <TextBlock
+                    Grid.Row="5"
+                    VerticalAlignment="Bottom"
+                    FontSize="12"
+                    Text="Best matches based on translation text" />
+            </StackPanel>
+
             <DataGrid
                 Name="TranslationsDataGrid"
                 Grid.Row="6"
@@ -129,7 +139,7 @@
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Width="100" Header="{x:Null}">
                         <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate DataType="{x:Type dto:Translation}">
+                            <DataTemplate DataType="{x:Type vm:Translation}">
                                 <Grid Background="{StaticResource BlackBrush}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />

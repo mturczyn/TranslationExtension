@@ -1,4 +1,4 @@
-﻿using AddTranslationCore.DTO;
+﻿using AddTranslationCore.ViewModel;
 using System;
 using System.Globalization;
 
