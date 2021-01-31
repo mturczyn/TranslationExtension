@@ -83,7 +83,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ResourceProjectHelpers\ResourceFile.cs" />
-    <Compile Include="ResourceProjectHelpers\ResourcesProjectHelper.cs" />
+    <Compile Include="ResourceProjectHelpers\Project.cs" />
     <Compile Include="DTO\Translation.cs" />
     <EmbeddedResource Include="Resources\Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -99,6 +99,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="TestConverter.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

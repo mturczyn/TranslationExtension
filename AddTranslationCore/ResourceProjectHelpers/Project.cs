@@ -1,4 +1,5 @@
-﻿using AddTranslationCore.DTO;
+﻿using AddTranslationCore.Abstractions;
+using AddTranslationCore.DTO;
 using log4net;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace AddTranslationCore.ResourceProjectHelpers
 {
-    public class ResourcesProjectHelper
+    public class Project : IProjectItem
     {
         private static readonly string _designerExtension = ".Designer.cs";
         private static readonly string _resExtension = ".resx";
@@ -15,20 +16,27 @@ namespace AddTranslationCore.ResourceProjectHelpers
         private ResourceFile[] _resourcesFiles;
         private readonly ILog _logger;
 
-        public ResourcesProjectHelper(string projectDirectory)
+        public Project(string fullPathToProjectFile, string projectName)
         {
-            _logger = LogManager.GetLogger(nameof(ResourcesProjectHelper));
-            IsValidResourcesDirectory = CheckIfIsCorrectResourcesProject(Path.GetDirectoryName(projectDirectory));
+            _logger = LogManager.GetLogger(nameof(Project));
+            IsValidResourcesProject = CheckIfIsCorrectResourcesProject(Path.GetDirectoryName(fullPathToProjectFile));
+            ProjectName = projectName;
+            FullPathToProjectFile = fullPathToProjectFile;
         }
 
-        public bool IsValidResourcesDirectory { get; }
+        public string ProjectName { get; }
+
+        public string FullPathToProjectFile { get; }
+
+        public bool IsValidResourcesProject { get; }
 
         public CultureInfo[] AvailableLanguages => _resourcesFiles.Where(rf => !rf.IsMainResource).Select(rf => rf.CultureInfo).ToArray();
 
         public Translation[] GetTranslations()
         {
             var file = _resourcesFiles.Single(f => f.IsMainResource);
-            return file.GetTranslations().ToArray();
+            var translations = file.GetTranslations(out string[] duplicatedKeys).ToArray();
+
         }
 
         public Translation GetTranslation(CultureInfo cultureInfo, string translationKey)

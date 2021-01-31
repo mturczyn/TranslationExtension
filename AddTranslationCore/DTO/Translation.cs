@@ -9,7 +9,6 @@ namespace AddTranslationCore.DTO
         public Translation(string translationKey, string translationText, CultureInfo cultureInfo)
             => (TranslationKey, TranslationText, CultureInfo) = (translationKey, translationText, cultureInfo);
 
-
         private bool _isUnderEdition;
         public bool IsUnderEdition
         {
@@ -40,26 +39,7 @@ namespace AddTranslationCore.DTO
 
         public object Clone() => this.MemberwiseClone();
         
-        #region Equality overrides, ToString override
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Translation t)) return false;
-            return this == t;
-        }
-
-        public static bool operator ==(Translation t1, Translation t2) => t1.TranslationKey == t2.TranslationKey;
-
-        public static bool operator !=(Translation t1, Translation t2) => !(t1 == t2);
-
-        public override int GetHashCode()
-        {
-            int hash = 17;
-            hash = hash * 31 + _translationKey.GetHashCode();
-            return hash;
-        }
-
         public override string ToString()
             => $"{CultureInfo} {TranslationKey} {TranslationText}";
-        #endregion
     }
 }

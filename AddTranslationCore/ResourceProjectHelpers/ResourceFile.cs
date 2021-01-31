@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace AddTranslationCore.ResourceProjectHelpers
@@ -124,7 +125,7 @@ namespace AddTranslationCore.ResourceProjectHelpers
         /// CAUTION: operation reads whole file, so it might result in huge data loaded into memory.
         /// </summary>
         /// <returns></returns>
-        public HashSet<Translation> GetTranslations()
+        public Translation[] GetTranslations(out string[] duplicatedKeys)
         {
             // For now we prohibit reading all translations from secondary file.
             // As user can choose arbitrary project as main project, here we
@@ -133,7 +134,8 @@ namespace AddTranslationCore.ResourceProjectHelpers
             {
                 throw new InvalidOperationException("Getting all translations is allowed only for main resource.");
             }
-            var translations = new HashSet<Translation>();
+            var translations = new List<Translation>();
+            var duplicates = new List<string>();
             using (var fileStream = new FileStream(_fullPath, FileMode.Open))
             {
                 using (var xmlReader = XmlReader.Create(fileStream))
@@ -176,16 +178,17 @@ namespace AddTranslationCore.ResourceProjectHelpers
                         _logger.Debug($"Adding translation: {nameof(name)} = {name}, {nameof(translationText)} = {translationText}");
 
                         var translation = new Translation(name, translationText, CultureInfo);
-
-                        if (!translations.Add(translation))
+                        if(translations.Any(t => t.TranslationKey == translation.TranslationKey))
                         {
-                            _logger.Warn($"We already read translation with key {translation.TranslationKey} - ignoring translation.");
-                            continue;
+                            _logger.Warn($"We already read translation with key {translation.TranslationKey}.");
+                            duplicates.Add(translation.TranslationKey);
                         }
+                        translations.Add(translation);
                     }
                 }
             }
-            return translations;
+            duplicatedKeys = duplicates.ToArray();
+            return translations.ToArray();
         }
     }
 }
