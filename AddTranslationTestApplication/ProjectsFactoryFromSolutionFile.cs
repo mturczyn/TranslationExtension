@@ -1,4 +1,5 @@
 ﻿using AddTranslationCore.Abstractions;
+using AddTranslationCore.ResourceProjectHelpers;
 using log4net;
 using Microsoft.Win32;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace AddTranslationTestApplication
                 var projName = match.Groups[1].Value;
                 var projRelativePath = match.Groups[2].Value;
 
-                var pi = new ProjectItem(Path.GetFullPath(Path.Combine(slnDir, projRelativePath)), projName);
+                var pi = new Project(Path.GetFullPath(Path.Combine(slnDir, projRelativePath)), projName);
                 if (pi.IsValidResourcesProject)
                     projectItems.Add(pi);
             }

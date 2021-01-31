@@ -1,10 +1,13 @@
 ﻿using AddTranslationCore.DTO;
+using System;
 using System.Globalization;
 
 namespace AddTranslationCore.Abstractions
 {
     public interface IProjectItem
     {
+        event Action<string[]> DuplicatedKeysFound;
+
         string ProjectName { get; }
         string FullPathToProjectFile { get; }
         /// <summary>

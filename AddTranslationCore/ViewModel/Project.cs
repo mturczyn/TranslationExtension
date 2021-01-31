@@ -1,6 +1,7 @@
 ﻿using AddTranslationCore.Abstractions;
 using AddTranslationCore.DTO;
 using log4net;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -10,6 +11,8 @@ namespace AddTranslationCore.ResourceProjectHelpers
 {
     public class Project : IProjectItem
     {
+        public event Action<string[]> DuplicatedKeysFound;
+
         private static readonly string _designerExtension = ".Designer.cs";
         private static readonly string _resExtension = ".resx";
 
@@ -36,7 +39,9 @@ namespace AddTranslationCore.ResourceProjectHelpers
         {
             var file = _resourcesFiles.Single(f => f.IsMainResource);
             var translations = file.GetTranslations(out string[] duplicatedKeys).ToArray();
-
+            if (duplicatedKeys.Length > 0)
+                DuplicatedKeysFound?.Invoke(duplicatedKeys);
+            return translations;
         }
 
         public Translation GetTranslation(CultureInfo cultureInfo, string translationKey)

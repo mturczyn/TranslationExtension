@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -57,6 +58,8 @@ namespace AddTranslationCore
             get => _selectedProject;
             set
             {
+                _selectedProject.DuplicatedKeysFound -= ProjectDuplicatedKTranslationeysFound;
+                value.DuplicatedKeysFound += ProjectDuplicatedKTranslationeysFound;
                 if (!Set(value, ref _selectedProject)) return;
                 SetTranslations();
                 SetAvailableLanguages();
@@ -148,6 +151,11 @@ namespace AddTranslationCore
             _logger.Info($"User canceled edition of {_editedTranslation.TranslationKey}");
             translation.IsUnderEdition = false;
             _editedTranslation = null;
+        }
+
+        private void ProjectDuplicatedKTranslationeysFound(string[] duplicatedKeys)
+        {
+            MessageBox.Show($"Found duplicated keys of translations:\n{string.Join(", ", duplicatedKeys)}");
         }
     }
 }
