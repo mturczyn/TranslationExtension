@@ -1,10 +1,12 @@
 ﻿using AddTranslationCore.Abstractions;
+using AddTranslationCore.Model;
 using AddTranslationCore.ViewModel;
 using log4net;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -49,7 +51,14 @@ namespace AddTranslationCore
 
         public CollectionViewSource Translations { get; } = new CollectionViewSource();
 
-        public ObservableCollection<CultureInfo> AvailableLanguages { get; } = new ObservableCollection<CultureInfo>();
+        public ObservableCollection<ResourceFile> AvailableLanguages { get; } = new ObservableCollection<ResourceFile>();
+
+        private ResourceFile _selectedLanguage;
+        public ResourceFile SelectedLanguage
+        {
+            get => _selectedLanguage;
+            set => Set(value, ref _selectedLanguage);
+        }
 
         private IProjectItem _selectedProject;
         public IProjectItem SelectedProject
@@ -120,7 +129,14 @@ namespace AddTranslationCore
         private void SetAvailableLanguages()
         {
             AvailableLanguages.Clear();
-            foreach (var t in SelectedProject.AvailableLanguages) AvailableLanguages.Add(t);
+            foreach (var t in SelectedProject.AvailableLanguages) 
+            {
+                AvailableLanguages.Add(t);
+                if (t.IsMainResource)
+                    SelectedLanguage = t;
+            }
+            if (SelectedLanguage == null)
+                SelectedLanguage = AvailableLanguages.First();
         }
 
         private void SortTranslations()
@@ -137,7 +153,7 @@ namespace AddTranslationCore
 
         private void SaveTranslationEdit(Translation translation)
         {
-
+            SelectedProject.SaveTranslation(translation);
         }
 
         private void EditTranslation(Translation translation)
@@ -151,6 +167,8 @@ namespace AddTranslationCore
         {
             _logger.Info($"User canceled edition of {_editedTranslation.TranslationKey}");
             translation.IsUnderEdition = false;
+            translation.TranslationKey = _editedTranslation.TranslationKey;
+            translation.TranslationText = _editedTranslation.TranslationText;
             _editedTranslation = null;
         }
 

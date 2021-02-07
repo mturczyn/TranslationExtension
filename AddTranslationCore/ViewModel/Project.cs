@@ -16,7 +16,6 @@ namespace AddTranslationCore.ViewModel
         private static readonly string _designerExtension = ".Designer.cs";
         private static readonly string _resExtension = ".resx";
 
-        private ResourceFile[] _resourcesFiles;
         private readonly ILog _logger;
 
         public Project(string fullPathToProjectFile, string projectName)
@@ -31,13 +30,16 @@ namespace AddTranslationCore.ViewModel
 
         public string FullPathToProjectFile { get; }
 
+        /// <inheritdoc/>
         public bool IsValidResourcesProject { get; }
 
-        public CultureInfo[] AvailableLanguages => _resourcesFiles.Where(rf => !rf.IsMainResource).Select(rf => rf.CultureInfo).ToArray();
+        /// <inheritdoc/>
+        public List<ResourceFile> AvailableLanguages { get; } = new List<ResourceFile>();
 
+        /// <inheritdoc/>
         public Translation[] GetTranslations()
         {
-            var file = _resourcesFiles.Single(f => f.IsMainResource);
+            var file = AvailableLanguages.Single(f => f.IsMainResource);
             var translations = file.GetTranslations(out string[] duplicatedKeys).ToArray();
             if (duplicatedKeys.Length > 0)
                 DuplicatedKeysFound?.Invoke(duplicatedKeys);
@@ -46,14 +48,14 @@ namespace AddTranslationCore.ViewModel
 
         public Translation GetTranslation(CultureInfo cultureInfo, string translationKey)
         {
-            var file = _resourcesFiles.Single(f => f.CultureInfo.LCID == cultureInfo.LCID);
+            var file = AvailableLanguages.Single(f => f.CultureInfo.LCID == cultureInfo.LCID);
             return file.GetTranslation(translationKey);
         }
 
         private bool CheckIfIsCorrectResourcesProject(string directory)
         {
             if (!Directory.Exists(directory)) return false;
-            if (!CheckIfDirectoryContainsRequiredFiles(directory, out _resourcesFiles))
+            if (!CheckIfDirectoryContainsRequiredFiles(directory))
             {
                 var enumerator = Directory.GetDirectories(directory).GetEnumerator();
                 bool isCorrect = false;
@@ -77,9 +79,9 @@ namespace AddTranslationCore.ViewModel
         /// NOTE: method requires single designer file, to avoid ambiguity.
         /// </summary>
         /// <returns></returns>
-        private static bool CheckIfDirectoryContainsRequiredFiles(string directory, out ResourceFile[] resourceFiles)
+        private bool CheckIfDirectoryContainsRequiredFiles(string directory)
         {
-            resourceFiles = null;
+            AvailableLanguages.Clear();
 
             var files = Directory.GetFiles(directory);
             var designerFiles = files.Where(f => f.EndsWith(_designerExtension)).ToArray();
@@ -92,19 +94,35 @@ namespace AddTranslationCore.ViewModel
             var designerFile = designerFiles.Single();
             // Here we remove designer extension and get only file name.
             var baseFileName = Path.GetFileName(designerFile.Substring(0, designerFile.Length - _designerExtension.Length));
-            // We get all resource files with translations.
-            List<ResourceFile> resFiles = new List<ResourceFile>();
             foreach (var path in files)
             {
                 var fileName = Path.GetFileName(path);
                 if (fileName.StartsWith(baseFileName) && fileName.EndsWith(_resExtension))
-                    resFiles.Add(new ResourceFile(path, 0 == string.Compare(fileName, baseFileName + _resExtension, true)));
+                {
+                    var isMainResource = 0 == string.Compare(fileName, baseFileName + _resExtension, true);
+                    // We want main resource as first element.
+                    if(isMainResource)
+                        AvailableLanguages.Insert(0, new ResourceFile(path, isMainResource));
+                    else
+                        AvailableLanguages.Add(new ResourceFile(path, isMainResource));
+                }
             }
 
-            if (resFiles.Count() <= 0) return false;
-            // Set found resources files.
-            resourceFiles = resFiles.ToArray();
+            if (AvailableLanguages.Count() <= 0) return false;
             return true;
+        }
+
+        /// <inheritdoc/>
+        public bool SaveTranslation(Translation newTranslation)
+        {
+            var resFile = AvailableLanguages.Single(f => f.IsMainResource);
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public bool SaveTranslation(Translation editedTranslation, string originalTranslationKey)
+        {
+            return false;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace AddTranslationCore.Model
     /// Represents single dictionary file.
     /// Handles getting translations from file.
     /// </summary>
-    class ResourceFile
+    public class ResourceFile
     {
         /// <summary>
         /// Name of a node in resources XML file. It contanis descendant element nameed 'value'.
