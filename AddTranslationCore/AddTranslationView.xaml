@@ -153,7 +153,7 @@
                     <DataGridTemplateColumn Width="100" Header="{x:Null}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type vm:Translation}">
-                                <Grid Background="{StaticResource BlackBrush}">
+                                <Grid Background="{StaticResource Gray22Brush}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                         <ColumnDefinition />
@@ -217,7 +217,7 @@
                                                 VerticalAlignment="Stretch"
                                                 Background="{StaticResource Gray33Brush}"
                                                 IsEnabled="{Binding IsUnderEdition}"
-                                                Text="{Binding TranslationKey, UpdateSourceTrigger=PropertyChanged}"
+                                                Text="{Binding Key, UpdateSourceTrigger=PropertyChanged}"
                                                 TextAlignment="Justify"
                                                 TextWrapping="Wrap" />
                                         </ControlTemplate>
@@ -228,7 +228,7 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn
                         Width="2*"
-                        Binding="{Binding TranslationText, UpdateSourceTrigger=PropertyChanged}"
+                        Binding="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                         Header="Translation text">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="{x:Type DataGridCell}">
@@ -239,7 +239,7 @@
                                                 Padding="5"
                                                 Background="{StaticResource Gray33Brush}"
                                                 IsEnabled="{Binding IsUnderEdition}"
-                                                Text="{Binding TranslationText, UpdateSourceTrigger=PropertyChanged}"
+                                                Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                                                 TextWrapping="Wrap" />
                                         </ControlTemplate>
                                     </Setter.Value>

@@ -45,7 +45,7 @@ namespace AddTranslationCore
         public ICommand CancelTranslationEditCommand => _cancelTranslationEditCommand ?? (_cancelTranslationEditCommand = new RelayCommand<Translation>(CancelTranslationEdit));
 
         private ICommand _saveNewTranslationCommand;
-        public ICommand SaveNewTranslationCommand => _saveNewTranslationCommand ?? (_saveNewTranslationCommand = new RelayCommand<Translation>(SaveNewTranslation));
+        public ICommand SaveNewTranslationCommand => _saveNewTranslationCommand ?? (_saveNewTranslationCommand = new RelayCommand(SaveNewTranslation));
 
         public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
@@ -57,7 +57,14 @@ namespace AddTranslationCore
         public ResourceFile SelectedLanguage
         {
             get => _selectedLanguage;
-            set => Set(value, ref _selectedLanguage);
+            set
+            {
+                if (value != null)
+                    value.DuplicatedKeysFound += DuplicatedTranslationKeysFound;
+                if (_selectedLanguage != null)
+                    _selectedLanguage.DuplicatedKeysFound -= DuplicatedTranslationKeysFound;
+                Set(value, ref _selectedLanguage);
+            }
         }
 
         private IProjectItem _selectedProject;
@@ -66,13 +73,9 @@ namespace AddTranslationCore
             get => _selectedProject;
             set
             {
-                if (_selectedProject != null)
-                    _selectedProject.DuplicatedKeysFound -= ProjectDuplicatedKTranslationeysFound;
-                if (value != null)
-                    value.DuplicatedKeysFound += ProjectDuplicatedKTranslationeysFound;
                 if (!Set(value, ref _selectedProject)) return;
-                SetTranslations();
                 SetAvailableLanguages();
+                SetTranslations();
             }
         }
 
@@ -87,8 +90,8 @@ namespace AddTranslationCore
                 // If we switch from translation that was edited, we cancel that edition.
                 if (prevSelected?.IsUnderEdition ?? false)
                 {
-                    prevSelected.TranslationText = _editedTranslation.TranslationText;
-                    prevSelected.TranslationKey = _editedTranslation.TranslationKey;
+                    prevSelected.Text = _editedTranslation.Text;
+                    prevSelected.Key = _editedTranslation.Key;
                     prevSelected.IsUnderEdition = false;
                 }
             }
@@ -121,8 +124,13 @@ namespace AddTranslationCore
 
         private void SetTranslations()
         {
+            if(SelectedLanguage == null)
+            {
+                _logger.Warn("Trying to set translations, but language was not selected");
+                return;
+            }
             _translations.Clear();
-            foreach (var t in SelectedProject.GetTranslations()) _translations.Add(t);
+            foreach (var t in SelectedLanguage.GetTranslations()) _translations.Add(t);
             Translations.View.Refresh();
         }
 
@@ -131,6 +139,7 @@ namespace AddTranslationCore
             AvailableLanguages.Clear();
             foreach (var t in SelectedProject.AvailableLanguages) 
             {
+
                 AvailableLanguages.Add(t);
                 if (t.IsMainResource)
                     SelectedLanguage = t;
@@ -146,33 +155,68 @@ namespace AddTranslationCore
             Translations.View.Refresh();
         }
 
-        private void SaveNewTranslation(Translation translation)
+        private void SaveNewTranslation()
         {
-
+            if (SelectedLanguage == null)
+            {
+                _logger.Warn("Trying to save new translation, but language was not selected");
+                MessageBox.Show("Please select language before working with translations.");
+                return;
+            }
+            var translation = new Translation(TranslationKey, TranslationText, SelectedLanguage.CultureInfo);
+            if (!SelectedLanguage.SaveTranslation(translation))
+            {
+                MessageBox.Show("Saving of translation failed. Please ensure correctness of resource file.");
+            }
+            else
+            {
+                TranslationKey = string.Empty;
+                TranslationText = string.Empty;
+            }
         }
 
         private void SaveTranslationEdit(Translation translation)
         {
-            SelectedProject.SaveTranslation(translation);
+            if (SelectedLanguage == null)
+            {
+                _logger.Warn("Trying to save edited translation, but language was not selected");
+                MessageBox.Show("Please select language before working with translations.");
+                return;
+            }
+            if (_editedTranslation == null)
+            {
+                _logger.Error($"Trying to edit translation, but {nameof(_editedTranslation)} is null");
+                MessageBox.Show("Something went really wrong. Please report issue on GItHub repo https://github.com/mturczyn/TranslationExtension/issues");
+#warning Zamknąć apkę??
+                return;
+            }
+            if(!SelectedLanguage.SaveTranslation(translation, _editedTranslation.Key))
+            {
+                MessageBox.Show("Failed updating translation.");
+                translation.Text = _editedTranslation.Text;
+                translation.Key = _editedTranslation.Key;
+            }
+            translation.IsUnderEdition = false;
+            _editedTranslation = null;
         }
 
         private void EditTranslation(Translation translation)
         {
-            _logger.Info($"User started edition of {translation.TranslationKey}");
+            _logger.Info($"User started edition of {translation.Key}");
             translation.IsUnderEdition = true;
             _editedTranslation = (Translation)translation.Clone();
         }
 
         private void CancelTranslationEdit(Translation translation)
         {
-            _logger.Info($"User canceled edition of {_editedTranslation.TranslationKey}");
+            _logger.Info($"User canceled edition of {_editedTranslation.Key}");
             translation.IsUnderEdition = false;
-            translation.TranslationKey = _editedTranslation.TranslationKey;
-            translation.TranslationText = _editedTranslation.TranslationText;
+            translation.Key = _editedTranslation.Key;
+            translation.Text = _editedTranslation.Text;
             _editedTranslation = null;
         }
 
-        private void ProjectDuplicatedKTranslationeysFound(string[] duplicatedKeys)
+        private void DuplicatedTranslationKeysFound(string[] duplicatedKeys)
         {
             MessageBox.Show($"Found duplicated keys of translations. You should resolve those duplicates before making any editions and adding new translations:\n{string.Join(", ", duplicatedKeys)}", "Duplicated keys found", MessageBoxButton.OK, MessageBoxImage.Warning);
         }

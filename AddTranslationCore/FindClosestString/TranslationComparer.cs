@@ -11,7 +11,7 @@ namespace AddTranslationCore
 
         public int Compare(Translation x, Translation y)
         {
-            var compareResult = FindClosestString.GetDistance(_textToCompareBy, x.TranslationText) - FindClosestString.GetDistance(_textToCompareBy, y.TranslationText);
+            var compareResult = FindClosestString.GetDistance(_textToCompareBy, x.Text) - FindClosestString.GetDistance(_textToCompareBy, y.Text);
             if (compareResult > 0) return 1;
             else if (compareResult == 0) return 0;
             else return -1;

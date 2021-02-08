@@ -36,16 +36,6 @@ namespace AddTranslationCore.ViewModel
         /// <inheritdoc/>
         public List<ResourceFile> AvailableLanguages { get; } = new List<ResourceFile>();
 
-        /// <inheritdoc/>
-        public Translation[] GetTranslations()
-        {
-            var file = AvailableLanguages.Single(f => f.IsMainResource);
-            var translations = file.GetTranslations(out string[] duplicatedKeys).ToArray();
-            if (duplicatedKeys.Length > 0)
-                DuplicatedKeysFound?.Invoke(duplicatedKeys);
-            return translations;
-        }
-
         public Translation GetTranslation(CultureInfo cultureInfo, string translationKey)
         {
             var file = AvailableLanguages.Single(f => f.CultureInfo.LCID == cultureInfo.LCID);

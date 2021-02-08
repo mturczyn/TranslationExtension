@@ -7,7 +7,7 @@ namespace AddTranslationCore.ViewModel
     public class Translation : BaseObservable, ICloneable
     {
         public Translation(string translationKey, string translationText, CultureInfo cultureInfo)
-            => (TranslationKey, TranslationText, CultureInfo) = (translationKey, translationText, cultureInfo);
+            => (Key, Text, CultureInfo) = (translationKey, translationText, cultureInfo);
 
         private bool _isUnderEdition;
         public bool IsUnderEdition
@@ -17,14 +17,14 @@ namespace AddTranslationCore.ViewModel
         }
 
         private string _translationKey;
-        public string TranslationKey
+        public string Key
         {
             get => _translationKey;
             set => Set(value, ref _translationKey);
         }
 
         private string _translationText;
-        public string TranslationText
+        public string Text
         {
             get => _translationText;
             set => Set(value, ref _translationText);
@@ -40,6 +40,6 @@ namespace AddTranslationCore.ViewModel
         public object Clone() => this.MemberwiseClone();
         
         public override string ToString()
-            => $"{CultureInfo} {TranslationKey} {TranslationText}";
+            => $"{CultureInfo} {Key} {Text}";
     }
 }
