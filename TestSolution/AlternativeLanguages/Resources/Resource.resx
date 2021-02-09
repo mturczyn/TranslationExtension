@@ -135,4 +135,10 @@
   <data name="englishRandomString" xml:space="preserve">
     <value>sdfa</value>
   </data>
+  <data name="as" xml:space="preserve">
+    <value>asd</value>
+  </data>
+  <data name="g g g g gg" xml:space="preserve">
+    <value />
+  </data>
 </root>

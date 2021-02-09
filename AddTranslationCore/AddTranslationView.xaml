@@ -89,30 +89,35 @@
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
 
-            <StackPanel
-                Grid.Row="3"
-                Grid.ColumnSpan="2"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal">
+            <Grid Grid.Row="3" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Margin="20"
+                    Foreground="Red"
+                    Text="{Binding ErrorText}" />
                 <Button
-                    Grid.Row="2"
+                    Grid.Column="1"
                     Width="100"
                     Margin="0,20,20,20"
                     Command="{Binding SaveNewTranslationCommand}"
                     Content="Save"
                     FontSize="20"
                     IsDefault="True"
+                    IsEnabled="{Binding IsKeyCorrect}"
                     ToolTip="Save new translation" />
                 <Button
-                    Grid.Row="2"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Width="100"
                     Margin="0,20,20,20"
                     Content="Close"
                     FontSize="20"
                     IsCancel="True"
                     ToolTip="Close window" />
-            </StackPanel>
+            </Grid>
 
             <GridSplitter
                 Grid.Row="4"

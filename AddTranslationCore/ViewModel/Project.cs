@@ -1,7 +1,6 @@
 ﻿using AddTranslationCore.Abstractions;
 using AddTranslationCore.Model;
 using log4net;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -11,8 +10,6 @@ namespace AddTranslationCore.ViewModel
 {
     public class Project : BaseObservable, IProjectItem
     {
-        public event Action<string[]> DuplicatedKeysFound;
-
         private static readonly string _designerExtension = ".Designer.cs";
         private static readonly string _resExtension = ".resx";
 
@@ -91,7 +88,7 @@ namespace AddTranslationCore.ViewModel
                 {
                     var isMainResource = 0 == string.Compare(fileName, baseFileName + _resExtension, true);
                     // We want main resource as first element.
-                    if(isMainResource)
+                    if (isMainResource)
                         AvailableLanguages.Insert(0, new ResourceFile(path, isMainResource));
                     else
                         AvailableLanguages.Add(new ResourceFile(path, isMainResource));

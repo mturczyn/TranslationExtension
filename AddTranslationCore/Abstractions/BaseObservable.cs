@@ -19,8 +19,10 @@ namespace AddTranslationCore.Abstractions
         {
             if (EqualityComparer<T>.Default.Equals(value, backingField)) return false;
             backingField = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            RaisePropertyChanged(propertyName);
             return true;
         }
+
+        protected void RaisePropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

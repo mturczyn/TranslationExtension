@@ -5,8 +5,8 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -67,6 +67,15 @@ namespace AddTranslationCore
             }
         }
 
+        public bool IsKeyCorrect => string.IsNullOrEmpty(ErrorText);
+
+        private string _errorText;
+        public string ErrorText
+        {
+            get => _errorText;
+            set => Set(value, ref _errorText);
+        }
+
         private IProjectItem _selectedProject;
         public IProjectItem SelectedProject
         {
@@ -101,7 +110,11 @@ namespace AddTranslationCore
         public string TranslationKey
         {
             get => _translationKey;
-            set => Set(value, ref _translationKey);
+            set
+            {
+                if (!Set(value, ref _translationKey)) return;
+                ValidateTranslationKey();
+            }
         }
 
         private string _translationText;
@@ -124,7 +137,7 @@ namespace AddTranslationCore
 
         private void SetTranslations()
         {
-            if(SelectedLanguage == null)
+            if (SelectedLanguage == null)
             {
                 _logger.Warn("Trying to set translations, but language was not selected");
                 return;
@@ -137,7 +150,7 @@ namespace AddTranslationCore
         private void SetAvailableLanguages()
         {
             AvailableLanguages.Clear();
-            foreach (var t in SelectedProject.AvailableLanguages) 
+            foreach (var t in SelectedProject.AvailableLanguages)
             {
 
                 AvailableLanguages.Add(t);
@@ -172,6 +185,8 @@ namespace AddTranslationCore
             {
                 TranslationKey = string.Empty;
                 TranslationText = string.Empty;
+                // Refresh after successful save.
+                SetTranslations();
             }
         }
 
@@ -190,7 +205,7 @@ namespace AddTranslationCore
 #warning Zamknąć apkę??
                 return;
             }
-            if(!SelectedLanguage.SaveTranslation(translation, _editedTranslation.Key))
+            if (!SelectedLanguage.SaveTranslation(translation, _editedTranslation.Key))
             {
                 MessageBox.Show("Failed updating translation.");
                 translation.Text = _editedTranslation.Text;
@@ -217,8 +232,19 @@ namespace AddTranslationCore
         }
 
         private void DuplicatedTranslationKeysFound(string[] duplicatedKeys)
+            => MessageBox.Show($"Found duplicated keys of translations. " +
+                $"You should resolve those duplicates before making any editions and adding new translations:" +
+                $"\n{string.Join(", ", duplicatedKeys)}", "Duplicated keys found", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+        private void ValidateTranslationKey()
         {
-            MessageBox.Show($"Found duplicated keys of translations. You should resolve those duplicates before making any editions and adding new translations:\n{string.Join(", ", duplicatedKeys)}", "Duplicated keys found", MessageBoxButton.OK, MessageBoxImage.Warning);
+            if (string.IsNullOrWhiteSpace(TranslationKey))
+                ErrorText = "Translation key must not be empty.";
+            else if (Regex.IsMatch(TranslationKey, @"\s+"))
+                ErrorText = "Translation key must not contain white spaces.";
+            else
+                ErrorText = string.Empty;
+            RaisePropertyChanged(nameof(IsKeyCorrect));
         }
     }
 }
