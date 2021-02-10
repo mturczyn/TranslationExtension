@@ -4,9 +4,9 @@
         <Setter Property="Foreground" Value="{StaticResource GrayAABrush}" />
         <Setter Property="FontSize" Value="18" />
         <Setter Property="Padding" Value="10,5,5,5" />
-        <Setter Property="BorderThickness" Value="0,0,0,1"/>
-        <Setter Property="Margin" Value="0,0,0,0"/>
-        <Setter Property="BorderBrush" Value="{StaticResource Gray55Brush}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="BorderBrush" Value="{StaticResource Gray55Brush}" />
     </Style>
     <!--  Style and template for the DataGridRow.  -->
     <Style TargetType="{x:Type DataGridRow}">
@@ -16,10 +16,10 @@
             <Setter.Value>
                 <ControlTemplate>
                     <TextBlock
-                                        Margin="2,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Foreground="Red"
-                                        Text="!" />
+                        Margin="2,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="Red"
+                        Text="!" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -27,10 +27,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridRow}">
                     <Border
-                                        x:Name="DGR_Border"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        SnapsToDevicePixels="True">
+                        x:Name="DGR_Border"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True">
                         <SelectiveScrollingGrid>
                             <SelectiveScrollingGrid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -41,18 +41,18 @@
                                 <RowDefinition Height="Auto" />
                             </SelectiveScrollingGrid.RowDefinitions>
                             <DataGridCellsPresenter
-                                                Grid.Column="1"
-                                                ItemsPanel="{TemplateBinding ItemsPanel}"
-                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                Grid.Column="1"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                             <DataGridDetailsPresenter
-                                                Grid.Row="1"
-                                                Grid.Column="1"
-                                                SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding AreRowDetailsFrozen, ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical}, Converter={x:Static DataGrid.RowDetailsScrollingConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                                Visibility="{TemplateBinding DetailsVisibility}" />
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding AreRowDetailsFrozen, ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical}, Converter={x:Static DataGrid.RowDetailsScrollingConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                Visibility="{TemplateBinding DetailsVisibility}" />
                             <DataGridRowHeader
-                                                Grid.RowSpan="2"
-                                                SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
-                                                Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                Grid.RowSpan="2"
+                                SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                                Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
                         </SelectiveScrollingGrid>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -65,7 +65,7 @@
         </Setter>
     </Style>
     <Style TargetType="{x:Type DataGridCell}">
-        <Setter Property="Background" Value="{StaticResource Gray66Brush}"/>
+        <Setter Property="Background" Value="{StaticResource Gray66Brush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
@@ -74,6 +74,6 @@
         </Style.Triggers>
     </Style>
     <Style TargetType="{x:Type DataGrid}">
-        <Setter Property="Background" Value="{StaticResource Gray22Brush}"/>
+        <Setter Property="Background" Value="{StaticResource Gray22Brush}" />
     </Style>
 </ResourceDictionary>

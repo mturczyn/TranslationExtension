@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
+using System.CodeDom.Compiler;
 using System.Windows.Input;
 
 namespace AddTranslationCore
@@ -47,6 +48,9 @@ namespace AddTranslationCore
         private ICommand _saveNewTranslationCommand;
         public ICommand SaveNewTranslationCommand => _saveNewTranslationCommand ?? (_saveNewTranslationCommand = new RelayCommand(SaveNewTranslation));
 
+        private ICommand _viewLoadedCommand;
+        public ICommand ViewLoadedCommand => _viewLoadedCommand ?? (_viewLoadedCommand = new RelayCommand(ViewLoaded));
+
         public ObservableCollection<IProjectItem> ProjectReferences { get; } = new ObservableCollection<IProjectItem>();
 
         public CollectionViewSource Translations { get; } = new CollectionViewSource();
@@ -63,9 +67,12 @@ namespace AddTranslationCore
                     value.DuplicatedKeysFound += DuplicatedTranslationKeysFound;
                 if (_selectedLanguage != null)
                     _selectedLanguage.DuplicatedKeysFound -= DuplicatedTranslationKeysFound;
-                Set(value, ref _selectedLanguage);
+                if (!Set(value, ref _selectedLanguage)) return;
+                RaisePropertyChanged(nameof(IsLanguageSelected));
             }
         }
+
+        public bool IsLanguageSelected => SelectedLanguage != null;
 
         public bool IsKeyCorrect => string.IsNullOrEmpty(ErrorText);
 
@@ -190,6 +197,12 @@ namespace AddTranslationCore
             }
         }
 
+        private void ViewLoaded()
+        {
+            RaisePropertyChanged(nameof(IsKeyCorrect));
+            RaisePropertyChanged(nameof(IsLanguageSelected));
+        }
+
         private void SaveTranslationEdit(Translation translation)
         {
             if (SelectedLanguage == null)
@@ -242,6 +255,9 @@ namespace AddTranslationCore
                 ErrorText = "Translation key must not be empty.";
             else if (Regex.IsMatch(TranslationKey, @"\s+"))
                 ErrorText = "Translation key must not contain white spaces.";
+            // We leave the most expensvive check last, after most obvious, as fallback.
+            else if(!CodeDomProvider.CreateProvider("C#").IsValidIdentifier(TranslationKey))
+                ErrorText = "Translation key must be valid C# variable name.";
             else
                 ErrorText = string.Empty;
             RaisePropertyChanged(nameof(IsKeyCorrect));
