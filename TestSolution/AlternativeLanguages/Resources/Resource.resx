@@ -141,4 +141,7 @@
   <data name="g g g g gg" xml:space="preserve">
     <value />
   </data>
+  <data name="testString123" xml:space="preserve">
+    <value>sdgasdsdd</value>
+  </data>
 </root>

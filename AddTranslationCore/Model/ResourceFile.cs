@@ -123,15 +123,16 @@ namespace AddTranslationCore.Model
             return true;
         }
 
+        public bool CheckIfTranslationKetExists(string translationKey) => GetTranslation(translationKey) != null;
+
         /// <summary>
         /// Get translation with specific key. It reads XML file until translation
         /// with specified name is found.
         /// </summary>
-        /// <param name="translationName">Name of translation.</param>
-        /// <returns></returns>
-        public Translation GetTranslation(string translationName)
+        /// <param name="translationKey">Name of translation.</param>
+        /// <returns>Translation object if key is found, null otherwise.</returns>
+        public Translation GetTranslation(string translationKey)
         {
-            var translation = new Translation(translationName, string.Empty, CultureInfo);
             using (var fileStream = new FileStream(_fullPath, FileMode.Open))
             using (var xmlReader = XmlReader.Create(fileStream))
             {
@@ -148,10 +149,10 @@ namespace AddTranslationCore.Model
                         continue;
                     }
 
-                    if (name != translationName)
+                    if (name != translationKey)
                         continue;
 
-                    _logger.Debug($"Found translation with name {translationName}");
+                    _logger.Debug($"Found translation with name {translationKey}");
 
                     if (!xmlReader.ReadToDescendant(VALUE_NODE))
                     {
@@ -174,11 +175,11 @@ namespace AddTranslationCore.Model
                         _logger.Warn($"Unexpected node type, expected {XmlNodeType.Text}");
                         continue;
                     }
-                    translation.Text = xmlReader.Value;
-                    return translation;
+
+                    return new Translation(translationKey, xmlReader.Value, CultureInfo);
                 }
             }
-            return translation;
+            return null;
         }
 
         /// <summary>

@@ -183,6 +183,11 @@ namespace AddTranslationCore
                 MessageBox.Show("Please select language before working with translations.");
                 return;
             }
+            if (CheckIfTranslationKetExists(TranslationKey))
+            {
+                MessageBox.Show($"Translation key \"{TranslationKey}\" already in use. Keys must be unique.");
+                return;
+            }
             var translation = new Translation(TranslationKey, TranslationText, SelectedLanguage.CultureInfo);
             if (!SelectedLanguage.SaveTranslation(translation))
             {
@@ -216,6 +221,11 @@ namespace AddTranslationCore
                 _logger.Error($"Trying to edit translation, but {nameof(_editedTranslation)} is null");
                 MessageBox.Show("Something went really wrong. Please report issue on GItHub repo https://github.com/mturczyn/TranslationExtension/issues");
 #warning Zamknąć apkę??
+                return;
+            }
+            if (CheckIfTranslationKetExists(translation.Key))
+            {
+                MessageBox.Show($"Translation key \"{translation.Key}\" already in use. Keys must be unique.");
                 return;
             }
             if (!SelectedLanguage.SaveTranslation(translation, _editedTranslation.Key))
@@ -262,5 +272,7 @@ namespace AddTranslationCore
                 ErrorText = string.Empty;
             RaisePropertyChanged(nameof(IsKeyCorrect));
         }
+
+        private bool CheckIfTranslationKetExists(string translationKey) => SelectedLanguage.CheckIfTranslationKetExists(translationKey);
     }
 }
