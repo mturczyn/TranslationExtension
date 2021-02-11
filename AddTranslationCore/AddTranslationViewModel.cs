@@ -1,15 +1,15 @@
 ﻿using AddTranslationCore.Abstractions;
-using AddTranslationCore.Model;
 using AddTranslationCore.ViewModel;
 using log4net;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
-using System.CodeDom.Compiler;
 using System.Windows.Input;
 
 namespace AddTranslationCore
@@ -55,18 +55,14 @@ namespace AddTranslationCore
 
         public CollectionViewSource Translations { get; } = new CollectionViewSource();
 
-        public ObservableCollection<ResourceFile> AvailableLanguages { get; } = new ObservableCollection<ResourceFile>();
+        public ObservableCollection<CultureInfo> AvailableLanguages { get; } = new ObservableCollection<CultureInfo>();
 
-        private ResourceFile _selectedLanguage;
-        public ResourceFile SelectedLanguage
+        private CultureInfo _selectedLanguage;
+        public CultureInfo SelectedLanguage
         {
             get => _selectedLanguage;
             set
             {
-                if (value != null)
-                    value.DuplicatedKeysFound += DuplicatedTranslationKeysFound;
-                if (_selectedLanguage != null)
-                    _selectedLanguage.DuplicatedKeysFound -= DuplicatedTranslationKeysFound;
                 if (!Set(value, ref _selectedLanguage)) return;
                 RaisePropertyChanged(nameof(IsLanguageSelected));
             }
@@ -89,6 +85,10 @@ namespace AddTranslationCore
             get => _selectedProject;
             set
             {
+                if (_selectedLanguage != null)
+                    _selectedProject.DuplicatedKeysFound -= DuplicatedTranslationKeysFound;
+                if (value != null)
+                    value.DuplicatedKeysFound += DuplicatedTranslationKeysFound;
                 if (!Set(value, ref _selectedProject)) return;
                 SetAvailableLanguages();
                 SetTranslations();
@@ -146,11 +146,16 @@ namespace AddTranslationCore
         {
             if (SelectedLanguage == null)
             {
-                _logger.Warn("Trying to set translations, but language was not selected");
+                _logger.Error("Trying to set translations, but language was not selected");
+                return;
+            }
+            if (SelectedProject == null)
+            {
+                _logger.Error("Trying to set translations, but project was not selected");
                 return;
             }
             _translations.Clear();
-            foreach (var t in SelectedLanguage.GetTranslations()) _translations.Add(t);
+            foreach (var t in SelectedProject.GetTranslations(SelectedLanguage)) _translations.Add(t);
             Translations.View.Refresh();
         }
 
@@ -158,14 +163,9 @@ namespace AddTranslationCore
         {
             AvailableLanguages.Clear();
             foreach (var t in SelectedProject.AvailableLanguages)
-            {
-
                 AvailableLanguages.Add(t);
-                if (t.IsMainResource)
-                    SelectedLanguage = t;
-            }
-            if (SelectedLanguage == null)
-                SelectedLanguage = AvailableLanguages.First();
+            
+            SelectedLanguage = AvailableLanguages.First();
         }
 
         private void SortTranslations()
@@ -188,8 +188,8 @@ namespace AddTranslationCore
                 MessageBox.Show($"Translation key \"{TranslationKey}\" already in use. Keys must be unique.");
                 return;
             }
-            var translation = new Translation(TranslationKey, TranslationText, SelectedLanguage.CultureInfo);
-            if (!SelectedLanguage.SaveTranslation(translation))
+            var translation = new Translation(TranslationKey, TranslationText, SelectedLanguage);
+            if (!SelectedProject.SaveTranslation(SelectedLanguage, translation))
             {
                 MessageBox.Show("Saving of translation failed. Please ensure correctness of resource file.");
             }
@@ -228,7 +228,7 @@ namespace AddTranslationCore
                 MessageBox.Show($"Translation key \"{translation.Key}\" already in use. Keys must be unique.");
                 return;
             }
-            if (!SelectedLanguage.SaveTranslation(translation, _editedTranslation.Key))
+            if (!SelectedProject.UpdateTranslation(SelectedLanguage, translation, _editedTranslation.Key))
             {
                 MessageBox.Show("Failed updating translation.");
                 translation.Text = _editedTranslation.Text;
@@ -266,13 +266,13 @@ namespace AddTranslationCore
             else if (Regex.IsMatch(TranslationKey, @"\s+"))
                 ErrorText = "Translation key must not contain white spaces.";
             // We leave the most expensvive check last, after most obvious, as fallback.
-            else if(!CodeDomProvider.CreateProvider("C#").IsValidIdentifier(TranslationKey))
+            else if (!CodeDomProvider.CreateProvider("C#").IsValidIdentifier(TranslationKey))
                 ErrorText = "Translation key must be valid C# variable name.";
             else
                 ErrorText = string.Empty;
             RaisePropertyChanged(nameof(IsKeyCorrect));
         }
 
-        private bool CheckIfTranslationKetExists(string translationKey) => SelectedLanguage.CheckIfTranslationKetExists(translationKey);
+        private bool CheckIfTranslationKetExists(string translationKey) => SelectedProject.CheckIfTranslationKetExists(SelectedLanguage, translationKey);
     }
 }

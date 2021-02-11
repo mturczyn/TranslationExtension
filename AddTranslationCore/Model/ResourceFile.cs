@@ -16,8 +16,6 @@ namespace AddTranslationCore.Model
     /// </summary>
     public class ResourceFile
     {
-        public event Action<string[]> DuplicatedKeysFound;
-
         /// <summary>
         /// Name of a root node in resources XML file. It contains all other nodes.
         /// </summary>
@@ -81,7 +79,7 @@ namespace AddTranslationCore.Model
             _logger.Debug($"Saving {newTranslation} into {CultureInfo} ({IsMainResource}) language");
             var document = XDocument.Load(_fullPath);
             var rootNode = document.Element(ROOT_NODE);
-            if(rootNode == null)
+            if (rootNode == null)
             {
                 _logger.Warn("Trying to save translation, but could not find a root node of a document");
                 return false;
@@ -93,7 +91,7 @@ namespace AddTranslationCore.Model
             dataNode.Add(valueNode);
             rootNode.Add(dataNode);
             document.Save(_fullPath);
-            
+
             return true;
         }
 
@@ -103,7 +101,7 @@ namespace AddTranslationCore.Model
         /// <param name="editedTranslation">Edited translation, that will be saved.</param>
         /// <param name="originalTranslationKey">Key of translation before edition (so it can be found in a file and updated).</param>
         /// <returns></returns>
-        public bool SaveTranslation(Translation editedTranslation, string originalTranslationKey)
+        public bool UpdateTranslation(Translation editedTranslation, string originalTranslationKey)
         {
             _logger.Debug($"Saving edited {editedTranslation} into {CultureInfo} ({IsMainResource}) language");
             var document = XDocument.Load(_fullPath);
@@ -187,7 +185,7 @@ namespace AddTranslationCore.Model
         /// CAUTION: operation reads whole file, so it might result in huge data loaded into memory.
         /// </summary>
         /// <returns></returns>
-        public Translation[] GetTranslations()
+        public Translation[] GetTranslations(out string[] duplicatedKeys)
         {
             var translations = new List<Translation>();
             var duplicates = new List<string>();
@@ -242,8 +240,7 @@ namespace AddTranslationCore.Model
                     }
                 }
             }
-            if (duplicates.Any())
-                DuplicatedKeysFound?.Invoke(duplicates.ToArray());
+            duplicatedKeys = duplicates.ToArray();
             return translations.ToArray();
         }
     }

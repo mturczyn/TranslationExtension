@@ -1,6 +1,7 @@
 ﻿using AddTranslationCore.Abstractions;
 using AddTranslationCore.Model;
 using log4net;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -10,10 +11,25 @@ namespace AddTranslationCore.ViewModel
 {
     public class Project : BaseObservable, IProjectItem
     {
-        private static readonly string _designerExtension = ".Designer.cs";
-        private static readonly string _resExtension = ".resx";
+        public event Action<string[]> DuplicatedKeysFound;
+        /// <summary>
+        /// Formatable string holding pattern for field generated in designer file.
+        /// </summary>
+        private const string _translationDesignerProperty = 
+            "/// <summary>" +
+            "///   Looks up a localized string similar to {0}." +
+            "/// </summary>" +
+            "public static string {1} {" +
+            "    get {" +
+            "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + 
+            "    }" + 
+            "}";
+        private const string _designerExtension = ".Designer.cs";
+        private const string _resExtension = ".resx";
 
+        private string _designerFullPath;
         private readonly ILog _logger;
+        private readonly List<ResourceFile> _resourceFiles = new List<ResourceFile>();
 
         public Project(string fullPathToProjectFile, string projectName)
         {
@@ -31,12 +47,39 @@ namespace AddTranslationCore.ViewModel
         public bool IsValidResourcesProject { get; }
 
         /// <inheritdoc/>
-        public List<ResourceFile> AvailableLanguages { get; } = new List<ResourceFile>();
+        public List<CultureInfo> AvailableLanguages { get; private set; }
 
-        public Translation GetTranslation(CultureInfo cultureInfo, string translationKey)
+        public bool CheckIfTranslationKetExists(CultureInfo language, string translationKey)
         {
-            var file = AvailableLanguages.Single(f => f.CultureInfo.LCID == cultureInfo.LCID);
+            var file = _resourceFiles.Single(f => f.CultureInfo.LCID == language.LCID);
+            return file.CheckIfTranslationKetExists(translationKey);
+        }
+
+        public Translation GetTranslation(CultureInfo language, string translationKey)
+        {
+            var file = _resourceFiles.Single(f => f.CultureInfo.LCID == language.LCID);
             return file.GetTranslation(translationKey);
+        }
+
+        public Translation[] GetTranslations(CultureInfo language)
+        {
+            var file = _resourceFiles.Single(f => f.CultureInfo.LCID == language.LCID);
+            var translations = file.GetTranslations(out string[] duplicatedKeys);
+            if (duplicatedKeys.Length > 0)
+                DuplicatedKeysFound?.Invoke(duplicatedKeys);
+            return translations;
+        }
+
+        public bool SaveTranslation(CultureInfo language, Translation newTranslation)
+        {
+            var file = _resourceFiles.Single(f => f.CultureInfo.LCID == language.LCID);
+            return file.SaveTranslation(newTranslation);
+        }
+
+        public bool UpdateTranslation(CultureInfo language, Translation editedTranslation, string originalTranslationKey)
+        {
+            var file = _resourceFiles.Single(f => f.CultureInfo.LCID == language.LCID);
+            return file.UpdateTranslation(editedTranslation, originalTranslationKey);
         }
 
         private bool CheckIfIsCorrectResourcesProject(string directory)
@@ -68,7 +111,7 @@ namespace AddTranslationCore.ViewModel
         /// <returns></returns>
         private bool CheckIfDirectoryContainsRequiredFiles(string directory)
         {
-            AvailableLanguages.Clear();
+            _resourceFiles.Clear();
 
             var files = Directory.GetFiles(directory);
             var designerFiles = files.Where(f => f.EndsWith(_designerExtension)).ToArray();
@@ -79,6 +122,7 @@ namespace AddTranslationCore.ViewModel
             if (designerFiles.Length > 1)
                 return false;
             var designerFile = designerFiles.Single();
+            _designerFullPath = designerFile;
             // Here we remove designer extension and get only file name.
             var baseFileName = Path.GetFileName(designerFile.Substring(0, designerFile.Length - _designerExtension.Length));
             foreach (var path in files)
@@ -89,27 +133,16 @@ namespace AddTranslationCore.ViewModel
                     var isMainResource = 0 == string.Compare(fileName, baseFileName + _resExtension, true);
                     // We want main resource as first element.
                     if (isMainResource)
-                        AvailableLanguages.Insert(0, new ResourceFile(path, isMainResource));
+                        _resourceFiles.Insert(0, new ResourceFile(path, isMainResource));
                     else
-                        AvailableLanguages.Add(new ResourceFile(path, isMainResource));
+                        _resourceFiles.Add(new ResourceFile(path, isMainResource));
                 }
             }
 
-            if (AvailableLanguages.Count() <= 0) return false;
+            if (_resourceFiles.Count() <= 0) return false;
+
+            AvailableLanguages = _resourceFiles.Select(f => f.CultureInfo).ToList();
             return true;
-        }
-
-        /// <inheritdoc/>
-        public bool SaveTranslation(Translation newTranslation)
-        {
-            var resFile = AvailableLanguages.Single(f => f.IsMainResource);
-            return false;
-        }
-
-        /// <inheritdoc/>
-        public bool SaveTranslation(Translation editedTranslation, string originalTranslationKey)
-        {
-            return false;
         }
     }
 }
