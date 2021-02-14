@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AddTranslationCore.ViewModel
 {
@@ -15,15 +16,15 @@ namespace AddTranslationCore.ViewModel
         /// <summary>
         /// Formatable string holding pattern for field generated in designer file.
         /// </summary>
-        private const string _translationDesignerProperty = 
-            "/// <summary>" +
-            "///   Looks up a localized string similar to {0}." +
-            "/// </summary>" +
-            "public static string {1} {" +
-            "    get {" +
-            "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + 
-            "    }" + 
-            "}";
+        private const string _translationDesignerPropertyFormat = 
+            "/// <summary>" + "\n" +
+            "///   Looks up a localized string similar to {0}." + "\n" +
+            "/// </summary>" + "\n" +
+            "public static string {1} {{" + "\n" +
+            "    get {{" + "\n" +
+            "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + "\n" + 
+            "    }}" + "\n" + 
+            "}}";
         private const string _designerExtension = ".Designer.cs";
         private const string _resExtension = ".resx";
 
@@ -73,7 +74,8 @@ namespace AddTranslationCore.ViewModel
         public bool SaveTranslation(CultureInfo language, Translation newTranslation)
         {
             var file = _resourceFiles.Single(f => f.CultureInfo.LCID == language.LCID);
-            return file.SaveTranslation(newTranslation);
+            return file.SaveTranslation(newTranslation)
+                && WriteNewPropertyToDesignerFile(newTranslation);
         }
 
         public bool UpdateTranslation(CultureInfo language, Translation editedTranslation, string originalTranslationKey)
@@ -142,6 +144,48 @@ namespace AddTranslationCore.ViewModel
             if (_resourceFiles.Count() <= 0) return false;
 
             AvailableLanguages = _resourceFiles.Select(f => f.CultureInfo).ToList();
+            return true;
+        }
+#warning Perfect for unit tests
+        private bool WriteNewPropertyToDesignerFile(Translation translation)
+        {
+            _logger.Info($"Writing new translation to designer file. Translation {translation}, file {_designerFullPath}");
+            var tempFileName = _designerFullPath + "temp";
+
+            try 
+            {
+                var reader = new StreamReader(_designerFullPath);
+                var writer = new StreamWriter(tempFileName);
+             
+                var classDeclarationRead = false;
+                var openedBraces = 0;
+
+                while(!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var isComment = line.Trim().StartsWith("//");
+                    // Line is not a comment and contains class keyword.
+                    if (!isComment && Regex.IsMatch(line, @"(?:\sclass|class)\s"))
+                        classDeclarationRead = true;
+                    if (!isComment && classDeclarationRead && line.Contains('{'))
+                        openedBraces++;
+                    if (!isComment && classDeclarationRead && line.Contains('}'))
+                        openedBraces--;
+
+                    if(classDeclarationRead && openedBraces == 0)
+                    {
+                        writer.Write(_translationDesignerPropertyFormat, translation.Text, translation.Key, translation.Key);
+                        writer.WriteLine();
+                    }
+
+                    writer.WriteLine(line);
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.Error("Error during saving translation to designer file.", ex);
+                return false;
+            }
             return true;
         }
     }

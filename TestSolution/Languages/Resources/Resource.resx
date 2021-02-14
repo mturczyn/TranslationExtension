@@ -156,4 +156,19 @@
   <data name="RandomTrannslation" xml:space="preserve">
     <value>This string i wish to translate</value>
   </data>
+  <data name="haha" xml:space="preserve">
+    <value>hihihahahaha</value>
+  </data>
+  <data name="hhhhh" xml:space="preserve">
+    <value>hh</value>
+  </data>
+  <data name="asdfsadfsa" xml:space="preserve">
+    <value>dddsa</value>
+  </data>
+  <data name="asdfdd" xml:space="preserve">
+    <value>ddaaa  sdasd</value>
+  </data>
+  <data name="hallll" xml:space="preserve">
+    <value>halo halo w morde walo</value>
+  </data>
 </root>

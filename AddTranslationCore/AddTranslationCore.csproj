@@ -87,6 +87,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Model\ResourceFile.cs" />
+    <None Include="ResourceClassGenerator\ResGenWrapper.cs" />
     <Compile Include="ViewModel\Project.cs" />
     <Compile Include="ViewModel\Translation.cs" />
     <EmbeddedResource Include="Resources\Resource.resx">
