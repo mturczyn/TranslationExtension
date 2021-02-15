@@ -180,13 +180,13 @@ namespace Languages {
 				return ResourceManager.GetString("RandomTrannslation", resourceCulture);
 			}
 		}
-/// <summary>
-///   Looks up a localized string similar to halo halo w morde walo.
-/// </summary>
-public static string hallll {
-    get {
-        return ResourceManager.GetString("hallll", resourceCulture);
-    }
-}
+        /// <summary>
+		///   Looks up a localized string similar to hihhihaha.
+		/// </summary>
+		public static string huehuehue {
+		    get {
+		        return ResourceManager.GetString("huehuehue", resourceCulture);
+		    }
+		}
 	}
 }

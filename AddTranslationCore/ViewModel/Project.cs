@@ -14,17 +14,22 @@ namespace AddTranslationCore.ViewModel
     {
         public event Action<string[]> DuplicatedKeysFound;
         /// <summary>
+        /// This is placeholder used to hold place and allow easy insertion
+        /// of necessary indent in a property.
+        /// </summary>
+        private const string _indentPlaceholder = "_I_N_D_E_N_T_";
+        /// <summary>
         /// Formatable string holding pattern for field generated in designer file.
         /// </summary>
-        private const string _translationDesignerPropertyFormat = 
-            "/// <summary>" + "\n" +
-            "///   Looks up a localized string similar to {0}." + "\n" +
-            "/// </summary>" + "\n" +
-            "public static string {1} {{" + "\n" +
-            "    get {{" + "\n" +
-            "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + "\n" + 
-            "    }}" + "\n" + 
-            "}}";
+        private static string _translationDesignerPropertyFormat =
+              $"{_indentPlaceholder}" + "/// <summary>" + 
+            $"\n{_indentPlaceholder}" + "///     Looks up a localized string similar to {0}." + 
+            $"\n{_indentPlaceholder}" + "/// </summary>" +
+            $"\n{_indentPlaceholder}" + "public static string {1} {{" +
+            $"\n{_indentPlaceholder}" + "    get {{" + $"\n{_indentPlaceholder}" +
+            $"\n{_indentPlaceholder}" + "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + 
+            $"\n{_indentPlaceholder}" + "    }}" + 
+            $"\n{_indentPlaceholder}" + "}}";
         private const string _designerExtension = ".Designer.cs";
         private const string _resExtension = ".resx";
 
@@ -151,18 +156,26 @@ namespace AddTranslationCore.ViewModel
         {
             _logger.Info($"Writing new translation to designer file. Translation {translation}, file {_designerFullPath}");
             var tempFileName = _designerFullPath + "temp";
-
+            StreamReader reader = null;
+            StreamWriter writer = null;
             try 
             {
-                var reader = new StreamReader(_designerFullPath);
-                var writer = new StreamWriter(tempFileName);
+                reader = new StreamReader(_designerFullPath);
+                writer = new StreamWriter(tempFileName);
              
                 var classDeclarationRead = false;
                 var openedBraces = 0;
 
-                while(!reader.EndOfStream)
+                var line = string.Empty;
+                var indentLineBefore = string.Empty;
+                while (!reader.EndOfStream)
                 {
-                    var line = reader.ReadLine();
+                    // Here we remember indentation in previous line (if it was read).
+                    // So, when we come across class end, we know what indentation were.
+                    if (!string.IsNullOrEmpty(line))
+                        indentLineBefore = Regex.Match(line, @"^\s+").Value;
+
+                    line = reader.ReadLine();
                     var isComment = line.Trim().StartsWith("//");
                     // Line is not a comment and contains class keyword.
                     if (!isComment && Regex.IsMatch(line, @"(?:\sclass|class)\s"))
@@ -174,7 +187,10 @@ namespace AddTranslationCore.ViewModel
 
                     if(classDeclarationRead && openedBraces == 0)
                     {
-                        writer.Write(_translationDesignerPropertyFormat, translation.Text, translation.Key, translation.Key);
+                        // It is important to insert indentations before formatting the string, so we do 
+                        // not accidentally insert indent if someone uses our indent placeholder in a translation.
+                        var indented = _translationDesignerPropertyFormat.Replace(_indentPlaceholder, indentLineBefore);
+                        writer.Write(indented, translation.Text, translation.Key, translation.Key);
                         writer.WriteLine();
                     }
 
@@ -185,6 +201,11 @@ namespace AddTranslationCore.ViewModel
             {
                 _logger.Error("Error during saving translation to designer file.", ex);
                 return false;
+            }
+            finally
+            {
+                reader?.Dispose();
+                writer?.Dispose();
             }
             return true;
         }
