@@ -152,6 +152,7 @@ namespace AddTranslationCore.ViewModel
             return true;
         }
 #warning Perfect for unit tests
+#warning Good candidate for consumer-writer pattern and use of Channels
         private bool WriteNewPropertyToDesignerFile(Translation translation)
         {
             _logger.Info($"Writing new translation to designer file. Translation {translation}, file {_designerFullPath}");
