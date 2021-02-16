@@ -180,5 +180,14 @@ namespace Languages {
 				return ResourceManager.GetString("RandomTrannslation", resourceCulture);
 			}
 		}
+		/// <summary>
+		///     Looks up a localized string similar to wkoncu nareszcie.
+		/// </summary>
+		public static string wkoncu {
+		    get {
+		
+		        return ResourceManager.GetString("wkoncu", resourceCulture);
+		    }
+		}
 	}
 }

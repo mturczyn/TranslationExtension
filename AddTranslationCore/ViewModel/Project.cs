@@ -26,7 +26,7 @@ namespace AddTranslationCore.ViewModel
             $"\n{_indentPlaceholder}" + "///     Looks up a localized string similar to {0}." + 
             $"\n{_indentPlaceholder}" + "/// </summary>" +
             $"\n{_indentPlaceholder}" + "public static string {1} {{" +
-            $"\n{_indentPlaceholder}" + "    get {{" + $"\n{_indentPlaceholder}" +
+            $"\n{_indentPlaceholder}" + "    get {{" +
             $"\n{_indentPlaceholder}" + "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + 
             $"\n{_indentPlaceholder}" + "    }}" + 
             $"\n{_indentPlaceholder}" + "}}";
@@ -207,6 +207,22 @@ namespace AddTranslationCore.ViewModel
             {
                 reader?.Dispose();
                 writer?.Dispose();
+            }
+
+            return DeleteDesignerFileAndRenameTempFile(_designerFullPath, tempFileName);
+        }
+
+        private bool DeleteDesignerFileAndRenameTempFile(string designerPath, string tempFilePath)
+        {
+            try
+            {
+                File.Delete(designerPath);
+                File.Move(tempFilePath, designerPath);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error during cleaning designer files.", ex);
+                return false;
             }
             return true;
         }
