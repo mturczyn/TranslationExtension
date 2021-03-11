@@ -227,6 +227,7 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type DataGridCell}">
                                             <TextBox
+                                                Name="txb"
                                                 Padding="5"
                                                 VerticalAlignment="Stretch"
                                                 Background="{StaticResource Gray33Brush}"
@@ -234,6 +235,11 @@
                                                 Text="{Binding Key, UpdateSourceTrigger=PropertyChanged}"
                                                 TextAlignment="Justify"
                                                 TextWrapping="Wrap" />
+                                            <ControlTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsUnderEdition}" Value="True">
+                                                    <Setter TargetName="txb" Property="Background" Value="{StaticResource Gray11Brush}" />
+                                                </DataTrigger>
+                                            </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
@@ -250,11 +256,17 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type DataGridCell}">
                                             <TextBox
+                                                Name="txb"
                                                 Padding="5"
                                                 Background="{StaticResource Gray33Brush}"
                                                 IsEnabled="{Binding IsUnderEdition}"
                                                 Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                                                 TextWrapping="Wrap" />
+                                            <ControlTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsUnderEdition}" Value="True">
+                                                    <Setter TargetName="txb" Property="Background" Value="{StaticResource Gray11Brush}" />
+                                                </DataTrigger>
+                                            </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>

@@ -120,7 +120,8 @@ namespace AddTranslationCore
             set
             {
                 if (!Set(value, ref _translationKey)) return;
-                ValidateTranslationKey();
+                ErrorText = ValidateTranslationKey(TranslationKey);
+                RaisePropertyChanged(nameof(IsKeyCorrect));
             }
         }
 
@@ -219,16 +220,18 @@ namespace AddTranslationCore
             if (_editedTranslation == null)
             {
                 _logger.Error($"Trying to edit translation, but {nameof(_editedTranslation)} is null");
-                MessageBox.Show("Something went really wrong. Please report issue on GItHub repo https://github.com/mturczyn/TranslationExtension/issues");
-#warning Zamknąć apkę??
+                MessageBox.Show("Something went really wrong. Please report issue on GitHub repo https://github.com/mturczyn/TranslationExtension/issues");
+#warning TODO: Zamknąć apkę??
                 return;
             }
-            if (CheckIfTranslationKetExists(translation.Key))
+            var error = ValidateTranslationKey(translation.Key);
+            if (!string.IsNullOrEmpty(error))
             {
-                MessageBox.Show($"Translation key \"{translation.Key}\" already in use. Keys must be unique.");
+                _logger.Debug($"Incorrect key in edited translation {translation}");
+                MessageBox.Show($"Invalid key, error: {error}");
                 return;
             }
-            if (!SelectedProject.UpdateTranslation(SelectedLanguage, translation, _editedTranslation.Key))
+            if (!SelectedProject.UpdateTranslation(SelectedLanguage, translation, _editedTranslation))
             {
                 MessageBox.Show("Failed updating translation.");
                 translation.Text = _editedTranslation.Text;
@@ -259,18 +262,18 @@ namespace AddTranslationCore
                 $"You should resolve those duplicates before making any editions and adding new translations:" +
                 $"\n{string.Join(", ", duplicatedKeys)}", "Duplicated keys found", MessageBoxButton.OK, MessageBoxImage.Warning);
 
-        private void ValidateTranslationKey()
+#warning TODO: maybe should be in another class
+        private static string ValidateTranslationKey(string translationKey)
         {
-            if (string.IsNullOrWhiteSpace(TranslationKey))
-                ErrorText = "Translation key must not be empty.";
-            else if (Regex.IsMatch(TranslationKey, @"\s+"))
-                ErrorText = "Translation key must not contain white spaces.";
+            if (string.IsNullOrWhiteSpace(translationKey))
+                return "Translation key must not be empty.";
+            else if (Regex.IsMatch(translationKey, @"\s+"))
+                return "Translation key must not contain white spaces.";
             // We leave the most expensvive check last, after most obvious, as fallback.
-            else if (!CodeDomProvider.CreateProvider("C#").IsValidIdentifier(TranslationKey))
-                ErrorText = "Translation key must be valid C# variable name.";
+            else if (!CodeDomProvider.CreateProvider("C#").IsValidIdentifier(translationKey))
+                return "Translation key must be valid C# variable name.";
             else
-                ErrorText = string.Empty;
-            RaisePropertyChanged(nameof(IsKeyCorrect));
+                return string.Empty;
         }
 
         private bool CheckIfTranslationKetExists(string translationKey) => SelectedProject.CheckIfTranslationKetExists(SelectedLanguage, translationKey);

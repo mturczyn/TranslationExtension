@@ -26,7 +26,7 @@ namespace AddTranslationCore.Abstractions
 
         bool SaveTranslation(CultureInfo language, Translation newTranslation);
 
-        bool UpdateTranslation(CultureInfo language, Translation editedTranslation, string originalTranslationKey);
+        bool UpdateTranslation(CultureInfo language, Translation newTranslation, Translation originalTranslation);
 
         bool CheckIfTranslationKetExists(CultureInfo language, string translationKey);
     }

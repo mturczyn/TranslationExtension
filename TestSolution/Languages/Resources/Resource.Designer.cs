@@ -77,11 +77,11 @@ namespace Languages {
 			}
 		}
 		/// <summary>
-		/// 	Looks up a localized string similar to witam w śiwecie rozszerzeń
+		/// 	Looks up a localized string similar to Edytowany 2 witam w śiwecie rozszerzeń
 		/// </summary>
-		public static string TransWorldWelcome {
+		public static string TransWorldWelcomeEdited {
 			get {
-				return ResourceManager.GetString("TransWorldWelcome", resourceCulture);
+				return ResourceManager.GetString("TransWorldWelcomeEdited", resourceCulture);
 			}
 		}
 		/// <summary>

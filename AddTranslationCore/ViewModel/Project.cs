@@ -18,6 +18,8 @@ namespace AddTranslationCore.ViewModel
         /// of necessary indent in a property.
         /// </summary>
         private const string _indentPlaceholder = "_I_N_D_E_N_T_";
+        private const string _designerPropertyPattern = @"\s*public static string {0}";
+        private const string _returnPattern = @"\s*return ResourceManager\.GetString\(""{0}"", resourceCulture\);";
         /// <summary>
         /// Formatable string holding pattern for field generated in designer file.
         /// </summary>
@@ -25,6 +27,7 @@ namespace AddTranslationCore.ViewModel
               $"{_indentPlaceholder}" + "/// <summary>" + 
             $"\n{_indentPlaceholder}" + "///     Looks up a localized string similar to {0}." + 
             $"\n{_indentPlaceholder}" + "/// </summary>" +
+#warning We use here public modifier, it would be good to detect somehow modifiers / enable user to set it.
             $"\n{_indentPlaceholder}" + "public static string {1} {{" +
             $"\n{_indentPlaceholder}" + "    get {{" +
             $"\n{_indentPlaceholder}" + "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + 
@@ -83,10 +86,11 @@ namespace AddTranslationCore.ViewModel
                 && WriteNewPropertyToDesignerFile(newTranslation);
         }
 
-        public bool UpdateTranslation(CultureInfo language, Translation editedTranslation, string originalTranslationKey)
+        public bool UpdateTranslation(CultureInfo language, Translation newTranslation, Translation originalTranslation)
         {
             var file = _resourceFiles.Single(f => f.CultureInfo.LCID == language.LCID);
-            return file.UpdateTranslation(editedTranslation, originalTranslationKey);
+            return file.UpdateTranslation(newTranslation, originalTranslation.Key)
+                && UpdatePropertyInDesignerFile(originalTranslation, newTranslation);
         }
 
         private bool CheckIfIsCorrectResourcesProject(string directory)
@@ -185,7 +189,7 @@ namespace AddTranslationCore.ViewModel
                         openedBraces++;
                     if (!isComment && classDeclarationRead && line.Contains('}'))
                         openedBraces--;
-
+                    // Write new property right before last brace.
                     if(classDeclarationRead && openedBraces == 0)
                     {
                         // It is important to insert indentations before formatting the string, so we do 
@@ -225,6 +229,101 @@ namespace AddTranslationCore.ViewModel
                 return false;
             }
             return true;
+        }
+        private bool UpdatePropertyInDesignerFile(Translation oldTranslation, Translation newTranslation)
+        {
+            _logger.Info($"Updating translation in designer file. Old translation {oldTranslation}, new translation {newTranslation}, file {_designerFullPath}");
+            var tempFileName = _designerFullPath + "temp";
+            StreamReader reader = null;
+            StreamWriter writer = null;
+#warning May be replaced by channel, when using asynchronous methods.
+            var queueCapacity = 5;
+            var queue = new Queue<string>(queueCapacity);
+            try
+            {
+                reader = new StreamReader(_designerFullPath);
+                writer = new StreamWriter(tempFileName);
+                
+                var propertyFound = false;
+                var classDeclarationRead = false;
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    // If we found property, then we simply rewrite rest of file.
+                    if (propertyFound)
+                    {
+                        writer.WriteLine(line);
+                        continue;
+                    }
+
+                    var isComment = line.TrimStart().StartsWith("//");
+                    // Line is not a comment and contains class keyword.
+                    if (!isComment && Regex.IsMatch(line, @"(?:\sclass|class)\s"))
+                        classDeclarationRead = true;
+                    // If we are not yet inside the class, then just re-write lines.
+                    if (!classDeclarationRead)
+                    {
+                        writer.WriteLine(line);
+                        continue;
+                    }
+                    // If we found what we are looking for, we flush the queue and
+                    // do the processing (text replacement).
+                    if (Regex.IsMatch(line, string.Format(_designerPropertyPattern, oldTranslation.Key)))
+                    {
+                        _logger.Info("Found translation, replacing key and text.");
+                        // Flush the queue, when found a comment containing text process it appropriately.
+                        while (queue.Count > 0)
+                        {
+                            var lineFromQueue = queue.Dequeue();
+                            // Here we try to replace text in comment.
+                            if (lineFromQueue.TrimStart().StartsWith("//"))
+                                lineFromQueue = lineFromQueue.Replace(oldTranslation.Text, newTranslation.Text);
+                            writer.WriteLine(lineFromQueue);
+                        }
+                        line = line.Replace(oldTranslation.Key, newTranslation.Key);
+                        writer.WriteLine(line);
+
+                        var i = 0;
+                        // For next four lines we try to rewrite following lines, but we look for
+                        // return statement, which contains translation key to replace.
+                        while(!reader.EndOfStream && i < 4)
+                        {
+                            var innerLine = reader.ReadLine();
+                            if (Regex.IsMatch(innerLine, string.Format(_returnPattern, oldTranslation.Key)))
+                            {
+                                _logger.Info("Found return statement.");
+                                innerLine = innerLine.Replace(oldTranslation.Key, newTranslation.Key);
+                            }
+                            writer.WriteLine(innerLine);
+                            i++;
+                        }
+
+                        propertyFound = true;
+                    }
+                    else
+                    {
+                        // If we reach the limit of a queue, we write last item.
+                        if (queue.Count == queueCapacity)
+                            writer.WriteLine(queue.Dequeue());
+
+                        queue.Enqueue(line);
+                    }
+                }
+                // Flush rest of the queue.
+                while (queue.Count > 0) writer.WriteLine(queue.Dequeue());
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error during updating translation to designer file.", ex);
+                return false;
+            }
+            finally
+            {
+                reader?.Dispose();
+                writer?.Dispose();
+            }
+
+            return DeleteDesignerFileAndRenameTempFile(_designerFullPath, tempFileName);
         }
     }
 }

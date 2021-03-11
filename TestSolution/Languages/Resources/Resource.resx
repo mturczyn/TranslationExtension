@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TestString" xml:space="preserve">
-    <value>Testowy ciąg</value>
+    <value>EDYTOWANY Testowy ciąg</value>
   </data>
-  <data name="TransWorldWelcome" xml:space="preserve">
-    <value>witam w śiwecie rozszerzeń</value>
+  <data name="TransWorldWelcomeEdited" xml:space="preserve">
+    <value>Edytowany 2 witam w śiwecie rozszerzeń</value>
   </data>
   <data name="testString2" xml:space="preserve">
     <value>testowty ciąg</value>
