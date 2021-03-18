@@ -24,7 +24,7 @@ namespace AddTranslation
     /// </summary>
     internal sealed class AddTranslationCommand
     {
-        private readonly ILog _logger;
+        private static readonly ILog _logger = LogManager.GetLogger(nameof(AddTranslationCommand));
 
         private AsyncPackage _serviceProvider;
         /// <summary>
@@ -45,8 +45,6 @@ namespace AddTranslation
         /// <param name="commandService">Command service to add command to, not null.</param>
         private AddTranslationCommand(OleMenuCommandService commandService, AsyncPackage package)
         {
-            _logger = LogManager.GetLogger(nameof(AddTranslationCommand));
-
             if (package == null) throw new ArgumentNullException(nameof(package));
             if (commandService == null) throw new ArgumentNullException(nameof(commandService));
             _serviceProvider = package;
@@ -99,6 +97,7 @@ namespace AddTranslation
             }
             catch (Exception ex)
             {
+                _logger.Error($"Could not load AddTranslationCore assembly.", ex);
                 MessageBox.Show($"Could not load AddTranslationCore assembly.\nException: {ex.Message}\nPlease report this at GitHub repo https://github.com/mturczyn/TranslationExtension/issues", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }

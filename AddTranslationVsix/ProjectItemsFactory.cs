@@ -1,9 +1,7 @@
 ﻿using AddTranslationCore.Abstractions;
 using EnvDTE;
 using Microsoft;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,7 +19,6 @@ namespace AddTranslation
 
         public async Task<IProjectItem[]> GetProjectItems()
         {
-
             var dte = (EnvDTE80.DTE2)await _serviceProvider.GetServiceAsync(typeof(DTE));
             Assumes.Present(dte);
             var vsProject = dte.ActiveDocument.ProjectItem.ContainingProject.Object as VSLangProj.VSProject;
@@ -30,32 +27,10 @@ namespace AddTranslation
                 // Cant get the current project.
                 return null;
             }
-            var projects1 = dte.Solution.Projects as Projects;
-            foreach(var item in projects1)
+            var projectReferences = new List<AddTranslationCore.ViewModel.Project>();
+            foreach (Project item in dte.Solution.Projects)
             {
-
-            }
-            var solution = dte.Solution;
-            foreach(var item in solution)
-            {
-
-            }
-
-            var sol = await _serviceProvider.GetServiceAsync(typeof(SVsSolution)) as IVsSolution;
-            uint numProjects;
-            ErrorHandler.ThrowOnFailure(
-                sol.GetProjectFilesInSolution((uint)__VSGETPROJFILESFLAGS.GPFF_SKIPUNLOADEDPROJECTS, 0, null, out numProjects));
-            string[] projects = new string[numProjects];
-            ErrorHandler.ThrowOnFailure(
-                sol.GetProjectFilesInSolution((uint)__VSGETPROJFILESFLAGS.GPFF_SKIPUNLOADEDPROJECTS, numProjects, projects, out numProjects));
-            // GetProjectFilesInSolution also returns solution folders, so we want to do some filtering
-            // things that don't exist on disk certainly can't be project files
-            //return projects.Where(p => !string.IsNullOrEmpty(p) && System.IO.File.Exists(p)).ToArray();
-
-            var projectReferences = new List<IProjectItem>();
-            foreach (var @ref in projects)
-            {
-                var p = new AddTranslationCore.ViewModel.Project(@ref, "");
+                projectReferences.Add(new AddTranslationCore.ViewModel.Project(item.FullName, item.Name));
             }
 
             return projectReferences.ToArray();
