@@ -1,5 +1,4 @@
-﻿using AddTranslation.TranslationResourcesManagement;
-using AddTranslationCore;
+﻿using AddTranslationCore;
 using AddTranslationVsix.Windows;
 using System.Collections.Generic;
 using System.Linq;

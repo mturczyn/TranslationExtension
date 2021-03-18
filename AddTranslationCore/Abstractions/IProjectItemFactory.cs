@@ -1,7 +1,9 @@
-﻿namespace AddTranslationCore.Abstractions
+﻿using System.Threading.Tasks;
+
+namespace AddTranslationCore.Abstractions
 {
     public interface IProjectItemFactory
     {
-        IProjectItem[] GetProjectItems();
+        Task<IProjectItem[]> GetProjectItems();
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -136,10 +137,10 @@ namespace AddTranslationCore
             }
         }
 
-        private void LoadProjects()
+        private async Task LoadProjects()
         {
             ProjectReferences.Clear();
-            var projectItems = _projectItemFactory.GetProjectItems();
+            var projectItems = await _projectItemFactory.GetProjectItems();
             foreach (var p in projectItems) ProjectReferences.Add(p);
         }
 

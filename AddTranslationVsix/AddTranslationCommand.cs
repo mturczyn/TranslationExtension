@@ -70,19 +70,12 @@ namespace AddTranslation
         /// <param name="package">Owner package, not null.</param>
         public static async Task InitializeAsync(AsyncPackage package)
         {
-            // Switch to the main thread - the call to AddCommand in AddTranslationCommand's constructor requires
-            // the UI thread.
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
-            var commandService = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
-            Assumes.Present(commandService);
-            // Get Visual Studio extensibility object.
-            var dte = (DTE)await package.GetServiceAsync(typeof(DTE));
-            Assumes.Present(dte);
-
-            Instance = new AddTranslationCommand(commandService, package);
-#warning It needs to be defined as pack urif or relative URIs, optionally, move it to XAML.
+            // For some reason, not all DLLs are loaded in extension (this how VS experimental instance loads them),
+            // so here we manually load assembly and then resources.
             try
             {
+                System.Reflection.Assembly.Load("AddTranslationCore");
+
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
                     Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ColorsAndBrushes.xaml", UriKind.RelativeOrAbsolute)
@@ -104,31 +97,22 @@ namespace AddTranslation
                     Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ComboBox.xaml", UriKind.RelativeOrAbsolute)
                 });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                MessageBox.Show($"Could not load AddTranslationCore assembly.\nException: {ex.Message}\nPlease report this at GitHub repo https://github.com/mturczyn/TranslationExtension/issues", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-        }
 
-        private async Task<List<VSLangProj.Reference>> GetProjectReferencesForCUrrentlyOpenedFileAsync()
-        {
-            var dte = (DTE)await _serviceProvider.GetServiceAsync(typeof(DTE));
+            // Switch to the main thread - the call to AddCommand in AddTranslationCommand's constructor requires
+            // the UI thread.
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+            var commandService = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
+            Assumes.Present(commandService);
+            // Get Visual Studio extensibility object.
+            var dte = (DTE)await package.GetServiceAsync(typeof(DTE));
             Assumes.Present(dte);
-            var vsProject = dte.ActiveDocument.ProjectItem.ContainingProject.Object as VSLangProj.VSProject;
-            if (vsProject == null)
-            {
-                // Cant get the current project.
-                return null;
-            }
 
-            var projectReferences = new List<VSLangProj.Reference>();
-            foreach (VSLangProj.Reference @ref in vsProject.References)
-            {
-                if (@ref.SourceProject != null)
-                    projectReferences.Add(@ref);
-            }
-
-            return projectReferences;
+            Instance = new AddTranslationCommand(commandService, package);
         }
 
         /// <summary>
@@ -165,8 +149,6 @@ namespace AddTranslation
                 IVsHierarchy hierarchy = null;
                 string csProjPath = null;
 
-                var projectReferences = await GetProjectReferencesForCUrrentlyOpenedFileAsync();
-
                 var selection = wpfTextView.Selection;
 
                 var startPosition = selection.Start.Position.Position;
@@ -175,13 +157,8 @@ namespace AddTranslation
 
                 var textToReplace = wpfTextView.TextBuffer.CurrentSnapshot.GetText(span).Trim(' ').Trim('"');
 
-                var vm = new AddTranslationViewModel(null);
+                var vm = new AddTranslationViewModel(new ProjectItemsFactory(_serviceProvider));
                 var translationWindow = new AddTranslationWindow(vm);
-#warning TO UNCOMMENT
-                //var translationWindow = new AddTranslationWindow(textToReplace, csProjPath, projectReferences, out bool shouldNotOpenTheWindow);
-                //if (shouldNotOpenTheWindow)
-                    // Jak musimy przeładować projekt, to nie pokazujemy okna w ogóle.
-                 //   return;
 
                 translationWindow.ShowDialog();
 

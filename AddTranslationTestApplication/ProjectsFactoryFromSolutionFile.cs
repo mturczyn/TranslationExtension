@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace AddTranslationTestApplication
@@ -25,7 +26,7 @@ namespace AddTranslationTestApplication
             _logger = LogManager.GetLogger(nameof(ProjectsFactoryFromSolutionFile));
         }
 
-        public IProjectItem[] GetProjectItems()
+        public async Task<IProjectItem[]> GetProjectItems()
         {
             var ofd = new OpenFileDialog();
             ofd.Title = "Choose solution file to provide context";
@@ -77,7 +78,7 @@ namespace AddTranslationTestApplication
                     projectItems.Add(pi);
             }
 
-            return projectItems.ToArray();
+            return await Task.FromResult(projectItems.ToArray());
         }
     }
 }
