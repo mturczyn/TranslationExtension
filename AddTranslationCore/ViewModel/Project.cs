@@ -13,6 +13,9 @@ namespace AddTranslationCore.ViewModel
     public class Project : BaseObservable, IProjectItem
     {
         public event Action<string[]> DuplicatedKeysFound;
+        // Output folders.
+        private const string _binDirectoryName = "bin";
+        private const string _objDirectoryName = "obj";
         /// <summary>
         /// This is placeholder used to hold place and allow easy insertion
         /// of necessary indent in a property.
@@ -96,18 +99,25 @@ namespace AddTranslationCore.ViewModel
         private bool CheckIfIsCorrectResourcesProject(string directory)
         {
             if (!Directory.Exists(directory)) return false;
-            if (!CheckIfDirectoryContainsRequiredFiles(directory))
-            {
-                var enumerator = Directory.GetDirectories(directory).GetEnumerator();
-                bool isCorrect = false;
-                // It will stop if directory is found (so first directory satisfying
-                // conditions will be loaded (_resourcesFiles will be populated)).
-                while (!isCorrect && enumerator.MoveNext())
-                    isCorrect = CheckIfIsCorrectResourcesProject((string)enumerator.Current);
 
-                return isCorrect;
+            if (CheckIfDirectoryContainsRequiredFiles(directory))
+                return true;
+            else
+            {
+                var subdirectories = Directory.GetDirectories(directory);
+                // Recursion will stop if directory is found (so first directory satisfying
+                // conditions will be loaded (_resourcesFiles will be populated)).
+                foreach (var subdir in subdirectories)
+                {
+                    // Do not recurse into bin and obj directories.
+                    if (subdir == Path.Combine(directory, _binDirectoryName)
+                        || subdir == Path.Combine(directory, _objDirectoryName))
+                        continue;
+                    if (CheckIfIsCorrectResourcesProject(subdir))
+                        return true;
+                }
+                return false;
             }
-            return true;
         }
 
         /// <summary>

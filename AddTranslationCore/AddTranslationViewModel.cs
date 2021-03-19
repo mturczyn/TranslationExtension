@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace AddTranslationCore
 {
@@ -34,7 +35,7 @@ namespace AddTranslationCore
 
             _projectItemFactory = projectItemFactory;
             Translations.Source = _translations;
-            LoadProjects();
+            _ = LoadProjects();
         }
 
         private ICommand _editTranslationCommand;
@@ -139,9 +140,14 @@ namespace AddTranslationCore
 
         private async Task LoadProjects()
         {
+#warning Dispatcher ?
             ProjectReferences.Clear();
             var projectItems = await _projectItemFactory.GetProjectItems();
-            foreach (var p in projectItems) ProjectReferences.Add(p);
+            foreach (var p in projectItems) 
+            {
+                if (p.IsValidResourcesProject)
+                    ProjectReferences.Add(p);
+            }
         }
 
         private void SetTranslations()
