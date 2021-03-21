@@ -2,6 +2,7 @@
 using AddTranslationCore.ViewModel;
 using log4net;
 using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -37,14 +38,14 @@ namespace AddTranslationTestApplication
             {
                 _logger.Info("User cancelled");
                 // No projects returned.
-                return null;
+                return Array.Empty<IProjectItem>();
             }
             var solutionPath = ofd.FileName;
             if (string.IsNullOrEmpty(solutionPath) && File.Exists(solutionPath))
             {
                 _logger.Warn($"Something wrong with the chosen file: {solutionPath ?? "NULL"}");
                 MessageBox.Show($"Something wrong with the chosen file: {solutionPath ?? "NULL"}. Check if file exists.");
-                return null;
+                return Array.Empty<IProjectItem>();
             }
 
             var regexMatches = Regex.Matches(
@@ -73,9 +74,8 @@ namespace AddTranslationTestApplication
                 var projName = match.Groups[1].Value;
                 var projRelativePath = match.Groups[2].Value;
 
-                var pi = new Project(Path.GetFullPath(Path.Combine(slnDir, projRelativePath)), projName);
-                if (pi.IsValidResourcesProject)
-                    projectItems.Add(pi);
+                var project = new Project(Path.GetFullPath(Path.Combine(slnDir, projRelativePath)), projName);
+                projectItems.Add(project);
             }
 
             return await Task.FromResult(projectItems.ToArray());

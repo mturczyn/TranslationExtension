@@ -94,6 +94,10 @@ namespace AddTranslation
                 {
                     Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ComboBox.xaml", UriKind.RelativeOrAbsolute)
                 });
+                Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/DataGridStylesAndTemplates.xaml", UriKind.RelativeOrAbsolute)
+                });
             }
             catch (Exception ex)
             {
@@ -121,9 +125,12 @@ namespace AddTranslation
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
-        private async void Execute(object sender, EventArgs e)
+        private void Execute(object sender, EventArgs e)
+            => _ = ExecuteAsync(sender, e);
+
+        private async Task ExecuteAsync(object sender, EventArgs e)
         {
-            _logger.Info("Rozpoczęcie tłumaczenia");
+            _logger.Info("Starting command of adding translation.");
 
             var textManager = (VsTextManager)await _serviceProvider.GetServiceAsync(typeof(SVsTextManager));
             Assumes.Present(textManager);
@@ -137,13 +144,15 @@ namespace AddTranslation
             try
             {
                 int result = (textManager as IVsTextManager2).GetActiveView2(1, null, (uint)_VIEWFRAMETYPE.vftCodeWindow, out view);
-                _logger.Info("Pomyślnie utworzono obiekt IVsTextView");
-                // Przekonwertuj IVsTextView na IWpfTextView, aby móc modyfikować tekst pliku (kod)
+                _logger.Debug("Successfully created " + nameof(IVsTextView));
+                // Cast IVsTextView to IWpfTextView, so we can modify text of the file.
                 wpfTextView = (componentModel as IComponentModel).GetService<IVsEditorAdaptersFactoryService>().GetWpfTextView(view);
-                _logger.Info("Pomyślnie utworzono obiekt IWpfTextView");
-                // Ważny moment: tutaj tworzymy obiekt do edycji tekstu kodu
+                _logger.Debug("Successfully created " + nameof(IWpfTextView));
+                // IMPORTANT MOMENT: here we create ITextEdit object, which, in case of a failure,
+                // may hang whole visual studio (thus, preventing from saving unsaved work,
+                // see catch(InvalidOperationException)).
                 edit = wpfTextView.TextBuffer.CreateEdit();
-                _logger.Info("Pomyślnie wykonano CreateEdit() oraz utworzono obiekt do edycji tekstu");
+                _logger.Info($"Successfully executed {nameof(wpfTextView.TextBuffer.CreateEdit)} and created {nameof(ITextEdit)} object.");
 
                 IVsHierarchy hierarchy = null;
                 string csProjPath = null;
@@ -156,8 +165,9 @@ namespace AddTranslation
 
                 var textToReplace = wpfTextView.TextBuffer.CurrentSnapshot.GetText(span).Trim(' ').Trim('"');
 
-                var vm = new AddTranslationViewModel(new ProjectItemsFactory(_serviceProvider));
-                var translationWindow = new AddTranslationWindow(vm);
+                var translationWindow = new AddTranslationWindow();
+                var vm = new AddTranslationViewModel(new ProjectItemsFactory(_serviceProvider), translationWindow);
+                translationWindow.DataContext = vm;
 
                 translationWindow.ShowDialog();
 
@@ -172,21 +182,17 @@ namespace AddTranslation
             }
             catch (InvalidOperationException ioe)
             {
-                string err = $"Wystąpił błąd!\n{ioe.ToString()}";
-                MessageBox.Show("Aby nie utracić wprowadzonych zmian NIE NALEŻY nic klikać," +
-                  " ponieważ spowoduje to zawieszenie Visuala i zmiany zostaną utracone." +
-                  " Należy zapisać plik, zamknąć go i ponownie otworzyć.");
-                _logger.Info(ioe.ToString());
+                MessageBox.Show("This should not happen, but it happened. Please, do not click anything," +
+                    " just save the file in order to not loose any work, then close the file.\nError:\n" + ioe);
+                _logger.Fatal("Fatal exception during translation command..", ioe);
                 if (ioe.InnerException != null)
-                    _logger.Info(ioe.InnerException.ToString());
+                    _logger.Fatal("Fatal inner exception.", ioe);
                 return;
             }
             catch (Exception ex)
             {
-                string err = $"Wystąpił błąd!\n{ex.ToString()}";
-                MessageBox.Show(err);
-                _logger.Info(err);
-                _logger.Info(ex.ToString());
+                MessageBox.Show($"The translation extension reported an exception:\n{ex}");
+                _logger.Error("Exception during translation command.", ex);
                 if (ex.InnerException != null)
                     _logger.Info(ex.InnerException.ToString());
                 return;

@@ -120,8 +120,4 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>REM skopiowanie kodu okna AddTranslationWindow z AddTranslation to Tests
-REM powershell.exe -ExecutionPolicy Unrestricted $(ProjectDir)PrzepisanieKoduOknaZRozszerzeniaDoTestowego.ps1</PreBuildEvent>
-  </PropertyGroup>
 </Project>

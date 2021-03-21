@@ -22,11 +22,22 @@ namespace AddTranslationCore
         private readonly IProjectItemFactory _projectItemFactory;
         private readonly ILog _logger;
         private Translation _editedTranslation;
+        private readonly Dispatcher _visualStudioDispatcher;
+        /// <summary>
+        /// It is little bit somehow against the MVVM pattern. But we need to close
+        /// the window in some cases, so for conveniency I store the reference.
+        /// Should not be used anywhere else.
+        /// </summary>
+        private readonly Window _view;
 
-        public AddTranslationViewModel(IProjectItemFactory projectItemFactory)
+        public AddTranslationViewModel(IProjectItemFactory projectItemFactory, Window view)
         {
-            _logger = LogManager.GetLogger(nameof(AddTranslationViewModel));
+            _visualStudioDispatcher = Application.Current.MainWindow.Dispatcher;
+            _view = view;
 
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
+            _logger = LogManager.GetLogger(nameof(AddTranslationViewModel));
             if (projectItemFactory == null)
             {
                 _logger.Error($"{nameof(projectItemFactory)} is null.");
@@ -140,13 +151,25 @@ namespace AddTranslationCore
 
         private async Task LoadProjects()
         {
-#warning Dispatcher ?
             ProjectReferences.Clear();
-            var projectItems = await _projectItemFactory.GetProjectItems();
-            foreach (var p in projectItems) 
+            var projectItems = await _projectItemFactory.GetProjectItems().ConfigureAwait(false);
+            if(projectItems.Length == 0)
             {
-                if (p.IsValidResourcesProject)
-                    ProjectReferences.Add(p);
+                _logger.Warn("Loading project returned 0 projects");
+                MessageBox.Show("Did not find any projects.");
+                return;
+            }
+            var validProjects = projectItems.Where(p => p.IsValidResourcesProject);
+            if(!validProjects.Any())
+            {
+                var warning = "Did not find any projects that Have valid language resources.";
+                _logger.Warn(warning);
+                MessageBox.Show(warning);
+                return;
+            }
+            foreach (var p in validProjects) 
+            {
+                ProjectReferences.Add(p);
             }
         }
 
@@ -191,7 +214,7 @@ namespace AddTranslationCore
                 MessageBox.Show("Please select language before working with translations.");
                 return;
             }
-            if (CheckIfTranslationKetExists(TranslationKey))
+            if (CheckIfTranslationKeyExists(TranslationKey))
             {
                 MessageBox.Show($"Translation key \"{TranslationKey}\" already in use. Keys must be unique.");
                 return;
@@ -228,7 +251,7 @@ namespace AddTranslationCore
             {
                 _logger.Error($"Trying to edit translation, but {nameof(_editedTranslation)} is null");
                 MessageBox.Show("Something went really wrong. Please report issue on GitHub repo https://github.com/mturczyn/TranslationExtension/issues");
-#warning TODO: Zamknąć apkę??
+                CloseTranslationWindow();
                 return;
             }
             var error = ValidateTranslationKey(translation.Key);
@@ -276,13 +299,34 @@ namespace AddTranslationCore
                 return "Translation key must not be empty.";
             else if (Regex.IsMatch(translationKey, @"\s+"))
                 return "Translation key must not contain white spaces.";
-            // We leave the most expensvive check last, after most obvious, as fallback.
+            // We leave the most expensive check last, after most obvious, as fallback.
             else if (!CodeDomProvider.CreateProvider("C#").IsValidIdentifier(translationKey))
                 return "Translation key must be valid C# variable name.";
             else
                 return string.Empty;
         }
 
-        private bool CheckIfTranslationKetExists(string translationKey) => SelectedProject.CheckIfTranslationKetExists(SelectedLanguage, translationKey);
+        private bool CheckIfTranslationKeyExists(string translationKey) => SelectedProject.CheckIfTranslationKetExists(SelectedLanguage, translationKey);
+
+        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            foreach (var unobservedEx in e.Exception.InnerExceptions)
+                _logger.Error("Unobserved exception caught.", unobservedEx);
+            MessageBox.Show($"There was unobserved exception, showing first of aggregated exceptions:\n{e.Exception.InnerExceptions.First()}\n" +
+                $"Please report issue at GitHub repo https://github.com/mturczyn/TranslationExtension/issues",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            CloseTranslationWindow();
+        }
+        
+        private void CloseTranslationWindow()
+        {
+            _logger.Info("Closing application.");
+            InvokeOnUIThread(() =>
+            {
+                _view.Close();
+            });
+        }
+
+        private void InvokeOnUIThread(Action action) => _visualStudioDispatcher.Invoke(action);
     }
 }

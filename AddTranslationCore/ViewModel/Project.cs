@@ -21,7 +21,7 @@ namespace AddTranslationCore.ViewModel
         /// of necessary indent in a property.
         /// </summary>
         private const string _indentPlaceholder = "_I_N_D_E_N_T_";
-        private const string _designerPropertyPattern = @"\s*public static string {0}";
+        private const string _designerPropertyPattern = @"\s*(?:public|internal) static string {0}";
         private const string _returnPattern = @"\s*return ResourceManager\.GetString\(""{0}"", resourceCulture\);";
         /// <summary>
         /// Formatable string holding pattern for field generated in designer file.
@@ -30,7 +30,6 @@ namespace AddTranslationCore.ViewModel
               $"{_indentPlaceholder}" + "/// <summary>" + 
             $"\n{_indentPlaceholder}" + "///     Looks up a localized string similar to {0}." + 
             $"\n{_indentPlaceholder}" + "/// </summary>" +
-#warning We use here public modifier, it would be good to detect somehow modifiers / enable user to set it.
             $"\n{_indentPlaceholder}" + "public static string {1} {{" +
             $"\n{_indentPlaceholder}" + "    get {{" +
             $"\n{_indentPlaceholder}" + "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + 

@@ -13,11 +13,7 @@ namespace AddTranslationVsix.Windows
     /// </summary>
     public partial class AddTranslationWindow : BaseDialogWindow
     {
-        public AddTranslationWindow(AddTranslationViewModel viewModel)
-        {
-            InitializeComponent();
-            DataContext = viewModel;
-        }
+        public AddTranslationWindow() => InitializeComponent();
 
         //private string _translation;
         //private string _toTransalte;
