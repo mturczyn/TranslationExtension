@@ -25,6 +25,7 @@ namespace AddTranslationCore.ViewModel
         }
         public void Execute(object parameter) { _execute((T)parameter); }
     }
+
     public class RelayCommand : ICommand
     {
         readonly Action _execute;
