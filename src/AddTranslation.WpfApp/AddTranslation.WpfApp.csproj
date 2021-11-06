@@ -114,7 +114,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AddTranslationCore\AddTranslation.Core.csproj">
+    <ProjectReference Include="..\AddTranslation.Core\AddTranslation.Core.csproj">
       <Project>{700c7082-4927-4cc2-a653-47e2f6392961}</Project>
       <Name>AddTranslation.Core</Name>
     </ProjectReference>
