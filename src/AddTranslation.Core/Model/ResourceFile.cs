@@ -1,4 +1,4 @@
-﻿using AddTranslationCore.ViewModel;
+﻿using AddTranslation.Core.ViewModel;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace AddTranslationCore.Model
+namespace AddTranslation.Core.Model
 {
     /// <summary>
     /// Represents single dictionary file.

@@ -1,12 +1,12 @@
 ﻿<UserControl
-    x:Class="AddTranslationCore.AddTranslationView"
+    x:Class="AddTranslation.Core.AddTranslationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:beh="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="clr-namespace:AddTranslationCore.Model"
-    xmlns:vm="clr-namespace:AddTranslationCore.ViewModel"
+    xmlns:model="clr-namespace:AddTranslation.Core.Model"
+    xmlns:vm="clr-namespace:AddTranslation.Core.ViewModel"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="{StaticResource BlackBrush}"
@@ -33,8 +33,12 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-                <TextBlock Margin="20,20,0,10" Text="Choose language: " />
+            <StackPanel
+                Grid.ColumnSpan="3"
+                Orientation="Horizontal">
+                <TextBlock
+                    Margin="20,20,0,10"
+                    Text="Choose language: " />
                 <ComboBox
                     MinWidth="100"
                     Margin="10,20,0,20"
@@ -44,9 +48,13 @@
                     SelectedItem="{Binding SelectedLanguage}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Name="txbLang" Text="{Binding}" />
+                            <TextBlock
+                                Name="txbLang"
+                                Text="{Binding}" />
                             <DataTemplate.Triggers>
-                                <DataTrigger Binding="{Binding}" Value="">
+                                <DataTrigger
+                                    Binding="{Binding}"
+                                    Value="">
                                     <Setter TargetName="txbLang" Property="Text" Value="Main" />
                                 </DataTrigger>
                             </DataTemplate.Triggers>
@@ -98,7 +106,9 @@
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
 
-            <Grid Grid.Row="3" Grid.ColumnSpan="2">
+            <Grid
+                Grid.Row="3"
+                Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
@@ -164,7 +174,9 @@
                 SelectedItem="{Binding SelectedTranslation}"
                 SelectionMode="Single">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Width="100" Header="{x:Null}">
+                    <DataGridTemplateColumn
+                        Width="100"
+                        Header="{x:Null}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type vm:Translation}">
                                 <Grid Background="{StaticResource Gray22Brush}">
@@ -211,7 +223,9 @@
                                     </Button>
                                 </Grid>
                                 <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding IsUnderEdition}" Value="True">
+                                    <DataTrigger
+                                        Binding="{Binding IsUnderEdition}"
+                                        Value="True">
                                         <Setter TargetName="EditButton" Property="Visibility" Value="Collapsed" />
                                         <Setter TargetName="SaveButton" Property="Visibility" Value="Visible" />
                                         <Setter TargetName="CancelButton" Property="Visibility" Value="Visible" />
@@ -220,7 +234,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Width="1*" Header="Translation key">
+                    <DataGridTextColumn
+                        Width="1*"
+                        Header="Translation key">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="{x:Type DataGridCell}">
                                 <Setter Property="Template">
@@ -236,7 +252,9 @@
                                                 TextAlignment="Justify"
                                                 TextWrapping="Wrap" />
                                             <ControlTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding IsUnderEdition}" Value="True">
+                                                <DataTrigger
+                                                    Binding="{Binding IsUnderEdition}"
+                                                    Value="True">
                                                     <Setter TargetName="txb" Property="Background" Value="{StaticResource Gray11Brush}" />
                                                 </DataTrigger>
                                             </ControlTemplate.Triggers>
@@ -263,7 +281,9 @@
                                                 Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                                                 TextWrapping="Wrap" />
                                             <ControlTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding IsUnderEdition}" Value="True">
+                                                <DataTrigger
+                                                    Binding="{Binding IsUnderEdition}"
+                                                    Value="True">
                                                     <Setter TargetName="txb" Property="Background" Value="{StaticResource Gray11Brush}" />
                                                 </DataTrigger>
                                             </ControlTemplate.Triggers>
@@ -279,7 +299,9 @@
                 Grid.Column="3"
                 Margin="10"
                 VerticalAlignment="Center">
-                <TextBlock FontWeight="SemiBold" Text="Languages projects" />
+                <TextBlock
+                    FontWeight="SemiBold"
+                    Text="Languages projects" />
                 <TextBlock
                     FontSize="12"
                     Text="Projects that contain required resources and designer files in required structure"
@@ -301,7 +323,9 @@
                 SelectedItem="{Binding SelectedProject}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Margin="5" Text="{Binding ProjectName}" />
+                        <TextBlock
+                            Margin="5"
+                            Text="{Binding ProjectName}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>

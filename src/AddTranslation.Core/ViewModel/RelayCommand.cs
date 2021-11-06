@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace AddTranslationCore.ViewModel
+namespace AddTranslation.Core.ViewModel
 {
     public class RelayCommand<T> : ICommand
     {

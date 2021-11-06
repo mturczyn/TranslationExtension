@@ -1,8 +1,8 @@
-﻿using AddTranslationCore.Abstractions;
+﻿using AddTranslation.Core.Abstractions;
 using System;
 using System.Globalization;
 
-namespace AddTranslationCore.ViewModel
+namespace AddTranslation.Core.ViewModel
 {
     public class Translation : BaseObservable, ICloneable
     {
@@ -38,7 +38,7 @@ namespace AddTranslationCore.ViewModel
         }
 
         public object Clone() => this.MemberwiseClone();
-        
+
         public override string ToString()
             => $"{CultureInfo} {Key} {Text}";
     }

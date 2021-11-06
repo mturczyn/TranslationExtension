@@ -1,17 +1,17 @@
 ﻿<Application
-    x:Class="AddTranslationTestApplication.App"
+    x:Class="AddTranslation.WpfApp.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ColorsAndBrushes.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/SmallStylesForControls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/Button.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ScrollBar.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ComboBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/DataGridStylesAndTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/ColorsAndBrushes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/SmallStylesForControls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/ScrollBar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/ComboBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/DataGridStylesAndTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

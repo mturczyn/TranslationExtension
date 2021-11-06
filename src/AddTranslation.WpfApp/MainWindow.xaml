@@ -1,8 +1,8 @@
 ﻿<Window
-    x:Class="AddTranslationTestApplication.MainWindow"
+    x:Class="AddTranslation.WpfApp.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:core="clr-namespace:AddTranslationCore;assembly=AddTranslationCore"
+    xmlns:core="clr-namespace:AddTranslation.Core;assembly=AddTranslation.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"

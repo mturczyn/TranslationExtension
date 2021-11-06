@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace AddTranslationCore.ResourceClassGenerator
+namespace AddTranslation.Core.ResourceClassGenerator
 {
 #error File is not compiled into output DLLs as another approach is chosen. But implementation is left, as it is partially tested and designed. Class itself contains quite knowledge about the ResGen tool.
     /// <summary>

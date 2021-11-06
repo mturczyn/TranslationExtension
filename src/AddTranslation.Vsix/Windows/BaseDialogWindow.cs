@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.PlatformUI;
 
-namespace AddTranslationVsix.Windows
+namespace AddTranslation.Vsix.Windows
 {
     public class BaseDialogWindow : DialogWindow
     {

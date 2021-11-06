@@ -1,5 +1,5 @@
-﻿using AddTranslationCore.Abstractions;
-using AddTranslationCore.Model;
+﻿using AddTranslation.Core.Abstractions;
+using AddTranslation.Core.Model;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AddTranslationCore.ViewModel
+namespace AddTranslation.Core.ViewModel
 {
     public class Project : BaseObservable, IProjectItem
     {
@@ -27,13 +27,13 @@ namespace AddTranslationCore.ViewModel
         /// Formatable string holding pattern for field generated in designer file.
         /// </summary>
         private static string _translationDesignerPropertyFormat =
-              $"{_indentPlaceholder}" + "/// <summary>" + 
-            $"\n{_indentPlaceholder}" + "///     Looks up a localized string similar to {0}." + 
+              $"{_indentPlaceholder}" + "/// <summary>" +
+            $"\n{_indentPlaceholder}" + "///     Looks up a localized string similar to {0}." +
             $"\n{_indentPlaceholder}" + "/// </summary>" +
             $"\n{_indentPlaceholder}" + "public static string {1} {{" +
             $"\n{_indentPlaceholder}" + "    get {{" +
-            $"\n{_indentPlaceholder}" + "        return ResourceManager.GetString(\"{2}\", resourceCulture);" + 
-            $"\n{_indentPlaceholder}" + "    }}" + 
+            $"\n{_indentPlaceholder}" + "        return ResourceManager.GetString(\"{2}\", resourceCulture);" +
+            $"\n{_indentPlaceholder}" + "    }}" +
             $"\n{_indentPlaceholder}" + "}}";
         private const string _designerExtension = ".Designer.cs";
         private const string _resExtension = ".resx";
@@ -172,11 +172,11 @@ namespace AddTranslationCore.ViewModel
             var tempFileName = _designerFullPath + "temp";
             StreamReader reader = null;
             StreamWriter writer = null;
-            try 
+            try
             {
                 reader = new StreamReader(_designerFullPath);
                 writer = new StreamWriter(tempFileName);
-             
+
                 var classDeclarationRead = false;
                 var openedBraces = 0;
 
@@ -199,7 +199,7 @@ namespace AddTranslationCore.ViewModel
                     if (!isComment && classDeclarationRead && line.Contains('}'))
                         openedBraces--;
                     // Write new property right before last brace.
-                    if(classDeclarationRead && openedBraces == 0)
+                    if (classDeclarationRead && openedBraces == 0)
                     {
                         // It is important to insert indentations before formatting the string, so we do 
                         // not accidentally insert indent if someone uses our indent placeholder in a translation.
@@ -211,7 +211,7 @@ namespace AddTranslationCore.ViewModel
                     writer.WriteLine(line);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Error("Error during saving translation to designer file.", ex);
                 return false;
@@ -253,7 +253,7 @@ namespace AddTranslationCore.ViewModel
             {
                 reader = new StreamReader(_designerFullPath);
                 writer = new StreamWriter(tempFileName);
-                
+
                 var propertyFound = false;
                 var classDeclarationRead = false;
                 while (!reader.EndOfStream)
@@ -296,7 +296,7 @@ namespace AddTranslationCore.ViewModel
                         var i = 0;
                         // For next four lines we try to rewrite following lines, but we look for
                         // return statement, which contains translation key to replace.
-                        while(!reader.EndOfStream && i < 4)
+                        while (!reader.EndOfStream && i < 4)
                         {
                             var innerLine = reader.ReadLine();
                             if (Regex.IsMatch(innerLine, string.Format(_returnPattern, oldTranslation.Key)))

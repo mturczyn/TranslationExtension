@@ -23,8 +23,8 @@
     <ProjectGuid>{55EC2353-8EF9-439F-9242-6934C932A754}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AddTranslationVsix</RootNamespace>
-    <AssemblyName>AddTranslationVsix</AssemblyName>
+    <RootNamespace>AddTranslation.Vsix</RootNamespace>
+    <AssemblyName>AddTranslation.Vsix</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>

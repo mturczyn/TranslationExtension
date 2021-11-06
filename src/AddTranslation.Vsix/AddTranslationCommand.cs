@@ -1,5 +1,6 @@
-﻿using AddTranslationCore;
-using AddTranslationVsix.Windows;
+﻿using AddTranslation.Core;
+using AddTranslation.Vsix.Vsix;
+using AddTranslation.Vsix.Windows;
 using EnvDTE;
 using log4net;
 using Microsoft;
@@ -11,13 +12,11 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Threading.Tasks;
 using System.Windows;
 using Task = System.Threading.Tasks.Task;
 
-namespace AddTranslation
+namespace AddTranslation.Vsix
 {
     /// <summary>
     /// Command handler
@@ -68,41 +67,42 @@ namespace AddTranslation
         /// <param name="package">Owner package, not null.</param>
         public static async Task InitializeAsync(AsyncPackage package)
         {
+#warning Try to find out better solution, this seems like a workaround.
             // For some reason, not all DLLs are loaded in extension (this how VS experimental instance loads them),
             // so here we manually load assembly and then resources.
             try
             {
-                System.Reflection.Assembly.Load("AddTranslationCore");
+                System.Reflection.Assembly.Load("AddTranslation.Core");
 
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ColorsAndBrushes.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/ColorsAndBrushes.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/SmallStylesForControls.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/SmallStylesForControls.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/Button.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/Button.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ScrollBar.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/ScrollBar.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/ComboBox.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/ComboBox.xaml", UriKind.RelativeOrAbsolute)
                 });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
-                    Source = new Uri(@"pack://application:,,,/AddTranslationCore;component/UserInterfaceResources/DataGridStylesAndTemplates.xaml", UriKind.RelativeOrAbsolute)
+                    Source = new Uri(@"pack://application:,,,/AddTranslation.Core;component/UserInterfaceResources/DataGridStylesAndTemplates.xaml", UriKind.RelativeOrAbsolute)
                 });
             }
             catch (Exception ex)
             {
-                _logger.Error($"Could not load AddTranslationCore assembly.", ex);
-                MessageBox.Show($"Could not load AddTranslationCore assembly.\nException: {ex.Message}\nPlease report this at GitHub repo https://github.com/mturczyn/TranslationExtension/issues", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.Error($"Could not load AddTranslation.Core assembly.", ex);
+                MessageBox.Show($"Could not load AddTranslation.Core assembly.\nException: {ex.Message}\nPlease report this at GitHub repo https://github.com/mturczyn/TranslationExtension/issues", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -125,8 +125,8 @@ namespace AddTranslation
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
-        private void Execute(object sender, EventArgs e)
-            => _ = ExecuteAsync(sender, e);
+        private async void Execute(object sender, EventArgs e)
+            => await ExecuteAsync(sender, e);
 
         private async Task ExecuteAsync(object sender, EventArgs e)
         {

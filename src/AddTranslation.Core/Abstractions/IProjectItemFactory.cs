@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AddTranslationCore.Abstractions
+namespace AddTranslation.Core.Abstractions
 {
     public interface IProjectItemFactory
     {

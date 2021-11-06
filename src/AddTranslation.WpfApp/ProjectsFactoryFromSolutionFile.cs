@@ -1,5 +1,5 @@
-﻿using AddTranslationCore.Abstractions;
-using AddTranslationCore.ViewModel;
+﻿using AddTranslation.Core.Abstractions;
+using AddTranslation.Core.ViewModel;
 using log4net;
 using Microsoft.Win32;
 using System;
@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace AddTranslationTestApplication
+namespace AddTranslation.WpfApp
 {
     class ProjectsFactoryFromSolutionFile : IProjectItemFactory
     {

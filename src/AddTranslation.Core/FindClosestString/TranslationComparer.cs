@@ -1,7 +1,7 @@
-﻿using AddTranslationCore.ViewModel;
+﻿using AddTranslation.Core.ViewModel;
 using System.Collections.Generic;
 
-namespace AddTranslationCore
+namespace AddTranslation.Core
 {
     public class TranslationComparer : IComparer<Translation>
     {

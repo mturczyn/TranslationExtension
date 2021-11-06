@@ -1,7 +1,7 @@
-﻿using AddTranslationCore;
+﻿using AddTranslation.Core;
 using System.Windows;
 
-namespace AddTranslationTestApplication
+namespace AddTranslation.WpfApp
 {
     /// <summary>
     /// Interaction logic for App.xaml

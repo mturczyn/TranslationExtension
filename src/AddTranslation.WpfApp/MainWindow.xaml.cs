@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace AddTranslationTestApplication
+namespace AddTranslation.WpfApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

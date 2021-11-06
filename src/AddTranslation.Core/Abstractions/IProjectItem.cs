@@ -1,9 +1,9 @@
-﻿using AddTranslationCore.ViewModel;
+﻿using AddTranslation.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace AddTranslationCore.Abstractions
+namespace AddTranslation.Core.Abstractions
 {
     public interface IProjectItem
     {

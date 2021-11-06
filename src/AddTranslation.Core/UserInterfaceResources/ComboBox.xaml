@@ -1,4 +1,6 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <LinearGradientBrush x:Key="ComboBoxDisabledBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Offset="0" Color="{StaticResource Gray22Color}" />
         <GradientStop Offset="0.8" Color="{StaticResource Gray44Color}" />
@@ -46,7 +48,9 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+    <Style
+        x:Key="ComboBoxToggleButton"
+        TargetType="{x:Type ToggleButton}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="IsTabStop" Value="false" />
         <Setter Property="Focusable" Value="false" />
@@ -134,11 +138,17 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <ControlTemplate x:Key="ComboBoxEditableTemplate" TargetType="{x:Type ComboBox}">
-        <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+    <ControlTemplate
+        x:Key="ComboBoxEditableTemplate"
+        TargetType="{x:Type ComboBox}">
+        <Grid
+            x:Name="templateRoot"
+            SnapsToDevicePixels="true">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0" MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+                <ColumnDefinition
+                    Width="0"
+                    MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
             </Grid.ColumnDefinitions>
             <Popup
                 x:Name="PART_Popup"
@@ -155,7 +165,9 @@
                     BorderBrush="{StaticResource Gray77Brush}"
                     BorderThickness="1">
                     <ScrollViewer x:Name="DropDownScrollViewer">
-                        <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                        <Grid
+                            x:Name="grid"
+                            RenderOptions.ClearTypeHint="Enabled">
                             <Canvas
                                 x:Name="canvas"
                                 Width="0"
@@ -220,11 +232,17 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
-        <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+    <ControlTemplate
+        x:Key="ComboBoxTemplate"
+        TargetType="{x:Type ComboBox}">
+        <Grid
+            x:Name="templateRoot"
+            SnapsToDevicePixels="true">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0" MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+                <ColumnDefinition
+                    Width="0"
+                    MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
             </Grid.ColumnDefinitions>
             <Popup
                 x:Name="PART_Popup"
@@ -242,7 +260,9 @@
                     BorderBrush="{StaticResource Gray77Brush}"
                     BorderThickness="1">
                     <ScrollViewer x:Name="DropDownScrollViewer">
-                        <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                        <Grid
+                            x:Name="grid"
+                            RenderOptions.ClearTypeHint="Enabled">
                             <Canvas
                                 x:Name="canvas"
                                 Width="0"

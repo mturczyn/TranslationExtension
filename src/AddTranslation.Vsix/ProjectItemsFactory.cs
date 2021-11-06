@@ -1,11 +1,11 @@
-﻿using AddTranslationCore.Abstractions;
+﻿using AddTranslation.Core.Abstractions;
 using EnvDTE;
 using Microsoft;
 using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AddTranslation
+namespace AddTranslation.Vsix.Vsix
 {
     /// <summary>
     /// Class is used to provide project items representing project references of given project.
@@ -27,10 +27,10 @@ namespace AddTranslation
                 // Cant get the current project.
                 return null;
             }
-            var projectReferences = new List<AddTranslationCore.ViewModel.Project>();
+            var projectReferences = new List<Core.ViewModel.Project>();
             foreach (Project item in dte.Solution.Projects)
             {
-                projectReferences.Add(new AddTranslationCore.ViewModel.Project(item.FullName, item.Name));
+                projectReferences.Add(new AddTranslation.Core.ViewModel.Project(item.FullName, item.Name));
             }
 
             return projectReferences.ToArray();

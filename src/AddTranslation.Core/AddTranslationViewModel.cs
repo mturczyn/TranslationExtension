@@ -1,5 +1,5 @@
-﻿using AddTranslationCore.Abstractions;
-using AddTranslationCore.ViewModel;
+﻿using AddTranslation.Core.Abstractions;
+using AddTranslation.Core.ViewModel;
 using log4net;
 using System;
 using System.CodeDom.Compiler;
@@ -14,7 +14,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 
-namespace AddTranslationCore
+namespace AddTranslation.Core
 {
     public class AddTranslationViewModel : BaseObservable
     {
@@ -23,6 +23,7 @@ namespace AddTranslationCore
         private readonly ILog _logger;
         private Translation _editedTranslation;
         private readonly Dispatcher _visualStudioDispatcher;
+
         /// <summary>
         /// It is little bit somehow against the MVVM pattern. But we need to close
         /// the window in some cases, so for conveniency I store the reference.
@@ -153,21 +154,21 @@ namespace AddTranslationCore
         {
             ProjectReferences.Clear();
             var projectItems = await _projectItemFactory.GetProjectItems().ConfigureAwait(false);
-            if(projectItems.Length == 0)
+            if (projectItems.Length == 0)
             {
                 _logger.Warn("Loading project returned 0 projects");
                 MessageBox.Show("Did not find any projects.");
                 return;
             }
             var validProjects = projectItems.Where(p => p.IsValidResourcesProject);
-            if(!validProjects.Any())
+            if (!validProjects.Any())
             {
                 var warning = "Did not find any projects that Have valid language resources.";
                 _logger.Warn(warning);
                 MessageBox.Show(warning);
                 return;
             }
-            foreach (var p in validProjects) 
+            foreach (var p in validProjects)
             {
                 ProjectReferences.Add(p);
             }
@@ -195,7 +196,7 @@ namespace AddTranslationCore
             AvailableLanguages.Clear();
             foreach (var t in SelectedProject.AvailableLanguages)
                 AvailableLanguages.Add(t);
-            
+
             SelectedLanguage = AvailableLanguages.First();
         }
 
@@ -317,7 +318,7 @@ namespace AddTranslationCore
                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             CloseTranslationWindow();
         }
-        
+
         private void CloseTranslationWindow()
         {
             _logger.Info("Closing application.");

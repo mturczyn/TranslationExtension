@@ -1,4 +1,4 @@
-﻿namespace AddTranslationCore
+﻿namespace AddTranslation.Core
 {
     /// <summary>
     /// Interaction logic for AddTranslationView.xaml

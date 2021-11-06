@@ -1,12 +1,11 @@
-﻿using AddTranslationCore;
-using AddTranslationVsix.Windows;
+﻿using AddTranslation.Core;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace AddTranslationVsix.Windows
+namespace AddTranslation.Vsix.Windows
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml

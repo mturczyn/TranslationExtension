@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AddTranslationCore
+namespace AddTranslation.Core
 {
     /// <summary>
     /// This class takes care of calculating distance between strings (words, sentences).
