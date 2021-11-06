@@ -239,6 +239,7 @@ namespace AddTranslationCore.ViewModel
             }
             return true;
         }
+
         private bool UpdatePropertyInDesignerFile(Translation oldTranslation, Translation newTranslation)
         {
             _logger.Info($"Updating translation in designer file. Old translation {oldTranslation}, new translation {newTranslation}, file {_designerFullPath}");

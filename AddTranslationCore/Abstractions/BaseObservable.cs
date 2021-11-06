@@ -7,6 +7,7 @@ namespace AddTranslationCore.Abstractions
     public abstract class BaseObservable : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Returns whether property changed event was raised.
         /// </summary>
