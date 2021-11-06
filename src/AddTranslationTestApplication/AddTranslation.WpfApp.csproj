@@ -114,9 +114,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AddTranslationCore\AddTranslationCore.csproj">
+    <ProjectReference Include="..\AddTranslationCore\AddTranslation.Core.csproj">
       <Project>{700c7082-4927-4cc2-a653-47e2f6392961}</Project>
-      <Name>AddTranslationCore</Name>
+      <Name>AddTranslation.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
